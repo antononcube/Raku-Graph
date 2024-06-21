@@ -1,0 +1,21 @@
+{
+  "name": "Graph",
+  "description": "Common graph functionalities.",
+  "version": "0.0.1",
+  "perl": "6.d",
+  "authors": [
+    "Anton Antonov"
+  ],
+  "auth": "zef:antononcube",
+  "depends": [
+    "Hash::Merge:ver<2.0.0>:auth<github:scriptkitties>:api<2>"
+  ],
+  "build-depends": [],
+  "test-depends": [],
+  "provides": {
+    "Graph": "lib/Graph.rakumod"
+  },
+  "resources": [],
+  "license": "Artistic-2.0",
+  "source-url": "https://github.com/antononcube/Raku-Graph.git"
+}
