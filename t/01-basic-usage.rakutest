@@ -44,4 +44,17 @@ is-deeply $graph1.find-shortest-path('1', '4'), ["1", "7", "2", "4"];
 ## 6
 is-deeply $graph1.find-hamiltonian-path.sort, $graph1.vertex-list.sort;
 
+## 7
+ok Graph.new(@edges);
+
+## 8
+my $graph8 = Graph.new(@edges);
+is $graph8.Str, $graph1.Str;
+
+## 9
+is-deeply $graph8.vertex-list.sort, $graph1.vertex-list;
+
+## 10
+is-deeply $graph8.find-shortest-path('1', '4'), $graph1.find-shortest-path('1', '4');
+
 done-testing;
