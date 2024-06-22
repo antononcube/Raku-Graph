@@ -134,7 +134,7 @@ class Graph {
                 }
             }
         }
-        @paths;
+        return @paths;
     }
 
     #------------------------------------------------------
@@ -179,7 +179,70 @@ class Graph {
             hamiltonian-path([$start], %visited, 0);
         }
 
-        @best-path;
+        return @best-path;
     }
 
+    #------------------------------------------------------
+    method find-cycle(:$min-length = 3, :$max-length = Inf, :$count = 1) {
+        self!find-cycle-helper(:$min-length, :$max-length, :$count);
+    }
+
+    sub rotate-to-smallest(@strings, Bool:D :$directed!) {
+        my $smallest = @strings.sort.head;
+        my @strings2 = @strings.clone.rotate(@strings.first($smallest,:k));
+        if !$directed {
+            my @r1 = @strings2.tail(*-1);
+            my @r2 = @r1.reverse;
+
+            @strings2 = do given @r1 cmp @r2 {
+                when Less { [@strings2.head, |@r1, @strings2.head] }
+                default { [@strings2.head, |@r2, @strings2.head] }
+            }
+        }
+        return @strings2;
+    }
+
+    method !find-cycle-helper(:$min-length = 3, :$max-length = Inf, :$count = Inf) {
+        my @cycles;
+        my %visited;
+        my $found = 0;
+
+        sub cycle-dfs($node, @path) {
+
+            my $parent = @path.tail;
+
+            if %visited{$node} && @path.elems > 1 {
+                if @path.elems ≥ $min-length && @path.elems ≤ $max-length {
+                    my $index = @path.first(* eq $node, :k);
+                    #my @candidate = [|@path[$index..*], $node];
+                    my @candidate = rotate-to-smallest(@path[$index..*].clone, :$!directed);
+                    my $cind = @cycles.first({ $_ eqv @candidate });
+                    without $cind {
+                        @cycles.push(@candidate);
+                        $found++;
+                    }
+                    return;
+                }
+            }
+
+            %visited{$node} = True;
+            @path.push($node);
+
+            for %.adjacency-list{$node}.keys -> $neighbor {
+                cycle-dfs($neighbor, @path) if $neighbor ∉ [$node, $parent];
+                last if $found >= $count;
+            }
+
+            @path.pop;
+            %visited{$node} = False;
+        }
+
+        for %.adjacency-list.keys -> $start {
+            %visited = %();
+            cycle-dfs($start, []);
+            last if $found >= $count;
+        }
+
+        return @cycles;
+    }
 }
