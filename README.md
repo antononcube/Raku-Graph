@@ -83,22 +83,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-6 --- 7
-6 --- 2
-10 --- 2
-10 --- 9
-2 --- 3
-2 --- 7
-2 --- 8
-2 --- 4
-2 --- 12
-3 --- 4
-3 --- 8
 4 --- 9
-5 --- 1
-5 --- 12
-1 --- 7
-12 --- 11
+4 --- 2
+4 --- 3
+3 --- 2
+3 --- 8
+7 --- 2
+7 --- 1
+7 --- 6
+2 --- 10
+2 --- 8
+2 --- 6
+2 --- 12
+11 --- 12
+12 --- 5
+9 --- 10
+1 --- 5
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -125,7 +125,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [10 9 4 3 8 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [11 12 5 1 7 6 2 10 9 4 3 8]
 ```
 
 Here we find a cycle:
@@ -134,7 +134,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([2 3 4 2])
+# find-cycle : ([10 2 4 9 10])
 ```
 
 Here we find all cycles in the graph:
@@ -234,6 +234,8 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 
 - [X] DONE Basic usage over undirected graphs
 - [ ] TODO Basic usage over directed graphs
+- [ ] TODO Random graphs creation
+- [ ] TODO Regular graphs creation (Grid, Wheel, etc.)
 
 -------
 

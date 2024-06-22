@@ -189,6 +189,8 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 
 - [X] DONE Basic usage over undirected graphs
 - [ ] TODO Basic usage over directed graphs
+- [ ] TODO Random graphs creation
+- [ ] TODO Regular graphs creation (Grid, Wheel, etc.)
 
 -------
 
