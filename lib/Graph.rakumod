@@ -9,9 +9,10 @@ class Graph {
     #======================================================
     # Creators
     #======================================================
-    submethod BUILD(:%adjacency-list, Bool:D :$directed = False) {
-        %!adjacency-list = %adjacency-list;
-        $!directed = $directed;
+    submethod BUILD(:%!adjacency-list = %(), Bool:D :$!directed = False, :@edges?) {
+        if @edges {
+            self.add-edges(@edges)
+        }
     }
 
     #------------------------------------------------------
@@ -20,8 +21,7 @@ class Graph {
     }
 
     multi method new(@edges) {
-        self.bless(adjacency-list => %(), :!directed);
-        self.add-edges(@edges);
+        self.bless(adjacency-list => %(), :!directed, :@edges);
     }
 
     #======================================================
