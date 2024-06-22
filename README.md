@@ -83,21 +83,21 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-8 --- 2
-8 --- 3
-12 --- 2
-12 --- 11
-12 --- 5
-7 --- 6
-7 --- 1
-7 --- 2
+1 --- 7
+1 --- 5
 9 --- 4
 9 --- 10
+12 --- 11
+12 --- 5
+12 --- 2
+8 --- 3
+8 --- 2
+7 --- 6
+7 --- 2
 2 --- 4
+2 --- 10
 2 --- 6
 2 --- 3
-2 --- 10
-1 --- 5
 4 --- 3
 ```
 
@@ -206,9 +206,9 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE [Grid graphs](https://en.wikipedia.org/wiki/Lattice_graph)
   - [X] DONE [Star graphs](https://en.wikipedia.org/wiki/Star_graph)
   - [X] DONE [Wheel graphs](https://en.wikipedia.org/wiki/Wheel_graph)
-- [ ] TODO Construction of random graphs
+- [X] DONE Construction of random graphs
   - Potentially very complicated, since different kinds of vertex-edge distributions exists.
-  - [ ] TODO "Simple" random `(m, n)` graphs with m-vertexes and n-edges between them 
+  - [X] DONE "Simple" random `(m, n)` graphs with m-vertexes and n-edges between them 
 - [ ] TODO Construction of *individual* graphs
   - [ ] TODO Bull graph
   - [ ] TODO Butterfly graph
