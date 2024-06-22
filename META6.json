@@ -13,7 +13,11 @@
   "build-depends": [],
   "test-depends": [],
   "provides": {
-    "Graph": "lib/Graph.rakumod"
+    "Graph": "lib/Graph.rakumod",
+    "Graph::Complete": "lib/Graph/Complete.rakumod",
+    "Graph::Cycle": "lib/Graph/Cycle.rakumod",
+    "Graph::Grid": "lib/Graph/Grid.rakumod",
+    "Graph::Star": "lib/Graph/Star.rakumod"
   },
   "resources": [],
   "license": "Artistic-2.0",
