@@ -7,6 +7,23 @@ class Graph {
     has Bool:D $.directed = False;
 
     #------------------------------------------------------
+    method add-edge(Str $from, Str $to, Int $weight = 1, Bool:D :d(:$directed) = False) {
+        %.adjacency-list{$from}{$to} = $weight;
+
+        if !$directed {
+            %.adjacency-list{$to}{$from} = $weight;
+        }
+        $!directed = $directed;
+    }
+
+    #------------------------------------------------------
+    method add-edges(@edges, Bool:D :d(:$directed) = False) {
+        for @edges -> %edge {
+            self.add-edge(%edge<from>, %edge<to>, %edge<weight> // 1, :$directed);
+        }
+    }
+
+    #------------------------------------------------------
     method edges(Bool:D :$dataset = False) {
         my @edges;
         my %mark;
@@ -59,23 +76,6 @@ class Graph {
     #------------------------------------------------------
     method vertex-count(--> Int) {
         return self.vertex-list().elems;
-    }
-
-    #------------------------------------------------------
-    method add-edge(Str $from, Str $to, Int $weight = 1, Bool:D :d(:$directed) = False) {
-        %.adjacency-list{$from}{$to} = $weight;
-
-        if !$directed {
-            %.adjacency-list{$to}{$from} = $weight;
-        }
-        $!directed = $directed;
-    }
-
-    #------------------------------------------------------
-    method add-edges(@edges, Bool:D :d(:$directed) = False) {
-        for @edges -> %edge {
-            self.add-edge(%edge<from>, %edge<to>, %edge<weight> // 1, :$directed);
-        }
     }
 
     #------------------------------------------------------
