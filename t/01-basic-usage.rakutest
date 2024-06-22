@@ -30,6 +30,18 @@ my $graph1 = Graph.new;
 ok $graph1.add-edges(@edges);
 
 ## 2
-#ok Graph.new(@edges);
+is $graph1.edge-count, @edges.elems;
+
+## 3
+is $graph1.vertex-count, 12;
+
+## 4
+is-deeply $graph1.vertex-list.sort, (1..12)».Str.sort.List;
+
+## 5
+is-deeply $graph1.find-shortest-path('1', '4'), ["1", "7", "2", "4"];
+
+## 6
+is-deeply $graph1.find-hamiltonian-path.sort, $graph1.vertex-list.sort;
 
 done-testing;
