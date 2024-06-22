@@ -34,7 +34,7 @@ class Graph {
                     @edges.push({ :$from, :$to, :$weight })
                 } else {
                     if !(%mark{$to}{$from} // False) {
-                        @edges.push({:$from, :$to, :$weight });
+                        @edges.push({ :$from, :$to, :$weight });
                         %mark{$from}{$to} = True;
                     }
                 }
@@ -59,10 +59,10 @@ class Graph {
     #------------------------------------------------------
     method wl() {
         my @dsEdges = self.edges(:dataset);
-        my $edges = @dsEdges.map({ "{$_<from>} -> {$_<to>}" }).join(', ');
+        my $edges = @dsEdges.map({ "\"{ $_<from> }\" -> \"{ $_<to> }\"" }).join(', ');
         my $weights = @dsEdges.map({ $_<weight>.Str }).join(', ');
 
-        "Graph[\{$edges\}, EdgeWeight -> \{$weights\}, DirectedEdges -> {$!directed}]";
+        "Graph[\{$edges\}, EdgeWeight -> \{$weights\}, DirectedEdges -> { $!directed }]";
     }
 
     #------------------------------------------------------
@@ -110,5 +110,30 @@ class Graph {
         unshift @path, $start if @path;
 
         return @path;
+    }
+
+    #------------------------------------------------------
+    multi method find-path(Str $s, Str $t, :$min-length = 0, :$max-length = Inf, :$count = 1) {
+        self!dfs($s, $t, :$min-length, :$max-length, :$count);
+    }
+
+    method !dfs(Str $s, Str $t, :$min-length = 0, :$max-length = Inf, :$count = 1) {
+        my @paths;
+        my @stack = [[$s, [$s,], 0], ];
+        # current node, path, length
+        while @stack && @paths.elems < $count {
+            my ($current, $path, $length) = @stack.pop;
+            #note (:$current, :$path, :$length);
+            if $current eq $t && $length >= $min-length && $length <= $max-length {
+                @paths.push($path);
+            } elsif $length < $max-length {
+                for %.adjacency-list{$current}.keys -> $neighbor {
+                    unless $neighbor ∈ $path {
+                        @stack.push([$neighbor, [|$path, $neighbor], $length + 1]);
+                    }
+                }
+            }
+        }
+        @paths;
     }
 }
