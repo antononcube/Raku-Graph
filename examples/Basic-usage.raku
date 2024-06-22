@@ -32,4 +32,16 @@ say 'edge count : ', $graph.edge-count;
 
 say "WL:\n", $graph.wl();
 
-say $graph.shortest-path('1', '4');
+say 'shortest-path : ', $graph.shortest-path('1', '4');
+
+say 'find-path : ' , $graph.find-path('1', '4', count => Inf).sort({ $_.elems ~ ' ' ~ $_.join(' ') });
+
+say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
+
+say 'find-hamiltonian-path from 1 to 4 : ' , $graph.find-hamiltonian-path('1', '4');
+
+say 'find-hamiltonian-path from 8 to 11 : ' , $graph.find-hamiltonian-path('8', '11');
+
+say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
+
+say 'find-cycle (All): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' ' ~ $_.join(' ') });
