@@ -17,6 +17,7 @@
     "Graph::Complete": "lib/Graph/Complete.rakumod",
     "Graph::Cycle": "lib/Graph/Cycle.rakumod",
     "Graph::Grid": "lib/Graph/Grid.rakumod",
+    "Graph::Random": "lib/Graph/Random.rakumod",
     "Graph::Star": "lib/Graph/Star.rakumod",
     "Graph::Wheel": "lib/Graph/Wheel.rakumod"
   },
