@@ -130,7 +130,9 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [ ] TODO Find postman tour
   - [ ] TODO Find Eulerian cycle
   - [ ] TODO Find Hamiltonian cycle
-  - [ ] TODO Find cycle
+  - [X] DONE Find cycle
+    - [X] Just one cycle
+    - [X] All cycles
   - [ ] TODO Find cycle matrix
 - [ ] TODO Independent paths
   - [X] DONE Find paths
