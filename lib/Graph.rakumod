@@ -77,7 +77,8 @@ class Graph {
 
     #------------------------------------------------------
     method edge-count(--> Int) {
-        return %!adjacency-list.elems;
+        my $res = %!adjacency-list.map(*.value.elems).sum;
+        return $!directed ?? $res !! $res div 2;
     }
 
     #------------------------------------------------------
