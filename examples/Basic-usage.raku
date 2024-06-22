@@ -32,7 +32,7 @@ say 'edge count : ', $graph.edge-count;
 
 say "WL:\n", $graph.wl();
 
-say 'shortest-path : ', $graph.shortest-path('1', '4');
+say 'find-shortest-path : ', $graph.find-shortest-path('1', '4');
 
 say 'find-path : ' , $graph.find-path('1', '4', count => Inf).sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 
