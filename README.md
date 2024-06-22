@@ -83,22 +83,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-1 --- 7
-1 --- 5
-9 --- 4
-9 --- 10
-12 --- 11
-12 --- 5
-12 --- 2
-8 --- 3
-8 --- 2
-7 --- 6
-7 --- 2
-2 --- 4
-2 --- 10
-2 --- 6
+6 --- 7
+6 --- 2
+10 --- 2
+10 --- 9
 2 --- 3
-4 --- 3
+2 --- 7
+2 --- 8
+2 --- 4
+2 --- 12
+3 --- 4
+3 --- 8
+4 --- 9
+5 --- 1
+5 --- 12
+1 --- 7
+12 --- 11
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -125,7 +125,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [10 9 4 3 8 2 6 7 1 5 12 11]
 ```
 
 Here we find a cycle:
@@ -134,7 +134,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([10 2 4 9 10])
+# find-cycle : ([2 3 4 2])
 ```
 
 Here we find all cycles in the graph:
@@ -222,8 +222,8 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 ### Tests
 
 - [ ] TODO Unit tests
-  - [ ] TODO Sanity
-  - [ ] TODO Undirected graphs
+  - [X] DONE Sanity
+  - [X] DONE Undirected graphs
   - [ ] TODO Directed graphs cycles
 - [ ] TODO Cross-verification with Mathematica
   - [ ] TODO General workflow programming/setup

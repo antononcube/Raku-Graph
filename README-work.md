@@ -177,8 +177,8 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 ### Tests
 
 - [ ] TODO Unit tests
-  - [ ] TODO Sanity
-  - [ ] TODO Undirected graphs
+  - [X] DONE Sanity
+  - [X] DONE Undirected graphs
   - [ ] TODO Directed graphs cycles
 - [ ] TODO Cross-verification with Mathematica
   - [ ] TODO General workflow programming/setup
