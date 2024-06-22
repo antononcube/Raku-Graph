@@ -83,22 +83,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-7 --- 2
-7 --- 1
-7 --- 6
-5 --- 12
-5 --- 1
-10 --- 9
-10 --- 2
-9 --- 4
-8 --- 3
 8 --- 2
-3 --- 2
-3 --- 4
-11 --- 12
-2 --- 6
+8 --- 3
+12 --- 2
+12 --- 11
+12 --- 5
+7 --- 6
+7 --- 1
+7 --- 2
+9 --- 4
+9 --- 10
 2 --- 4
-2 --- 12
+2 --- 6
+2 --- 3
+2 --- 10
+1 --- 5
+4 --- 3
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -125,7 +125,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [10 9 4 3 8 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
 ```
 
 Here we find a cycle:
@@ -201,11 +201,11 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 ### Construction
 
 - [X] DONE Construction of (regular) graphs
-  - [X] DONE Complete graphs
-  - [X] DONE Cycle graphs
-  - [X] DONE Grid graphs
-  - [X] DONE Star graphs
-  - [X] DONE Wheel graphs
+  - [X] DONE [Complete graphs](https://en.wikipedia.org/wiki/Complete_graph)
+  - [X] DONE [Cycle graphs](https://en.wikipedia.org/wiki/Cycle_graph)
+  - [X] DONE [Grid graphs](https://en.wikipedia.org/wiki/Lattice_graph)
+  - [X] DONE [Star graphs](https://en.wikipedia.org/wiki/Star_graph)
+  - [X] DONE [Wheel graphs](https://en.wikipedia.org/wiki/Wheel_graph)
 - [ ] TODO Construction of random graphs
   - Potentially very complicated, since different kinds of vertex-edge distributions exists.
   - [ ] TODO "Simple" random `(m, n)` graphs with m-vertexes and n-edges between them 

@@ -156,11 +156,11 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 ### Construction
 
 - [X] DONE Construction of (regular) graphs
-  - [X] DONE Complete graphs
-  - [X] DONE Cycle graphs
-  - [X] DONE Grid graphs
-  - [X] DONE Star graphs
-  - [X] DONE Wheel graphs
+  - [X] DONE [Complete graphs](https://en.wikipedia.org/wiki/Complete_graph)
+  - [X] DONE [Cycle graphs](https://en.wikipedia.org/wiki/Cycle_graph)
+  - [X] DONE [Grid graphs](https://en.wikipedia.org/wiki/Lattice_graph)
+  - [X] DONE [Star graphs](https://en.wikipedia.org/wiki/Star_graph)
+  - [X] DONE [Wheel graphs](https://en.wikipedia.org/wiki/Wheel_graph)
 - [ ] TODO Construction of random graphs
   - Potentially very complicated, since different kinds of vertex-edge distributions exists.
   - [ ] TODO "Simple" random `(m, n)` graphs with m-vertexes and n-edges between them 
