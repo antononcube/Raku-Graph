@@ -83,22 +83,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-5 --- 1
-5 --- 12
+3 --- 4
+3 --- 2
+3 --- 8
 12 --- 2
 12 --- 11
-10 --- 9
+12 --- 5
 10 --- 2
-6 --- 7
-6 --- 2
-3 --- 4
-3 --- 8
-3 --- 2
-2 --- 4
-2 --- 7
-2 --- 8
-1 --- 7
-4 --- 9
+10 --- 9
+9 --- 4
+7 --- 2
+7 --- 1
+7 --- 6
+5 --- 1
+4 --- 2
+8 --- 2
+2 --- 6
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -199,9 +199,10 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 ### Construction
 
 - [ ] TODO Construction of (regular) graphs
-  - [ ] TODO Complete graphs
-  - [ ] TODO Cycle graphs
-  - [ ] TODO Star graphs
+  - [X] DONE Complete graphs
+  - [X] DONE Cycle graphs
+  - [X] TODO Grid graphs
+  - [X] TODO Star graphs
   - [ ] TODO Wheel graphs
 - [ ] TODO Construction of random graphs
   - Potentially very complicated, since different kinds of vertex-edge distributions exists.
