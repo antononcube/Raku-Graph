@@ -6,14 +6,35 @@ class Graph {
     has %.adjacency-list;
     has Bool:D $.directed = False;
 
+    #======================================================
+    # Creators
+    #======================================================
+    submethod BUILD(:%adjacency-list, Bool:D :$directed = False) {
+        %!adjacency-list = %adjacency-list;
+        $!directed = $directed;
+    }
+
     #------------------------------------------------------
+    multi method new(:%adjacency-list = %(), Bool:D :$directed = False) {
+        self.bless(:%adjacency-list, :$directed);
+    }
+
+    multi method new(@edges) {
+        self.bless(adjacency-list => %(), :!directed);
+        self.add-edges(@edges);
+    }
+
+    #======================================================
+    # Construction
+    #======================================================
     method add-edge(Str $from, Str $to, Int $weight = 1, Bool:D :d(:$directed) = False) {
-        %.adjacency-list{$from}{$to} = $weight;
+        %!adjacency-list{$from}{$to} = $weight;
 
         if !$directed {
-            %.adjacency-list{$to}{$from} = $weight;
+            %!adjacency-list{$to}{$from} = $weight;
         }
         $!directed = $directed;
+        return True;
     }
 
     #------------------------------------------------------
@@ -21,9 +42,12 @@ class Graph {
         for @edges -> %edge {
             self.add-edge(%edge<from>, %edge<to>, %edge<weight> // 1, :$directed);
         }
+        return @edges.elems;
     }
 
-    #------------------------------------------------------
+    #======================================================
+    # Properties
+    #======================================================
     method edges(Bool:D :$dataset = False) {
         my @edges;
         my %mark;
@@ -57,15 +81,6 @@ class Graph {
     }
 
     #------------------------------------------------------
-    method wl() {
-        my @dsEdges = self.edges(:dataset);
-        my $edges = @dsEdges.map({ "\"{ $_<from> }\" -> \"{ $_<to> }\"" }).join(', ');
-        my $weights = @dsEdges.map({ $_<weight>.Str }).join(', ');
-
-        "Graph[\{$edges\}, EdgeWeight -> \{$weights\}, DirectedEdges -> { $!directed }]";
-    }
-
-    #------------------------------------------------------
     method vertex-list() {
         my @res = %!adjacency-list.map({ $_.value.values }).flat.unique;
         @res.append(%%!adjacency-list.keys);
@@ -78,7 +93,48 @@ class Graph {
         return self.vertex-list().elems;
     }
 
+    #======================================================
+    # Representation
+    #======================================================
+    multi method gist(::?CLASS:D:-->Str) {
+        return "Graph(vertexes => {self.vertex-count}, edges => {self.edge-count}, directed => {self.directed})";
+    }
+
+    method Str(){
+        return self.gist();
+    }
+
     #------------------------------------------------------
+    method wl() {
+        my @dsEdges = self.edges(:dataset);
+        my $edges = @dsEdges.map({ "\"{ $_<from> }\" -> \"{ $_<to> }\"" }).join(', ');
+        my $weights = @dsEdges.map({ $_<weight>.Str }).join(', ');
+
+        "Graph[\{$edges\}, EdgeWeight -> \{$weights\}, DirectedEdges -> { $!directed }]";
+    }
+
+    #------------------------------------------------------
+    method mermaid(Str:D :d(:$direction) = 'LR', :$weights is copy = Whatever) {
+
+        my @dsEdges = self.edges(:dataset);
+
+        my $arrow = $!directed ?? '-->' !! '---';
+
+        my $allOne = [&&] @dsEdges.map({ $_<weight> == 1 });
+
+        my $edges =
+                do if $weights.isa(Whatever) && $allOne || ($weights ~~ Bool:D) && !$weights {
+                    @dsEdges.map({ "{ $_<from> } $arrow { $_<to> }" }).join("\n");
+                } else {
+                    @dsEdges.map({ "{ $_<from> } $arrow |{ $_<weight>.Str }|{ $_<to> }" }).join("\n");
+                }
+
+        "graph $direction\n$edges";
+    }
+
+    #======================================================
+    # Core algorithm
+    #======================================================
     method shortest-path(Str $start, Str $end) {
         my %distances = %.adjacency-list.keys.map({ $_ => Inf }).Hash;
         %distances{$start} = 0;
