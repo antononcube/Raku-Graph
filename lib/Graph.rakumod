@@ -136,7 +136,7 @@ class Graph {
     #======================================================
     # Core algorithm
     #======================================================
-    method shortest-path(Str $start, Str $end) {
+    method find-shortest-path(Str $start, Str $end) {
         my %distances = %.adjacency-list.keys.map({ $_ => Inf }).Hash;
         %distances{$start} = 0;
         my %previous;
