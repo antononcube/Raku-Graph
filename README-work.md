@@ -45,9 +45,6 @@ my @edges =
 
 @edges.elems;
 ```
-```
-# 16
-```
 
 **Remark:** If there is no `weight` key in the edge records the weight of the edge is taken to be 1.
 
@@ -59,9 +56,6 @@ use Graph;
 my $graph = Graph.new;
 $graph.add-edges(@edges);
 ```
-```
-# Graph(vertexes => 13, edges => 12, directed => False)
-```
 
 Here are basic properties of the graph:
 
@@ -70,35 +64,11 @@ say 'edge count   : ', $graph.edge-count;
 say 'vertex count : ', $graph.vertex-count;
 say 'vertex list  : ', $graph.vertex-list;
 ```
-```
-# edge count   : 12
-# vertex count : 13
-# vertex list  : (1 7 6 4 8 2 12 5 9 10 11 3 1)
-```
 
 Here we display the graph using [Mermaid-JS](https://mermaid.js.org), (see also, [AAp1]):
 
 ```perl6, output.lang=mermaid, output.prompt=NONE
 $graph.mermaid(d=>'TD')
-```
-```mermaid
-graph TD
-7 --- 1
-7 --- 6
-7 --- 2
-6 --- 2
-4 --- 3
-4 --- 9
-4 --- 2
-8 --- 3
-8 --- 2
-2 --- 3
-2 --- 10
-2 --- 12
-12 --- 5
-12 --- 11
-5 --- 1
-9 --- 10
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -106,17 +76,11 @@ Here we find the shortest path between nodes "1" and "4":
 ```perl6
 say 'shortest-path : ', $graph.shortest-path('1', '4');
 ```
-```
-# shortest-path : [1 7 2 4]
-```
 
 Here we find all paths between "1" and "4", (and sort them by length and vertex names.):
 
 ```perl6
 say 'find-path : ' , $graph.find-path('1', '4', count => Inf).sort({ $_.elems ~ ' ' ~ $_.join(' ') });
-```
-```
-# find-path : ([1 7 2 4] [1 5 12 2 4] [1 7 2 3 4] [1 7 6 2 4] [1 5 12 2 3 4] [1 7 2 10 9 4] [1 7 2 8 3 4] [1 7 6 2 3 4] [1 5 12 2 10 9 4] [1 5 12 2 8 3 4] [1 7 6 2 10 9 4] [1 7 6 2 8 3 4])
 ```
 
 Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path) in the graph:
@@ -124,26 +88,17 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 ```perl6
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
-```
-# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
-```
 
 Here we find a cycle:
 
 ```perl6
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
-```
-# find-cycle : ([2 3 4 2])
-```
 
 Here we find all cycles in the graph:
 
 ```perl6
 say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' ' ~ $_.join(' ') });
-```
-```
-# find-cycle (all): ([2 3 4 2] [2 3 8 2] [2 6 7 2] [10 2 4 9 10] [2 4 3 8 2] [1 5 12 2 7 1] [10 2 3 4 9 10] [1 5 12 2 6 7 1] [10 2 8 3 4 9 10])
 ```
 
 
