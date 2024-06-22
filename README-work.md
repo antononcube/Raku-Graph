@@ -74,7 +74,7 @@ $graph.mermaid(d=>'TD')
 Here we find the shortest path between nodes "1" and "4":
 
 ```perl6
-say 'shortest-path : ', $graph.shortest-path('1', '4');
+say 'find-shortest-path : ', $graph.find-shortest-path('1', '4');
 ```
 
 Here we find all paths between "1" and "4", (and sort them by length and vertex names.):
