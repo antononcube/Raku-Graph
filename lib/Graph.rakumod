@@ -119,7 +119,7 @@ class Graph {
 
     method !dfs(Str $s, Str $t, :$min-length = 0, :$max-length = Inf, :$count = 1) {
         my @paths;
-        my @stack = [[$s, [$s,], 0], ];
+        my @stack = [[$s, [$s,], 0],];
         # current node, path, length
         while @stack && @paths.elems < $count {
             my ($current, $path, $length) = @stack.pop;
@@ -136,4 +136,50 @@ class Graph {
         }
         @paths;
     }
+
+    #------------------------------------------------------
+    multi method find-hamiltonian-path() {
+        self!hamiltonian-path-helper();
+    }
+
+    multi method find-hamiltonian-path(Str $s, Str $t) {
+        self!hamiltonian-path-helper($s, $t);
+    }
+
+    method !hamiltonian-path-helper(Str $s?, Str $t?) {
+        my @vertices = %.adjacency-list.keys;
+        my @best-path;
+        my $best-length = Inf;
+
+        sub hamiltonian-path(@path, %visited, $length) {
+            if @path.elems == @vertices.elems {
+                if !$s.defined || @path.head eq $s && (!$t.defined || @path.tail eq $t) {
+                    if $length < $best-length {
+                        @best-path = @path;
+                        $best-length = $length;
+                    }
+                }
+                return;
+            }
+
+            for %.adjacency-list{@path.tail}.keys -> $neighbor {
+                unless %visited{$neighbor} {
+                    %visited{$neighbor} = True;
+                    hamiltonian-path(
+                            [|@path, $neighbor],
+                            %visited,
+                            $length + %.adjacency-list{@path.tail}{$neighbor});
+                    %visited{$neighbor} = False;
+                }
+            }
+        }
+
+        for @vertices -> $start {
+            my %visited = $start => True;
+            hamiltonian-path([$start], %visited, 0);
+        }
+
+        @best-path;
+    }
+
 }
