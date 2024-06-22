@@ -3,17 +3,26 @@ use v6.d;
 
 use lib <. lib>;
 
-use Graph::Star;
-use Graph::Grid;
 use Graph::Complete;
+use Graph::Cycle;
+use Graph::Grid;
+use Graph::Star;
 
 ##---------------------------------------------------------
-## Star
-my $star = Graph::Star.new(leaves => 7, center => '0', prefix => '');
+## Complete
+my $complete = Graph::Complete.new(n => 6, prefix => '');
 
-say $star;
+say $complete;
 
-say $star.mermaid;
+say $complete.mermaid;
+
+##---------------------------------------------------------
+## Cycle
+my $cycle = Graph::Cycle.new(n => 6, prefix => '');
+
+say $cycle;
+
+say $cycle.mermaid;
 
 ##---------------------------------------------------------
 ## Grid
@@ -24,9 +33,9 @@ say $grid;
 say $grid.mermaid;
 
 ##---------------------------------------------------------
-## Complete
-my $complete = Graph::Complete.new(n => 6, prefix => '');
+## Star
+my $star = Graph::Star.new(leaves => 7, center => '0', prefix => '');
 
-say $complete;
+say $star;
 
-say $complete.mermaid;
+say $star.mermaid;
