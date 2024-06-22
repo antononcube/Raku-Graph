@@ -7,6 +7,7 @@ use Graph::Complete;
 use Graph::Cycle;
 use Graph::Grid;
 use Graph::Star;
+use Graph::Wheel;
 
 ##---------------------------------------------------------
 ## Complete
@@ -39,3 +40,11 @@ my $star = Graph::Star.new(leaves => 7, center => '0', prefix => '');
 say $star;
 
 say $star.mermaid;
+
+##---------------------------------------------------------
+## Wheel
+my $wheel = Graph::Wheel.new(spokes => 7, center => '0', prefix => '');
+
+say $wheel;
+
+say $wheel.mermaid;
