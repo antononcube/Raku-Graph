@@ -34,7 +34,7 @@ class Graph {
             %!adjacency-list{$to}{$from} = $weight;
         }
         $!directed = $directed;
-        return True;
+        return self;
     }
 
     #------------------------------------------------------
@@ -42,7 +42,7 @@ class Graph {
         for @edges -> %edge {
             self.add-edge(%edge<from>, %edge<to>, %edge<weight> // 1, :$directed);
         }
-        return @edges.elems;
+        return self;
     }
 
     #======================================================
