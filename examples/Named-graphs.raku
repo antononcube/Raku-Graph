@@ -17,6 +17,9 @@ say $complete;
 
 say $complete.mermaid;
 
+## Exporting to WL with WL Graph options:
+# say $complete.wl(ImageSize => 600, GraphLayout => "LayeredEmbedding");
+
 ##---------------------------------------------------------
 ## Cycle
 my $cycle = Graph::Cycle.new(n => 6, prefix => '');
