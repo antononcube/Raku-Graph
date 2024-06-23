@@ -75,6 +75,8 @@ zef install https://github.com/antononcube/Raku-Graph.git
   - Mathematica (aka Wolfram Language) can be 500 ÷ 10,000 faster.
   - I hope good heuristic functions for the "A* search" method would make `find-shortest-path` fast enough,
     for say country / continent route systems.
+    - With the larger, 1,000-vertex random graphs finding paths with the method "a-star" is ≈50 faster than with the method "dijkstra". 
+      - See [here](./examples/Performance.raku).
 - Setting up comprehensive performance profiling and correctness testing is some involved.
   - One main impediment is that in Raku one cannot expect and specify same random numbers between different sessions. 
 

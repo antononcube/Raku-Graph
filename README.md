@@ -75,6 +75,8 @@ zef install https://github.com/antononcube/Raku-Graph.git
   - Mathematica (aka Wolfram Language) can be 500 ÷ 10,000 faster.
   - I hope good heuristic functions for the "A* search" method would make `find-shortest-path` fast enough,
     for say country / continent route systems.
+    - With the larger, 1,000-vertex random graphs finding paths with the method "a-star" is ≈50 faster than with the method "dijkstra". 
+      - See [here](./examples/Performance.raku).
 - Setting up comprehensive performance profiling and correctness testing is some involved.
   - One main impediment is that in Raku one cannot expect and specify same random numbers between different sessions. 
 
@@ -143,22 +145,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-10 --- 9
-10 --- 2
-7 --- 2
+3 --- 8
+3 --- 2
+3 --- 4
 7 --- 1
+7 --- 2
 7 --- 6
-4 --- 3
+6 --- 2
+12 --- 5
+12 --- 11
+12 --- 2
+5 --- 1
+10 --- 2
+10 --- 9
 4 --- 9
 4 --- 2
-3 --- 2
-3 --- 8
-2 --- 6
 2 --- 8
-2 --- 12
-11 --- 12
-1 --- 5
-5 --- 12
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -194,7 +196,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([2 6 7 2])
+# find-cycle : ([10 2 8 3 4 9 10])
 ```
 
 Here we find all cycles in the graph:
