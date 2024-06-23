@@ -34,6 +34,14 @@ say $grid;
 say $grid.mermaid;
 
 ##---------------------------------------------------------
+## KnightTour
+my $knight = Graph::Grid.new(rows => 7, columns => 5, prefix => '');
+
+say $knight;
+
+say $knight.mermaid;
+
+##---------------------------------------------------------
 ## Star
 my $star = Graph::Star.new(leaves => 7, center => '0', prefix => '');
 
