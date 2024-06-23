@@ -136,11 +136,13 @@ class Graph {
     #======================================================
     # Core algorithm
     #======================================================
+    # Dijkstra's algorithm
     method find-shortest-path(Str $start, Str $end) {
         my %distances = %.adjacency-list.keys.map({ $_ => Inf }).Hash;
         %distances{$start} = 0;
         my %previous;
         my @nodes = %.adjacency-list.keys;
+        my $visited = SetHash.new;
 
         while @nodes {
             @nodes .= sort({ %distances{$^a} <=> %distances{$^b} });
@@ -150,12 +152,15 @@ class Graph {
             last if $closest eq $end;
 
             for %.adjacency-list{$closest}.keys -> $neighbor {
-                my $alt = %distances{$closest} + %.adjacency-list{$closest}{$neighbor};
-                if $alt < %distances{$neighbor} {
-                    %distances{$neighbor} = $alt;
-                    %previous{$neighbor} = $closest;
+                if ! $visited{$neighbor} {
+                    my $alt = %distances{$closest} + %.adjacency-list{$closest}{$neighbor};
+                    if $alt < %distances{$neighbor} {
+                        %distances{$neighbor} = $alt;
+                        %previous{$neighbor} = $closest;
+                    }
                 }
             }
+            $visited.set($closest)
         }
 
         my @path;
