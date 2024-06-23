@@ -106,12 +106,17 @@ class Graph {
     }
 
     #------------------------------------------------------
-    method wl() {
+    method wl(*%args) {
         my @dsEdges = self.edges(:dataset);
         my $edges = @dsEdges.map({ "\"{ $_<from> }\" -> \"{ $_<to> }\"" }).join(', ');
         my $weights = @dsEdges.map({ $_<weight>.Str }).join(', ');
 
-        "Graph[\{$edges\}, EdgeWeight -> \{$weights\}, DirectedEdges -> { $!directed }]";
+        my $args = '';
+        if %args {
+            $args = ', ' ~ %args.map({ "{$_.key} -> {$_.value ~~ Str:D ?? '"' ~ $_.value ~ '"' !! $_.value}"}).join(', ');
+        }
+
+        return "Graph[\{$edges\}, EdgeWeight -> \{$weights\}, DirectedEdges -> { $!directed }{ $args }]";
     }
 
     #------------------------------------------------------
