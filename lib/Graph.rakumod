@@ -134,10 +134,25 @@ class Graph {
     }
 
     #======================================================
-    # Core algorithm
+    # Shortest paths algorithms
     #======================================================
+    method find-shortest-path(Str $start, Str $end, :$method is copy = Whatever) {
+        if $method.isa(Whatever) { $method = 'dijkstra' }
+        die 'The value of $method is expected to be Whatever or one of "dijkstra" or "a-star-search".'
+        unless $method ~~ Str:D;
+
+        return do given $method.lc {
+            when $_ eq 'dijkstra' { self!dijkstra-shortest-path($start, $end); }
+            when $_ ∈ <a* a-star a-star-search> { self!a-star-shortest-path($start, $end); }
+            default {
+                die 'Do not know how to process the given method.'
+            }
+        }
+    }
+
+    #------------------------------------------------------
     # Dijkstra's algorithm
-    method find-shortest-path(Str $start, Str $end) {
+    method !dijkstra-shortest-path(Str $start, Str $end) {
         my %distances = %.adjacency-list.keys.map({ $_ => Inf }).Hash;
         %distances{$start} = 0;
         my %previous;
@@ -175,6 +190,46 @@ class Graph {
     }
 
     #------------------------------------------------------
+    # A* search
+    method !a-star-shortest-path(Str $start, Str $end, :&heuristic is copy = WhateverCode) {
+        # Placeholder for actual heuristic function
+        if &heuristic.isa(WhateverCode) {
+            &heuristic = -> Str $a, Str $b { 1 };
+        }
+
+        my %open-set = $start => 0;
+        my %came-from;
+        my %g-score = $start => 0;
+        my %f-score = $start => heuristic($start, $end);
+
+        while %open-set {
+            my $current = %open-set.keys.sort({ %f-score{$_} }).first;
+            return gather {
+                my $node = $current;
+                while %came-from{$node}:exists {
+                    take $node;
+                    $node = %came-from{$node};
+                }
+                take $start;
+            }.reverse if $current eq $end;
+
+            %open-set{$current}:delete;
+            for %.adjacency-list{$current}.keys -> $neighbor {
+                my $tentative-g-score = %g-score{$current} + %.adjacency-list{$current}{$neighbor};
+                if %g-score{$neighbor}:!exists || $tentative-g-score < %g-score{$neighbor} {
+                    %came-from{$neighbor} = $current;
+                    %g-score{$neighbor} = $tentative-g-score;
+                    %f-score{$neighbor} = %g-score{$neighbor} + heuristic($neighbor, $end);
+                    %open-set{$neighbor} = %f-score{$neighbor} unless %open-set{$neighbor}:exists;
+                }
+            }
+        }
+        return Nil; # No path found
+    }
+
+    #======================================================
+    # Find paths
+    #======================================================
     multi method find-path(Str $s, Str $t, :$min-length = 0, :$max-length = Inf, :$count = 1) {
         self!dfs($s, $t, :$min-length, :$max-length, :$count);
     }
@@ -199,7 +254,9 @@ class Graph {
         return @paths;
     }
 
-    #------------------------------------------------------
+    #======================================================
+    # Find Hamiltonian paths
+    #======================================================
     multi method find-hamiltonian-path() {
         self!hamiltonian-path-helper();
     }
@@ -244,11 +301,14 @@ class Graph {
         return @best-path;
     }
 
-    #------------------------------------------------------
+    #======================================================
+    # Find cycles
+    #======================================================
     method find-cycle(:$min-length = 3, :$max-length = Inf, :$count = 1) {
         self!find-cycle-helper(:$min-length, :$max-length, :$count);
     }
 
+    #------------------------------------------------------
     sub rotate-to-smallest(@strings, Bool:D :$directed!) {
         my $smallest = @strings.sort.head;
         my @strings2 = @strings.clone.rotate(@strings.first($smallest,:k));
@@ -264,6 +324,7 @@ class Graph {
         return @strings2;
     }
 
+    #------------------------------------------------------
     method !find-cycle-helper(:$min-length = 3, :$max-length = Inf, :$count = Inf) {
         my @cycles;
         my %visited;
