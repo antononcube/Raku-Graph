@@ -6,25 +6,25 @@ class Graph::Grid is Graph {
     has Int:D $.rows is required;
     has Int:D $.columns is required;
 
-    submethod BUILD(:$!rows!, :$!columns!, :$prefix = '') {
+    submethod BUILD(:$!rows!, :$!columns!, :$prefix = '', Str:D :$sep = '_') {
         for 1..$!rows -> $r {
             for 1..$!columns -> $c {
                 my $current = "{$prefix}{$r}_{$c}";
                 if $r < $!rows {
-                    self.add-edge($current, "{$prefix}{$r+1}_{$c}", :!directed);
+                    self.add-edge($current, "{$prefix}{$r+1}{$sep}{$c}", :!directed);
                 }
                 if $c < $!columns {
-                    self.add-edge($current, "{$prefix}{$r}_{$c+1}", :!directed);
+                    self.add-edge($current, "{$prefix}{$r}{$sep}{$c+1}", :!directed);
                 }
             }
         }
     }
 
-    multi method new(Int:D $rows, Int:D $columns, Str:D $prefix = '') {
-        self.bless(:$rows, :$columns, :$prefix);
+    multi method new(Int:D $rows, Int:D $columns, Str:D $prefix = '', Str:D $sep = '_') {
+        self.bless(:$rows, :$columns, :$prefix, :$sep);
     }
-    multi method new(Int:D :$rows, Int:D :$columns, Str:D :$prefix = '') {
-        self.bless(:$rows, :$columns, :$prefix);
+    multi method new(Int:D :m(:$rows), Int:D :n(:$columns), Str:D :$prefix = '', Str:D :$sep = '_') {
+        self.bless(:$rows, :$columns, :$prefix, :$sep);
     }
 }
 
