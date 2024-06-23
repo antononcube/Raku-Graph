@@ -7,6 +7,9 @@ class Graph::KnightTour is Graph {
     has Int:D $.columns is required;
 
     submethod BUILD(:$!rows!, :$!columns!, Str:D :$prefix = '', Str:D :$sep = '_') {
+        # Currently this knight tour creation does not include "skipped" cells of
+        # the chessboard because the Graph class does not support "lone vertices."
+        # See for example 3x3 graph here: https://mathworld.wolfram.com/KnightGraph.html
         my @moves = (-2, -1, 1, 2).combinations(2).grep({ $_[0].abs != $_[1].abs });
         for ^$!rows -> $row {
             for ^$!columns -> $col {
