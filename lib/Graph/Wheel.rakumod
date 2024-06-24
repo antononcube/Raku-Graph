@@ -4,7 +4,7 @@ use Graph;
 
 class Graph::Wheel is Graph {
     has Int:D $.n is required;
-    has Str:D $.center = '0';
+    has Str:D $.center = 'center';
 
     submethod BUILD(:$!n!, :$!center = '0', :$prefix = '') {
         for 1..$!n -> $i {
