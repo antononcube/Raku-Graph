@@ -11,7 +11,7 @@ class Graph {
     #======================================================
     submethod BUILD(:%!adjacency-list = %(), Bool:D :$!directed = False, :@edges?) {
         if @edges {
-            self.add-edges(@edges)
+            self.add-edges(@edges, :$!directed)
         }
     }
 
@@ -20,8 +20,8 @@ class Graph {
         self.bless(:%adjacency-list, :$directed);
     }
 
-    multi method new(@edges) {
-        self.bless(adjacency-list => %(), :!directed, :@edges);
+    multi method new(@edges, Bool:D :$directed = False) {
+        self.bless(adjacency-list => %(), :$directed, :@edges);
     }
 
     #======================================================
@@ -92,6 +92,33 @@ class Graph {
     #------------------------------------------------------
     method vertex-count(--> Int) {
         return self.vertex-list().elems;
+    }
+
+    #------------------------------------------------------
+    method vertex-in-degree(Str:D $v--> Int) {
+        return do if $!directed {
+            self.adjacency-list{*;$v}.flat.grep(*.defined).elems;
+        } else {
+            self.vertex-degree($v);
+        }
+    }
+
+    #------------------------------------------------------
+    method vertex-out-degree(Str:D $v--> Int) {
+        return do if $!directed {
+            self.adjacency-list{$v}.elems // 0;
+        } else {
+            self.vertex-degree($v);
+        }
+    }
+
+    #------------------------------------------------------
+    method vertex-degree(Str:D $v--> Int) {
+        return do if $!directed {
+            self.vertex-out-degree($v) - self.vertex-in-degree($v);
+        } else {
+            self.adjacency-list{$v}.elems // 0;
+        }
     }
 
     #======================================================
