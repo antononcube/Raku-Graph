@@ -182,13 +182,13 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 - [ ] TODO Vertexes
   - [X] DONE Vertex list
   - [X] DONE Vertex count
+  - [X] DONE Vertex degree
+  - [X] DONE in-degree, edges-at
+  - [X] DONE out-degree, edges-from
   - [ ] TODO Vertex tags support
   - [ ] TODO Add vertex
   - [ ] TODO Has vertex
   - [ ] TODO Delete vertex(es)
-  - [ ] TODO Vertex degree
-  - [ ] TODO in-degree, edges-at
-  - [ ] TODO out-degree, edges-from
 - [ ] TODO Edges
   - [X] DONE Edge list
   - [X] DONE Edge dataset

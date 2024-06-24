@@ -145,22 +145,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-3 --- 8
-3 --- 2
-3 --- 4
+11 --- 12
+10 --- 2
+10 --- 9
 7 --- 1
 7 --- 2
 7 --- 6
-6 --- 2
-12 --- 5
-12 --- 11
-12 --- 2
-5 --- 1
-10 --- 2
-10 --- 9
+3 --- 2
+3 --- 8
+3 --- 4
 4 --- 9
 4 --- 2
-2 --- 8
+12 --- 5
+12 --- 2
+8 --- 2
+5 --- 1
+2 --- 6
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -187,7 +187,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [10 9 4 3 8 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [11 12 5 1 7 6 2 10 9 4 3 8]
 ```
 
 Here we find a cycle:
@@ -196,7 +196,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([10 2 8 3 4 9 10])
+# find-cycle : ([2 6 7 2])
 ```
 
 Here we find all cycles in the graph:
@@ -227,13 +227,13 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 - [ ] TODO Vertexes
   - [X] DONE Vertex list
   - [X] DONE Vertex count
+  - [X] DONE Vertex degree
+  - [X] DONE in-degree, edges-at
+  - [X] DONE out-degree, edges-from
   - [ ] TODO Vertex tags support
   - [ ] TODO Add vertex
   - [ ] TODO Has vertex
   - [ ] TODO Delete vertex(es)
-  - [ ] TODO Vertex degree
-  - [ ] TODO in-degree, edges-at
-  - [ ] TODO out-degree, edges-from
 - [ ] TODO Edges
   - [X] DONE Edge list
   - [X] DONE Edge dataset
