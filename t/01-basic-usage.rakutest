@@ -57,4 +57,20 @@ is-deeply $graph8.vertex-list.sort, $graph1.vertex-list;
 ## 10
 is-deeply $graph8.find-shortest-path('1', '4'), $graph1.find-shortest-path('1', '4');
 
+## 11
+my $graph11 = Graph.new(@edges, :directed);
+is $graph11.directed, True;
+
+## 12
+is $graph11.vertex-out-degree('1'), 2;
+
+## 13
+is $graph11.vertex-in-degree('12'), 3;
+
+## 14
+is $graph1.vertex-degree('5'), 2;
+
+## 15
+is $graph1.vertex-in-degree('5'), $graph1.vertex-degree('5');
+
 done-testing;
