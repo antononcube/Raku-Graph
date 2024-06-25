@@ -9,6 +9,8 @@ use Graph::Grid;
 use Graph::Star;
 use Graph::Wheel;
 
+my $viz = 'dot';
+
 ##---------------------------------------------------------
 ## Complete
 say '=' x 100;
@@ -18,7 +20,7 @@ my $complete = Graph::Complete.new(n => 6, prefix => '');
 
 say $complete;
 
-say $complete.mermaid;
+say $complete."$viz"();
 
 ## Exporting to WL with WL Graph options:
 # say $complete.wl(ImageSize => 600, GraphLayout => "LayeredEmbedding");
@@ -32,18 +34,18 @@ my $cycle = Graph::Cycle.new(n => 6, prefix => '');
 
 say $cycle;
 
-say $cycle.mermaid;
+say $cycle."$viz"();
 
 ##---------------------------------------------------------
 ## Grid
 say '=' x 100;
 say 'Grid';
 say '-' x 100;
-my $grid = Graph::Grid.new(rows => 7, columns => 5, prefix => '');
+my $grid = Graph::Grid.new(rows => 7, columns => 5, prefix => 'g');
 
 say $grid;
 
-say $grid.mermaid;
+say $grid."$viz"();
 
 ##---------------------------------------------------------
 ## KnightTour
@@ -55,7 +57,7 @@ my $knight = Graph::Grid.new(rows => 7, columns => 5, prefix => '');
 
 say $knight;
 
-say $knight.mermaid;
+say $knight."$viz"();
 
 ##---------------------------------------------------------
 ## Star
@@ -66,7 +68,7 @@ my $star = Graph::Star.new(leaves => 7, center => '0', prefix => '', :directed);
 
 say $star;
 
-say $star.mermaid;
+say $star."$viz"();
 
 ##---------------------------------------------------------
 ## Wheel
@@ -77,4 +79,4 @@ my $wheel = Graph::Wheel.new(spokes => 7, center => '0', prefix => '');
 
 say $wheel;
 
-say $wheel.mermaid;
+say $wheel."$viz"();
