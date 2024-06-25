@@ -165,6 +165,25 @@ class Graph {
         "graph $direction\n$edges";
     }
 
+    #------------------------------------------------------
+    method dot(:$weights is copy = Whatever) {
+
+        my @dsEdges = self.edges(:dataset);
+
+        my $arrow = $!directed ?? '->' !! '--';
+
+        my $allOne = [&&] @dsEdges.map({ $_<weight> == 1 });
+
+        my $edges =
+                do if $weights.isa(Whatever) && $allOne || ($weights ~~ Bool:D) && !$weights {
+                    @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\"" }).join("\n");
+                } else {
+                    @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\" [weight={$_<weight>.Str }, label={$_<weight>.Str }]" }).join("\n");
+                }
+
+        "{$!directed ?? 'digraph' !! 'graph'} \{\n$edges\n\}";
+    }
+
     #======================================================
     # Shortest paths algorithms
     #======================================================
@@ -200,7 +219,7 @@ class Graph {
 
             for %.adjacency-list{$closest}.keys -> $neighbor {
                 if ! $visited{$neighbor} {
-                    my $alt = %distances{$closest} + %.adjacency-list{$closest}{$neighbor};
+                    my $alt = %distances{$closest} + %.adjacency-list{$closest}{$neighbor} // Inf;
                     if $alt < %distances{$neighbor} {
                         %distances{$neighbor} = $alt;
                         %previous{$neighbor} = $closest;
