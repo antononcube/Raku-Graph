@@ -7,6 +7,9 @@ class Graph::KnightTour is Graph {
     has Int:D $.columns is required;
 
     submethod BUILD(:$!rows!, :$!columns!, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :$directed = False) {
+        if $directed {
+            note 'Directed knight-tour graphs are not implemented.';
+        }
         # Currently this knight tour creation does not include "skipped" cells of
         # the chessboard because the Graph class does not support "lone vertices."
         # See for example 3x3 graph here: https://mathworld.wolfram.com/KnightGraph.html
@@ -19,7 +22,7 @@ class Graph::KnightTour is Graph {
                     my $new-col = $col + $dc;
                     if $new-row >= 0 && $new-row < $!rows && $new-col >= 0 && $new-col < $!columns {
                         # Note the columns are the X-coordinates and the rows are the Y-coordinates.
-                        self.add-edge("{$prefix}{$col}{$sep}{$row}", "{$prefix}{$new-col}{$sep}{$new-row}", :$directed);
+                        self.add-edge("{$prefix}{$col}{$sep}{$row}", "{$prefix}{$new-col}{$sep}{$new-row}", :!directed);
                     }
                 }
             }
