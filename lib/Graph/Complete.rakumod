@@ -5,7 +5,7 @@ use Graph;
 class Graph::Complete is Graph {
     has Int:D $.n is required;
 
-    submethod BUILD(:$!n!, :$prefix = '', Bool:D :$directed = False) {
+    submethod BUILD(:$!n!, :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         for 1..$!n -> $i {
             for 1..$!n -> $j {
                 next if $i == $j;
@@ -17,11 +17,11 @@ class Graph::Complete is Graph {
         }
     }
 
-    multi method new(Int:D $n, Str:D $prefix = '', Bool:D :$directed = False) {
+    multi method new(Int:D $n, Str:D $prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$n, :$prefix, :$directed);
     }
 
-    multi method new(Int:D :$n, Str:D :$prefix = '', Bool:D :$directed = False) {
+    multi method new(Int:D :$n, Str:D :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$n, :$prefix, :$directed);
     }
 }

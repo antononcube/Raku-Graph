@@ -6,7 +6,7 @@ class Graph::Random is Graph {
     has Int:D $.vertex-count is required;
     has Int:D $.edge-count is required;
 
-    submethod BUILD(:$!vertex-count!, :$!edge-count!, :$prefix = '', Bool:D :$directed = False) {
+    submethod BUILD(:$!vertex-count!, :$!edge-count!, :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         my @all-edges = gather {
             for 1..$!vertex-count -> $i {
                 for 1..$!vertex-count -> $j {
@@ -21,10 +21,10 @@ class Graph::Random is Graph {
         }
     }
 
-    multi method new(Int:D $vertex-count, Int:D $edge-count, Str:D $prefix = '', Bool:D :$directed = False) {
+    multi method new(Int:D $vertex-count, Int:D $edge-count, Str:D $prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$vertex-count, :$edge-count, :$prefix, :$directed);
     }
-    multi method new(Int:D :$vertex-count, Int:D :$edge-count, Str:D :$prefix = '', Bool:D :$directed = False) {
+    multi method new(Int:D :$vertex-count, Int:D :$edge-count, Str:D :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$vertex-count, :$edge-count, :$prefix, :$directed);
     }
 }

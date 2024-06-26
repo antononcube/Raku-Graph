@@ -6,7 +6,7 @@ class Graph::KnightTour is Graph {
     has Int:D $.rows is required;
     has Int:D $.columns is required;
 
-    submethod BUILD(:$!rows!, :$!columns!, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :$directed = False) {
+    submethod BUILD(:$!rows!, :$!columns!, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
         if $directed {
             note 'Directed knight-tour graphs are not implemented.';
         }
@@ -29,10 +29,10 @@ class Graph::KnightTour is Graph {
         }
     }
 
-    multi method new(Int:D $rows, Int:D $columns, Str:D $prefix = '', Str:D $sep = '_', Bool:D :$directed = False) {
+    multi method new(Int:D $rows, Int:D $columns, Str:D $prefix = '', Str:D $sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$rows, :$columns, :$prefix, :$sep, :$directed);
     }
-    multi method new(Int:D :m(:$rows), Int:D :n(:$columns), Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :$directed = False) {
+    multi method new(Int:D :m(:$rows), Int:D :n(:$columns), Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$rows, :$columns, :$prefix, :$sep, :$directed);
     }
 }

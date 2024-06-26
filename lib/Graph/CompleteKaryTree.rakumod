@@ -6,7 +6,7 @@ class Graph::CompleteKaryTree is Graph {
     has Int:D $.n is required;
     has Int:D $.k is required;
 
-    submethod BUILD(:$!n!, :$!k!, :$prefix = '', Bool:D :$directed = False) {
+    submethod BUILD(:$!n!, :$!k!, :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         my $m = $!k ≥ 2 ?? ($!k ** $!n - 1) / ($!k - 1) !! $!n;
         my @nodes = ^$m;
         for @nodes -> $parent {
@@ -18,11 +18,11 @@ class Graph::CompleteKaryTree is Graph {
         }
     }
 
-    multi method new(Int:D $n, Int:D $k = 2, Str:D $prefix = '', Bool:D :$directed = False) {
+    multi method new(Int:D $n, Int:D $k = 2, Str:D $prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$n, :$k, :$prefix, :$directed);
     }
 
-    multi method new(Int:D :$n, Int:D :$k = 2, Str:D :$prefix = '', Bool:D :$directed = False) {
+    multi method new(Int:D :$n, Int:D :$k = 2, Str:D :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$n, :$k, :$prefix, :$directed);
     }
 }
