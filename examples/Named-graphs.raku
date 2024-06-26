@@ -4,12 +4,13 @@ use v6.d;
 use lib <. lib>;
 
 use Graph::Complete;
+use Graph::CompleteKaryTree;
 use Graph::Cycle;
 use Graph::Grid;
 use Graph::Star;
 use Graph::Wheel;
 
-my $viz = 'dot';
+my $viz = 'mermaid';
 
 ##---------------------------------------------------------
 ## Complete
@@ -25,6 +26,18 @@ say $complete."$viz"();
 ## Exporting to WL with WL Graph options:
 # say $complete.wl(ImageSize => 600, GraphLayout => "LayeredEmbedding");
 
+##---------------------------------------------------------
+## CompleteKaryTree
+say '=' x 100;
+say 'CompleteKaryTree';
+say '-' x 100;
+my $kary-tree = Graph::CompleteKaryTree.new(n => 4, k => 3, prefix => '');
+
+say $kary-tree;
+
+say $kary-tree."$viz"();
+
+#`[
 ##---------------------------------------------------------
 ## Cycle
 say '=' x 100;
@@ -80,3 +93,4 @@ my $wheel = Graph::Wheel.new(spokes => 7, center => '0', prefix => '');
 say $wheel;
 
 say $wheel."$viz"();
+]
