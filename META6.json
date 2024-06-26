@@ -15,6 +15,7 @@
   "provides": {
     "Graph": "lib/Graph.rakumod",
     "Graph::Complete": "lib/Graph/Complete.rakumod",
+    "Graph::CompleteKaryTree": "lib/Graph/CompleteKaryTree.rakumod",
     "Graph::Cycle": "lib/Graph/Cycle.rakumod",
     "Graph::Grid": "lib/Graph/Grid.rakumod",
     "Graph::KnightTour": "lib/Graph/KnightTour.rakumod",
