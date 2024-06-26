@@ -184,6 +184,38 @@ class Graph {
         "{$!directed ?? 'digraph' !! 'graph'} \{\n$edges\n\}";
     }
 
+    #------------------------------------------------------
+    method graphml() {
+        my $xml = qq:to/END/;
+        <?xml version="1.0" encoding="UTF-8"?>
+        <graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+                                 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+        <graph edgedefault="{ $!directed ?? 'directed' !! 'undirected' }">
+        END
+
+        for %.adjacency-list.kv -> $from, %to {
+            $xml ~= qq:to/END/;
+            <node id="{ $from }"/>
+            END
+
+            for %to.kv -> $to, $weight {
+                $xml ~= qq:to/END/;
+                <node id="{ $to }"/>
+                <edge source="{ $from }" target="{ $to }" weight="{ $weight }"/>
+                END
+            }
+        }
+
+        $xml ~= qq:to/END/;
+        </graph>
+        </graphml>
+        END
+
+        return $xml;
+    }
+
     #======================================================
     # Shortest paths algorithms
     #======================================================
