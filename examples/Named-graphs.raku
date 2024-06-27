@@ -37,7 +37,7 @@ say $kary-tree;
 
 say $kary-tree."$viz"();
 
-#`[
+
 ##---------------------------------------------------------
 ## Cycle
 say '=' x 100;
@@ -93,4 +93,3 @@ my $wheel = Graph::Wheel.new(spokes => 7, center => '0', prefix => '');
 say $wheel;
 
 say $wheel."$viz"();
-]
