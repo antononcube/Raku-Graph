@@ -24,7 +24,7 @@ say $complete;
 say $complete."$viz"();
 
 ## Exporting to WL with WL Graph options:
-# say $complete.wl(ImageSize => 600, GraphLayout => "LayeredEmbedding");
+# say $complete.wl(ImageSize => 600, GraphLayout => "LayeredEmbedding", Background => "`GrayLevel[0.3]`");
 
 ##---------------------------------------------------------
 ## CompleteKaryTree
