@@ -133,6 +133,15 @@ class Graph {
     }
 
     #------------------------------------------------------
+    sub to-wl-value($x) {
+        return do given $x {
+            when ($_ ~~ Str:D) && ($_ ~~ / ^ '`' .* '`' $ /) { $_.substr(1, $_.chars - 2) }
+            when ($_ ~~ Str:D) && ($_ ~~ / ^ '${' .* '}' $ /) { $_.substr(1, $_.chars - 3) }
+            when Str:D { '"' ~ $_ ~ '"' }
+            default { $_.Str }
+        };
+    }
+
     method wl(*%args) {
         my @dsEdges = self.edges(:dataset);
         my $edges = @dsEdges.map({ "\"{ $_<from> }\" -> \"{ $_<to> }\"" }).join(', ');
@@ -140,7 +149,7 @@ class Graph {
 
         my $args = '';
         if %args {
-            $args = ', ' ~ %args.map({ "{$_.key} -> {$_.value ~~ Str:D ?? '"' ~ $_.value ~ '"' !! $_.value}"}).join(', ');
+            $args = ', ' ~ %args.map({ "{$_.key} -> { to-wl-value($_.value) }" }).join(', ');
         }
 
         return "Graph[\{$edges\}, EdgeWeight -> \{$weights\}, DirectedEdges -> { $!directed }{ $args }]";
