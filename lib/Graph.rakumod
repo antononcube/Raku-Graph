@@ -243,7 +243,7 @@ class Graph {
     }
 
     #------------------------------------------------------
-    # Dijkstra's algorithm
+    # Dijkstra's algorithm, two nodes
     method !dijkstra-shortest-path(Str $start, Str $end) {
         my %distances = %.adjacency-list.keys.map({ $_ => Inf }).Hash;
         %distances{$start} = 0;
@@ -279,6 +279,30 @@ class Graph {
         unshift @path, $start if @path;
 
         return @path;
+    }
+
+    #------------------------------------------------------
+    # Dijkstra's algorithm to all other vertexes
+    method !dijkstra-shortest-path-distances(Str $start) {
+        my %distances;
+        my %visited;
+        my @queue = [[$start, 0], ];
+
+        while @queue {
+            my ($current, $dist) = @queue.shift;
+            next if %visited{$current}:exists;
+            %visited{$current} = True;
+            %distances{$current} = $dist;
+
+            for %.adjacency-list{$current}.keys -> $neighbor {
+                unless %visited{$neighbor}:exists {
+                    @queue.push([$neighbor, $dist + %.adjacency-list{$current}{$neighbor}] );
+                }
+            }
+            @queue .= sort({ $^a[1] <=> $^b[1] });
+        }
+
+        return %distances;
     }
 
     #------------------------------------------------------
@@ -459,5 +483,37 @@ class Graph {
         }
 
         return @cycles;
+    }
+
+    #======================================================
+    # Measures
+    #======================================================
+    method vertex-eccentricity($v --> Int) {
+        # The distance between two vertices in a graph is the number of edges in a shortest path connecting them.
+        # The eccentricity ϵ(v) of a vertex v is the greatest distance between v and any other vertex.
+        my %distances = self!dijkstra-shortest-path-distances($v);
+        return %distances.values.max;
+    }
+
+    method diameter(--> Numeric) {
+        # To find the diameter of a graph, first find the shortest path between each pair of vertices.
+        # The greatest length of any of these paths is the diameter of the graph.
+        my $max-distance = 0;
+        for %.adjacency-list.keys -> $start {
+            my %distances = self!dijkstra-shortest-path-distances($start);
+            my $eccentricity = %distances.values.max;
+            if $eccentricity > $max-distance { $max-distance = $eccentricity; }
+        }
+        return $max-distance;
+    }
+
+    method radius(--> Numeric) {
+        my $min-eccentricity = Inf;
+        for %.adjacency-list.keys -> $start {
+            my %distances = self!dijkstra-shortest-path-distances($start);
+            my $eccentricity = %distances.values.max;
+            $min-eccentricity = $eccentricity if $eccentricity < $min-eccentricity;
+        }
+        $min-eccentricity;
     }
 }
