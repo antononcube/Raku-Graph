@@ -6,8 +6,8 @@ class Graph::Cycle is Graph {
     has Int:D $.n is required;
 
     submethod BUILD(:$!n!, :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
-        for 1..$!n -> $i {
-            my $next = $i == $!n ?? 1 !! $i + 1;
+        for ^$!n -> $i {
+            my $next = $i == $!n - 1 ?? 0 !! $i + 1;
             self.add-edge("{$prefix}{$i}", "{$prefix}{$next}", :$directed);
         }
     }
