@@ -1,0 +1,48 @@
+use v6.d;
+
+use lib <. lib>;
+
+use Graph;
+use Test;
+
+my @edges =
+        { from => '1', to => '5', weight => 1 },
+        { from => '1', to => '7', weight => 1 },
+        { from => '2', to => '3', weight => 1 },
+        { from => '2', to => '4', weight => 1 },
+        { from => '2', to => '6', weight => 1 },
+        { from => '2', to => '7', weight => 1 },
+        { from => '2', to => '8', weight => 1 },
+        { from => '2', to => '10', weight => 1 },
+        { from => '2', to => '12', weight => 1 },
+        { from => '3', to => '4', weight => 1 },
+        { from => '3', to => '8', weight => 1 },
+        { from => '4', to => '9', weight => 1 },
+        { from => '5', to => '12', weight => 1 },
+        { from => '6', to => '7', weight => 1 },
+        { from => '9', to => '10', weight => 1 },
+        { from => '11', to => '12', weight => 1 };
+
+plan *;
+
+## 1
+my $graph1 = Graph.new(@edges);
+isa-ok $graph1.diameter, Int:D;
+
+## 2
+is $graph1.diameter, 4;
+
+## 3
+isa-ok $graph1.radius, Int:D;
+
+## 4
+is $graph1.radius, 2;
+
+## 5
+my $graph5 = Graph.new(@edges, :directed);
+is $graph5.vertex-eccentricity('8'), 0;
+
+## 6
+#is $graph5.radius, Inf;
+
+done-testing;
