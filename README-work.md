@@ -206,18 +206,21 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 - [X] DONE Shortest paths
   - [X] DONE Find shortest path
   - [X] DONE Find Hamiltonian paths
+    - For both the whole graph or for a given pair of vertexes.
 - [ ] TODO Flows
   - [ ] TODO Find maximum flow
   - [ ] TODO Find minimum cost flow
 - [ ] TODO Distances
-  - [ ] TODO Graph distance
+  - [X] DONE Graph distance
+    - See shortest path.
   - [ ] TODO Graph distance matrix
-- [ ] TODO Longest shortest paths
-  - [ ] TODO Vertex eccentricity
-  - [ ] TODO Graph radius
-  - [ ] TODO Graph diameter
-  - [ ] TODO Graph center
-  - [ ] TODO Graph periphery
+    - Again, requires choosing a matrix Raku class or package. 
+- [X] DONE Longest shortest paths
+  - [X] DONE Vertex eccentricity
+  - [X] DONE Graph radius
+  - [X] DONE Graph diameter
+  - [X] DONE Graph center
+  - [X] DONE Graph periphery
 - [ ] TODO Topological paths
   - [ ] TODO Topological sort
 - [ ] TODO Cycles and tours
@@ -253,13 +256,19 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 - [X] DONE Construction of (regular) graphs
   - [X] DONE [Complete graphs](https://en.wikipedia.org/wiki/Complete_graph)
   - [X] DONE [Cycle graphs](https://en.wikipedia.org/wiki/Cycle_graph)
+  - [X] DONE [Hypercube graphs](https://en.wikipedia.org/wiki/Hypercube_graph)
   - [X] DONE [Grid graphs](https://en.wikipedia.org/wiki/Lattice_graph)
   - [X] DONE [Knight tour graphs](https://en.wikipedia.org/wiki/Knight%27s_graph)
   - [X] DONE [Star graphs](https://en.wikipedia.org/wiki/Star_graph)
+  - [X] DONE Path graphs
   - [X] DONE [Wheel graphs](https://en.wikipedia.org/wiki/Wheel_graph)
 - [X] DONE Construction of random graphs
   - Potentially very complicated, since different kinds of vertex-edge distributions exists.
-  - [X] DONE "Simple" random `(m, n)` graphs with m-vertexes and n-edges between them 
+  - [X] DONE "Simple" random `(m, n)` graphs with m-vertexes and n-edges between them
+  - [ ] TODO Bernoulli distribution 
+  - [ ] TODO Uniform distribution
+    - The result is obtained right now with the simple random implementation. 
+      - But we want to have "distribution" specification for that. 
 - [ ] TODO Construction of *individual* graphs
   - [ ] TODO Bull graph
   - [ ] TODO Butterfly graph
@@ -267,7 +276,7 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [ ] TODO Diamond graph
   - [ ] TODO Durer graph
   - [ ] TODO Franklin graph
-  - [ ] TODO [Petersen graph](https://en.wikipedia.org/wiki/Petersen_graph)
+  - [X] DONE [Petersen graph](https://en.wikipedia.org/wiki/Petersen_graph)
   - [ ] TODO Wagner graph
 
 ### Tests
@@ -277,7 +286,7 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE Undirected graphs
   - [ ] TODO Directed graphs cycles
 - [ ] TODO Cross-verification with Mathematica
-  - [ ] TODO General workflow programming/setup
+  - [X] DONE General workflow programming/setup
   - [ ] TODO Path finding
   - [ ] TODO Cycle finding
 
@@ -285,8 +294,9 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 
 - [X] DONE Basic usage over undirected graphs
 - [ ] TODO Basic usage over directed graphs
+- [X] DONE Regular graphs creation (Grid, Wheel, etc.)
+  - [Notebook with a gallery of graphs](./docs/Named-graphs-gallery.ipynb)
 - [ ] TODO Random graphs creation
-- [ ] TODO Regular graphs creation (Grid, Wheel, etc.)
 
 -------
 
