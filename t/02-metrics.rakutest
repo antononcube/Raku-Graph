@@ -39,10 +39,13 @@ isa-ok $graph1.radius, Int:D;
 is $graph1.radius, 2;
 
 ## 5
-my $graph5 = Graph.new(@edges, :directed);
-is $graph5.vertex-eccentricity('8'), 0;
+is $graph1.vertex-eccentricity('8'), 3;
 
 ## 6
-#is $graph5.radius, Inf;
+my $graph5 = Graph.new(@edges, :directed);
+is $graph5.vertex-eccentricity('8'), Inf;
+
+## 7
+is $graph5.radius, Inf;
 
 done-testing;
