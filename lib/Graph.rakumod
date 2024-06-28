@@ -1,6 +1,7 @@
 use v6.d;
 
 use Hash::Merge;
+use Data::TypeSystem;
 
 class Graph {
     has %.adjacency-list;
@@ -39,8 +40,21 @@ class Graph {
 
     #------------------------------------------------------
     method add-edges(@edges, Bool:D :d(:$directed) = False) {
-        for @edges -> %edge {
-            self.add-edge(%edge<from>, %edge<to>, %edge<weight> // 1, :$directed);
+        if is-reshapable(@edges, iterable-type => Positional, record-type => Map) {
+            for @edges -> %edge {
+                self.add-edge(%edge<from>, %edge<to>, %edge<weight> // 1, :$directed);
+            }
+        } elsif is-reshapable(@edges, iterable-type => Positional, record-type => Positional) {
+            for @edges -> @edge {
+                if !(@edge.elems ≥ 2 && @edge[^2].all ~~ Str:D) {
+                    die "When the edges are specified as a Positional of Positionals " ~
+                            "then edge record is expected to have two or three elements. " ~
+                        "The first two record elements are expected to be strings; the third, if present, a number.";
+                }
+                self.add-edge(@edge[0], @edge[1], @edge[3] // 1, :$directed);
+            }
+        } else {
+            die "The first argument is expected to be a Positional of Maps or a Positional of Positionals.";
         }
         return self;
     }
