@@ -84,7 +84,7 @@ class Graph {
     #------------------------------------------------------
     method vertex-list() {
         my @res = %!adjacency-list.map({ $_.value.keys }).flat.unique;
-        @res.append(%%!adjacency-list.keys);
+        @res.append(%!adjacency-list.keys);
 
         return @res.unique.sort.List;
     }
