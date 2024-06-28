@@ -27,7 +27,7 @@ class Graph {
     #======================================================
     # Construction
     #======================================================
-    method add-edge(Str $from, Str $to, Int $weight = 1, Bool:D :d(:$directed) = False) {
+    method add-edge(Str $from, Str $to, Numeric $weight = 1, Bool:D :d(:$directed) = False) {
         %!adjacency-list{$from}{$to} = $weight;
 
         if !$directed {
