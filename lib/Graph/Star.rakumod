@@ -12,10 +12,10 @@ class Graph::Star is Graph {
         }
     }
 
-    multi method new(Int:D $n, Str:D $center = 'center', Str:D $prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
+    multi method new(Int:D $n, Str:D $center = '0', Str:D $prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$n, :$center, :$prefix, :$directed);
     }
-    multi method new(Int:D :leaves(:rays(:$n)), Str:D :$center = 'center', Str:D :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
+    multi method new(Int:D :leaves(:rays(:$n)), Str:D :$center = '0', Str:D :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$n, :$center, :$prefix, :$directed);
     }
 }
