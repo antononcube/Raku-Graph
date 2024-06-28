@@ -502,19 +502,23 @@ class Graph {
     #======================================================
     # Measures
     #======================================================
-    method vertex-eccentricity($v --> Int) {
+    method vertex-eccentricity($v --> Numeric) {
         # The distance between two vertices in a graph is the number of edges in a shortest path connecting them.
         # The eccentricity ϵ(v) of a vertex v is the greatest distance between v and any other vertex.
         my %distances = self!dijkstra-shortest-path-distances($v);
+        if %distances.elems < self.vertex-count { return Inf; }
         return %distances.values.max;
     }
 
     method diameter(--> Numeric) {
         # To find the diameter of a graph, first find the shortest path between each pair of vertices.
         # The greatest length of any of these paths is the diameter of the graph.
+        # It represents the longest shortest path between any two vertices in the graph.
         my $max-distance = 0;
+        my $nv = self.vertex-count;
         for %.adjacency-list.keys -> $start {
             my %distances = self!dijkstra-shortest-path-distances($start);
+            if %distances.elems < $nv { return Inf; }
             my $eccentricity = %distances.values.max;
             if $eccentricity > $max-distance { $max-distance = $eccentricity; }
         }
@@ -522,12 +526,28 @@ class Graph {
     }
 
     method radius(--> Numeric) {
+        # The radius of a graph is the minimum eccentricity of any vertex in that graph.
+        # The radius is the smallest maximum distance from any vertex to all other vertices in the graph.
         my $min-eccentricity = Inf;
+        my $nv = self.vertex-count;
         for %.adjacency-list.keys -> $start {
             my %distances = self!dijkstra-shortest-path-distances($start);
+            if %distances.elems < $nv { return Inf; }
             my $eccentricity = %distances.values.max;
             $min-eccentricity = $eccentricity if $eccentricity < $min-eccentricity;
         }
         $min-eccentricity;
+    }
+
+    method center(--> Numeric) {
+        my %eccentricities = %.adjacency-list.keys.map({ $_ => self.vertex-eccentricity($_) });
+        my $me = %eccentricities.values.min;
+        return %eccentricities.grep({ $_.value == $me });
+    }
+
+    method periphery(--> Numeric) {
+        my %eccentricities = %.adjacency-list.keys.map({ $_ => self.vertex-eccentricity($_) });
+        my $me = %eccentricities.values.max;
+        return %eccentricities.grep({ $_.value == $me });
     }
 }
