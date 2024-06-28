@@ -316,7 +316,7 @@ class Graph {
                 }
             }
         }
-        return Nil; # No path found
+        return []; # No path found
     }
 
     #======================================================
