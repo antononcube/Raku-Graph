@@ -33,7 +33,7 @@ class Graph {
         if !$directed {
             %!adjacency-list{$to}{$from} = $weight;
         }
-        $!directed = $directed;
+        if $directed { $!directed = True; }
         return self;
     }
 
