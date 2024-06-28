@@ -7,6 +7,9 @@ use Graph::Complete;
 use Graph::CompleteKaryTree;
 use Graph::Cycle;
 use Graph::Grid;
+use Graph::Hypercube;
+use Graph::Path;
+use Graph::Petersen;
 use Graph::Star;
 use Graph::Wheel;
 
@@ -50,6 +53,17 @@ say $cycle;
 say $cycle."$viz"();
 
 ##---------------------------------------------------------
+## Hypercube
+say '=' x 100;
+say 'Hypercube';
+say '-' x 100;
+my $hypercube = Graph::Hypercube.new(n => 3, prefix => 'g');
+
+say $hypercube;
+
+say $hypercube."$viz"();
+
+##---------------------------------------------------------
 ## Grid
 say '=' x 100;
 say 'Grid';
@@ -82,6 +96,29 @@ my $star = Graph::Star.new(leaves => 7, center => '0', prefix => '', :directed);
 say $star;
 
 say $star."$viz"();
+
+##---------------------------------------------------------
+## Path
+say '=' x 100;
+say 'Path';
+say '-' x 100;
+my $path = Graph::Path.new('a'..'k', prefix => 'note:', :directed);
+
+say $path;
+
+say $path."$viz"();
+
+
+##---------------------------------------------------------
+## Petersen
+say '=' x 100;
+say 'Petersen';
+say '-' x 100;
+my $petersen = Graph::Petersen.new(prefix => '');
+
+say $petersen;
+
+say $petersen."$viz"();
 
 ##---------------------------------------------------------
 ## Wheel
