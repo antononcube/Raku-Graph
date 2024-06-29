@@ -145,22 +145,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-11 --- 12
-7 --- 1
-7 --- 6
-7 --- 2
-3 --- 2
-3 --- 4
-3 --- 8
-5 --- 12
-5 --- 1
-6 --- 2
-12 --- 2
-2 --- 10
+2 --- 6
 2 --- 4
+2 --- 10
 2 --- 8
-10 --- 9
+2 --- 12
+2 --- 3
+2 --- 7
+11 --- 12
+6 --- 7
+5 --- 1
+5 --- 12
+7 --- 1
+9 --- 10
 9 --- 4
+8 --- 3
+3 --- 4
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -196,7 +196,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([1 5 12 2 7 1])
+# find-cycle : ([2 6 7 2])
 ```
 
 Here we find all cycles in the graph:
@@ -307,14 +307,14 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE [Star graphs](https://en.wikipedia.org/wiki/Star_graph)
   - [X] DONE Path graphs
   - [X] DONE [Wheel graphs](https://en.wikipedia.org/wiki/Wheel_graph)
-- [X] TODO Construction of random graphs
+- [X] DONE Construction of random graphs
   - Potentially very complicated, since different kinds of vertex-edge distributions exists.
   - [X] DONE Bernoulli distribution 
   - [X] DONE [de Solla Price's model distribution](https://en.wikipedia.org/wiki/Price%27s_model) 
   - [X] DONE "Simple" random `(m, n)` graphs with m-vertexes and n-edges between them
     - This was the first version of `Graph::Random`.
     - Refactored to be done via the uniform graph distribution.
-  - [ ] TODO [Watts–Strogatz model distribution](https://en.wikipedia.org/wiki/Watts–Strogatz_model) 
+  - [X] DONE [Watts–Strogatz model distribution](https://en.wikipedia.org/wiki/Watts–Strogatz_model) 
   - [X] DONE Uniform distribution
 - [ ] TODO Construction of *individual* graphs
   - [ ] TODO Bull graph
