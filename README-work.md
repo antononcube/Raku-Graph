@@ -262,13 +262,15 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE [Star graphs](https://en.wikipedia.org/wiki/Star_graph)
   - [X] DONE Path graphs
   - [X] DONE [Wheel graphs](https://en.wikipedia.org/wiki/Wheel_graph)
-- [X] DONE Construction of random graphs
+- [X] TODO Construction of random graphs
   - Potentially very complicated, since different kinds of vertex-edge distributions exists.
+  - [X] DONE Bernoulli distribution 
+  - [X] DONE [de Solla Price's model distribution](https://en.wikipedia.org/wiki/Price%27s_model) 
   - [X] DONE "Simple" random `(m, n)` graphs with m-vertexes and n-edges between them
-  - [ ] TODO Bernoulli distribution 
-  - [ ] TODO Uniform distribution
-    - The result is obtained right now with the simple random implementation. 
-      - But we want to have "distribution" specification for that. 
+    - This was the first version of `Graph::Random`.
+    - Refactored to be done via the uniform graph distribution.
+  - [ ] TODO [Watts–Strogatz model distribution](https://en.wikipedia.org/wiki/Watts–Strogatz_model) 
+  - [X] DONE Uniform distribution
 - [ ] TODO Construction of *individual* graphs
   - [ ] TODO Bull graph
   - [ ] TODO Butterfly graph
