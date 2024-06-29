@@ -45,17 +45,16 @@ class Graph::Random is Graph {
     #------------------------------------------------------
     # For PriceGraphDistribution
     method !generate-de-solla-price-graph(Int:D $n, Int:D $k, Numeric:D $a, Str:D :$prefix = '') {
-        my @vertexes = (^$k).map: { "{$prefix}{$_}" };
-        @vertexes.map: { self.add-edge($_, "{$prefix}{$_}", 1) };
+        my @vertexes = ["{$prefix}0", ];
 
-        for 1..$n-$k -> $i {
+        for 1..$n-1 -> $i {
             my $new-vertex = $prefix ~ ($k + $i - 1);
-            my @degrees = @vertexes.map: { self.vertex-in-degree($_) };
+            my @degrees = @vertexes.elems ==1 ?? [1,] !! @vertexes.map: { self.vertex-in-degree($_) };
             #my $total-degree = @degrees.sum + $a * @vertexes.elems;
             #my @probabilities = @degrees.map: { ($_ + $a) / $total-degree };
             my @freqs = @degrees.map: { ($_ + $a) };
 
-            #my $vertexMix = (@vertexes Z=> @probabilities).MixHash;
+            #my $vertexMix = (@vertexes Z=> @probabilities).MixHash;3
             my $vertexBag = (@vertexes Z=> @freqs).BagHash;
 
             #$vertexMix.roll($k).map({ self.add-edge($new-vertex, $_, 1, :directed) });
