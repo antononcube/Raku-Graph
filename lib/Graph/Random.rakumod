@@ -7,9 +7,8 @@ class Graph::Random is Graph {
     has $.dist is required;
 
     submethod BUILD(:$!dist, :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
-        note (:$!dist);
         given $!dist {
-            when ($_ ~~ BernoulliGraphDistribution) || ($_ ~~ UniformGraphDistribution) {
+            when ($_ ~~ BernoulliGraphDistribution:D) || ($_ ~~ UniformGraphDistribution:D) {
                 my @all-edges = gather {
                     for 1 .. $!dist.vertex-count -> $i {
                         for 1 .. $!dist.vertex-count -> $j {
@@ -20,7 +19,7 @@ class Graph::Random is Graph {
                 }
 
                 @all-edges =
-                        do if $_ ~~ (BernoulliGraphDistribution) {
+                        do if $_ ~~ (BernoulliGraphDistribution:D) {
                             # Divide by the probability by two since
                             # we use the Cartesian product of vertexes.
                             @all-edges.grep({ rand ≤ $!dist.p / 2});
@@ -41,7 +40,6 @@ class Graph::Random is Graph {
 
     #------------------------------------------------------
     multi method new(Int:D $vertex-count, Int:D $edges-count, Str:D $prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
-        note 'HERE';
         my $dist = UniformGraphDistribution.new(:$vertex-count, :$edges-count);
         self.bless(:$dist, :$prefix, :$directed);
     }
