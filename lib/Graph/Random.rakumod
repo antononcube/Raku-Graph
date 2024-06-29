@@ -1,14 +1,14 @@
 use v6.d;
 
 use Graph;
-use Graph::Distributions;
+use Graph::Distribution;
 
 class Graph::Random is Graph {
     has $.dist is required;
 
     submethod BUILD(:$!dist, :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         given $!dist {
-            when ($_ ~~ BernoulliGraphDistribution:D) || ($_ ~~ UniformGraphDistribution:D) {
+            when ($_ ~~ Graph::Distribution::Bernoulli:D) || ($_ ~~ Graph::Distribution::Uniform:D) {
                 my @all-edges = gather {
                     for 1 .. $!dist.vertex-count -> $i {
                         for 1 .. $!dist.vertex-count -> $j {
@@ -19,7 +19,7 @@ class Graph::Random is Graph {
                 }
 
                 @all-edges =
-                        do if $_ ~~ (BernoulliGraphDistribution:D) {
+                        do if $_ ~~ (Graph::Distribution::Bernoulli:D) {
                             # Divide by the probability by two since
                             # we use the Cartesian product of vertexes.
                             @all-edges.grep({ rand ≤ $!dist.p / 2});
@@ -32,7 +32,7 @@ class Graph::Random is Graph {
                 }
             }
 
-            when PriceGraphDistribution:D {
+            when Graph::Distribution::Price:D {
                 self!generate-de-solla-price-graph($!dist.vertex-count, $!dist.edges-count, $!dist.attractiveness, :$prefix);
             }
 
@@ -66,12 +66,12 @@ class Graph::Random is Graph {
 
     #------------------------------------------------------
     multi method new(Int:D $vertex-count, Int:D $edges-count, Str:D $prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
-        my $dist = UniformGraphDistribution.new(:$vertex-count, :$edges-count);
+        my $dist = Graph::Distribution::Uniform.new(:$vertex-count, :$edges-count);
         self.bless(:$dist, :$prefix, :$directed);
     }
 
     multi method new(Int:D :v(:$vertex-count), Int:D :n(:$edges-count), Str:D :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
-        my $dist = UniformGraphDistribution.new(:$vertex-count, :$edges-count);
+        my $dist = Graph::Distribution::Uniform.new(:$vertex-count, :$edges-count);
         self.bless(:$dist, :$prefix, :$directed);
     }
 

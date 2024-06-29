@@ -17,7 +17,7 @@
     "Graph": "lib/Graph.rakumod",
     "Graph::Complete": "lib/Graph/Complete.rakumod",
     "Graph::CompleteKaryTree": "lib/Graph/CompleteKaryTree.rakumod",
-    "Graph::Distributions": "lib/Graph/Distributions.rakumod",
+    "Graph::Distribution": "lib/Graph/Distribution.rakumod",
     "Graph::Cycle": "lib/Graph/Cycle.rakumod",
     "Graph::Grid": "lib/Graph/Grid.rakumod",
     "Graph::Hypercube": "lib/Graph/Hypercube.rakumod",

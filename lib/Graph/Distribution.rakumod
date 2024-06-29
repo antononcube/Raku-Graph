@@ -1,13 +1,13 @@
 use v6.d;
 
-unit module Graph::Distributions;
+unit module Graph::Distribution;
 
 #============================================================
 # Graph Distributions
 #============================================================
 
 #| Bernoulli graph distribution class
-class BernoulliGraphDistribution is export {
+class Bernoulli is export {
     has Int:D $.vertex-count is required;
     has Numeric $.p = 0.5;
 
@@ -22,7 +22,7 @@ class BernoulliGraphDistribution is export {
 #= Bernoulli graph distribution objects are specified with parameters for number of vertexes and edge probability.
 
 #| Price's model graph distribution class
-class PriceGraphDistribution is export {
+class Price is export {
     has Int:D $.vertex-count is required;
     has Int:D $.edges-count is required;
     has Numeric:D $.attractiveness is required;
@@ -39,7 +39,7 @@ class PriceGraphDistribution is export {
 
 
 #| Uniform graph distribution class
-class UniformGraphDistribution is export {
+class Uniform is export {
     has Int:D $.vertex-count is required;
     has Int:D $.edges-count is required;
 
