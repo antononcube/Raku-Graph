@@ -75,8 +75,8 @@ class Graph::Random is Graph {
 
         for ^$n -> $i {
             for 1 ..^ ($k div 2 + 1) -> $j {
-                self.add-edge($i.Str, (($i + $j) % $n).Str);
-                self.add-edge($i.Str, (($i - $j + $n) % $n).Str);
+                self.add-edge($prefix ~ $i.Str, $prefix ~ (($i + $j) % $n).Str);
+                self.add-edge($prefix ~ $i.Str, $prefix ~ (($i - $j + $n) % $n).Str);
             }
         }
 
@@ -85,10 +85,10 @@ class Graph::Random is Graph {
                 if rand < $p {
                     my $new-to;
                     repeat {
-                        $new-to = (^$n).grep({ $_ != $i && self.edges.grep({ $_[0] eq $i.Str && $_[1] eq $_.Str }).elems }).pick;
+                        $new-to = (^$n).grep({ $_ != $i && self.adjacency-list{$prefix ~ $i.Str}.elems }).pick;
                     } until $new-to.defined;
-                    self.add-edge($i.Str, $new-to.Str);
-                    self.add-edge($i.Str, (($i + $j) % $n).Str);
+                    self.add-edge($prefix ~ $i.Str, $prefix ~ $new-to.Str);
+                    self.add-edge($prefix ~ $i.Str, $prefix ~ (($i + $j) % $n).Str);
                 }
             }
         }
