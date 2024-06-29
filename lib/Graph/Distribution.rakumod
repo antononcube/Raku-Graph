@@ -37,6 +37,21 @@ class Price is export {
 }
 #= de Solla Price's graph distribution objects are specified with parameters for number vertexes, number of increment edges, and an attractiveness parameter.
 
+#| Watts-Strogatz's model graph distribution class
+class WattsStrogatz is export {
+    has Int:D $.vertex-count is required;
+    has Numeric:D $.p is required;
+
+    multi method new($vertex-count, $p) {
+        self.bless(:$vertex-count, :$p);
+    }
+
+    multi method new(:n(:$vertex-count), :$p) {
+        self.bless(:$vertex-count, :$p);
+    }
+}
+#= Watts-Strogatz graph distribution objects are specified with parameters for number vertexes and a rewiring parameter.
+
 
 #| Uniform graph distribution class
 class Uniform is export {
