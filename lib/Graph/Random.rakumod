@@ -22,7 +22,7 @@ class Graph::Random is Graph {
                         do if $_ ~~ (Graph::Distribution::Bernoulli:D) {
                             # Divide by the probability by two since
                             # we use the Cartesian product of vertexes.
-                            @all-edges.grep({ rand ≤ $!dist.p / 2});
+                            @all-edges.grep({ rand ≤ $!dist.p / 2 });
                         } else {
                             @all-edges.pick($!dist.edges-count);
                         }
@@ -36,6 +36,10 @@ class Graph::Random is Graph {
                 self!generate-de-solla-price-graph($!dist.vertex-count, $!dist.edges-count, $!dist.attractiveness, :$prefix);
             }
 
+            when Graph::Distribution::WattsStrogatz:D {
+                self!generate-watts-strogatz-graph($!dist.vertex-count, $!dist.p, :$prefix);
+            }
+
             default {
                 die "Uknown or un-implemented graph distribution.";
             }
@@ -45,11 +49,11 @@ class Graph::Random is Graph {
     #------------------------------------------------------
     # For PriceGraphDistribution
     method !generate-de-solla-price-graph(Int:D $n, Int:D $k, Numeric:D $a, Str:D :$prefix = '') {
-        my @vertexes = ["{$prefix}0", ];
+        my @vertexes = ["{ $prefix }0",];
 
-        for 1..$n-1 -> $i {
+        for 1 .. $n - 1 -> $i {
             my $new-vertex = $prefix ~ ($k + $i - 1);
-            my @degrees = @vertexes.elems ==1 ?? [1,] !! @vertexes.map: { self.vertex-in-degree($_) };
+            my @degrees = @vertexes.elems == 1 ?? [1,] !! @vertexes.map: { self.vertex-in-degree($_) };
             #my $total-degree = @degrees.sum + $a * @vertexes.elems;
             #my @probabilities = @degrees.map: { ($_ + $a) / $total-degree };
             my @freqs = @degrees.map: { ($_ + $a) };
@@ -65,12 +69,40 @@ class Graph::Random is Graph {
     }
 
     #------------------------------------------------------
-    multi method new(Int:D $vertex-count, Int:D $edges-count, Str:D $prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
+    method !generate-watts-strogatz-graph(Int:D $n, Numeric:D $p, :$prefix = '') {
+        my $k = 4;
+        # Each node is connected to k nearest neighbors in ring topology
+
+        for ^$n -> $i {
+            for 1 ..^ ($k div 2 + 1) -> $j {
+                self.add-edge($i.Str, (($i + $j) % $n).Str);
+                self.add-edge($i.Str, (($i - $j + $n) % $n).Str);
+            }
+        }
+
+        for ^$n -> $i {
+            for 1 ..^ ($k div 2 + 1) -> $j {
+                if rand < $p {
+                    my $new-to;
+                    repeat {
+                        $new-to = (^$n).grep({ $_ != $i && self.edges.grep({ $_[0] eq $i.Str && $_[1] eq $_.Str }).elems }).pick;
+                    } until $new-to.defined;
+                    self.add-edge($i.Str, $new-to.Str);
+                    self.add-edge($i.Str, (($i + $j) % $n).Str);
+                }
+            }
+        }
+    }
+
+    #------------------------------------------------------
+    multi method new(Int:D $vertex-count, Int:D $edges-count, Str:D $prefix = '',
+                     Bool:D :d(:directed-edges(:$directed)) = False) {
         my $dist = Graph::Distribution::Uniform.new(:$vertex-count, :$edges-count);
         self.bless(:$dist, :$prefix, :$directed);
     }
 
-    multi method new(Int:D :v(:$vertex-count), Int:D :n(:$edges-count), Str:D :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
+    multi method new(Int:D :v(:$vertex-count), Int:D :n(:$edges-count), Str:D :$prefix = '',
+                     Bool:D :d(:directed-edges(:$directed)) = False) {
         my $dist = Graph::Distribution::Uniform.new(:$vertex-count, :$edges-count);
         self.bless(:$dist, :$prefix, :$directed);
     }
