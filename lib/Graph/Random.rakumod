@@ -32,9 +32,36 @@ class Graph::Random is Graph {
                 }
             }
 
+            when PriceGraphDistribution:D {
+                self!generate-de-solla-price-graph($!dist.vertex-count, $!dist.edges-count, $!dist.attractiveness, :$prefix);
+            }
+
             default {
                 die "Uknown or un-implemented graph distribution.";
             }
+        }
+    }
+
+    #------------------------------------------------------
+    # For PriceGraphDistribution
+    method !generate-de-solla-price-graph(Int:D $n, Int:D $k, Numeric:D $a, Str:D :$prefix = '') {
+        my @vertexes = (^$k).map: { "{$prefix}{$_}" };
+        @vertexes.map: { self.add-edge($_, "{$prefix}{$_}", 1) };
+
+        for 1..$n-$k -> $i {
+            my $new-vertex = $prefix ~ ($k + $i - 1);
+            my @degrees = @vertexes.map: { self.vertex-in-degree($_) };
+            #my $total-degree = @degrees.sum + $a * @vertexes.elems;
+            #my @probabilities = @degrees.map: { ($_ + $a) / $total-degree };
+            my @freqs = @degrees.map: { ($_ + $a) };
+
+            #my $vertexMix = (@vertexes Z=> @probabilities).MixHash;
+            my $vertexBag = (@vertexes Z=> @freqs).BagHash;
+
+            #$vertexMix.roll($k).map({ self.add-edge($new-vertex, $_, 1, :directed) });
+            $vertexBag.pick($k).map({ self.add-edge($new-vertex, $_, 1, :directed) });
+
+            @vertexes.push: $new-vertex;
         }
     }
 

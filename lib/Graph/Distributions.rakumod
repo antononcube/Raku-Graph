@@ -31,7 +31,7 @@ class PriceGraphDistribution is export {
         self.bless(:$vertex-count, :$edges-count, :$attractiveness);
     }
 
-    multi method new(:n(:$vertex-count), :m(:$edges-count), :a(:$attractiveness)) {
+    multi method new(:n(:$vertex-count), :k(:$edges-count), :a(:$attractiveness)) {
         self.bless(:$vertex-count, :$edges-count, :$attractiveness);
     }
 }
