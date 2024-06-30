@@ -12,7 +12,7 @@ class Graph::Cycle is Graph {
         }
     }
 
-    multi method new(Int:D $n, Str:D $prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
+    multi method new(Int:D $n, Str:D :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$n, :$prefix, :$directed);
     }
 
