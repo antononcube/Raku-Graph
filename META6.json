@@ -1,7 +1,7 @@
 {
   "name": "Graph",
   "description": "Common graph functionalities.",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
@@ -15,10 +15,11 @@
   "test-depends": [],
   "provides": {
     "Graph": "lib/Graph.rakumod",
+    "Graph::Circulant": "lib/Graph/Circulant.rakumod",
     "Graph::Complete": "lib/Graph/Complete.rakumod",
     "Graph::CompleteKaryTree": "lib/Graph/CompleteKaryTree.rakumod",
-    "Graph::Distribution": "lib/Graph/Distribution.rakumod",
     "Graph::Cycle": "lib/Graph/Cycle.rakumod",
+    "Graph::Distribution": "lib/Graph/Distribution.rakumod",
     "Graph::Grid": "lib/Graph/Grid.rakumod",
     "Graph::Hypercube": "lib/Graph/Hypercube.rakumod",
     "Graph::KnightTour": "lib/Graph/KnightTour.rakumod",
