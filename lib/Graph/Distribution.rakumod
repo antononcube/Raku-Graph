@@ -6,6 +6,21 @@ unit module Graph::Distribution;
 # Graph Distributions
 #============================================================
 
+#| BarabasiAlbert graph distribution class
+class BarabasiAlbert is export {
+    has Int:D $.vertex-count is required;
+    has Int:D $.edges-count is required;
+
+    multi method new($vertex-count, $edges-count) {
+        self.bless(:$vertex-count, :$edges-count);
+    }
+
+    multi method new(:n(:$vertex-count), :k(:$edges-count)) {
+        self.bless(:$vertex-count, :$edges-count);
+    }
+}
+#= BarabasiAlbert graph distribution objects are specified with parameters for number of vertexes and number of increment edges.
+
 #| Bernoulli graph distribution class
 class Bernoulli is export {
     has Int:D $.vertex-count is required;
