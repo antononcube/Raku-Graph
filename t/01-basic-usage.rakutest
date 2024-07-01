@@ -3,6 +3,8 @@ use v6.d;
 use lib <. lib>;
 
 use Graph;
+use Graph::Path;
+
 use Test;
 
 my @edges =
@@ -72,5 +74,10 @@ is $graph1.vertex-degree('5'), 2;
 
 ## 15
 is $graph1.vertex-in-degree('5'), $graph1.vertex-degree('5');
+
+## 16
+is-deeply
+        Graph::Path.new('a'..'h', :directed).vertex-list.Array,
+        ('a'...'h').Array;
 
 done-testing;
