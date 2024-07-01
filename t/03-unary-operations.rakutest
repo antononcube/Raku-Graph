@@ -1,0 +1,15 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+use Graph;
+use Graph::Cycle;
+
+## 1
+my $g1 = Graph::Cycle.new(5, :directed);
+ok $g1.reverse;
+
+## 2
+ok $g1.complement;
+
+done-testing;
