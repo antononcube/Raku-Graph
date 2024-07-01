@@ -32,6 +32,10 @@ class Graph::Random is Graph {
                 }
             }
 
+            when Graph::Distribution::BarabasiAlbert:D {
+                self!generate-barabasi-albert-graph($!dist.vertex-count, $!dist.edges-count, :$prefix);
+            }
+
             when Graph::Distribution::Price:D {
                 self!generate-de-solla-price-graph($!dist.vertex-count, $!dist.edges-count, $!dist.attractiveness, :$prefix);
             }
@@ -43,6 +47,20 @@ class Graph::Random is Graph {
             default {
                 die "Uknown or un-implemented graph distribution.";
             }
+        }
+    }
+
+    #------------------------------------------------------
+    # For BarabasiAlbert distribution
+    method !generate-barabasi-albert-graph(Int:D $n, Int:D $k, Str:D :$prefix = '') {
+        my @vertexes = [$prefix ~ '0',];
+
+        for 1 ..^ $n -> $i {
+            my @degrees = @vertexes.elems == 1 ?? [1,] !! @vertexes.map: { self.vertex-in-degree($_) };
+            my $vertexBag = (@vertexes Z=> @degrees).BagHash;
+            $vertexBag.pick($k).map({ self.add-edge($prefix ~ $i, $_, 1, :!directed) });
+
+            @vertexes.push($prefix ~ $i);
         }
     }
 
