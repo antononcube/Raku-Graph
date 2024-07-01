@@ -35,3 +35,9 @@ my $graph5 = Graph::Random.new(Graph::Distribution::WattsStrogatz.new(50, 0.03),
 #say $graph5;
 
 say $graph5.wl;
+
+my $graph6 = Graph::Random.new(Graph::Distribution::BarabasiAlbert.new(3, 2), prefix => 'ba');
+
+#say $graph6;
+
+say $graph6.wl;

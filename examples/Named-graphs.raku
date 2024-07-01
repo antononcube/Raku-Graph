@@ -3,6 +3,7 @@ use v6.d;
 
 use lib <. lib>;
 
+use Graph::Circulant;
 use Graph::Complete;
 use Graph::CompleteKaryTree;
 use Graph::Cycle;
@@ -13,7 +14,18 @@ use Graph::Petersen;
 use Graph::Star;
 use Graph::Wheel;
 
-my $viz = 'mermaid';
+my $viz = 'wl';
+
+##---------------------------------------------------------
+## Circulant
+say '=' x 100;
+say 'Circulant';
+say '-' x 100;
+my $cicrculant = Graph::Circulant.new(n => 5, j => 3, prefix => '');
+
+say $cicrculant;
+
+say $cicrculant."$viz"();
 
 ##---------------------------------------------------------
 ## Complete
