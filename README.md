@@ -145,22 +145,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-2 --- 6
+9 --- 10
+9 --- 4
+6 --- 7
+6 --- 2
+12 --- 5
+12 --- 2
+12 --- 11
 2 --- 4
 2 --- 10
 2 --- 8
-2 --- 12
-2 --- 3
 2 --- 7
-11 --- 12
-6 --- 7
-5 --- 1
-5 --- 12
-7 --- 1
-9 --- 10
-9 --- 4
+2 --- 3
+1 --- 7
+1 --- 5
+4 --- 3
 8 --- 3
-3 --- 4
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -196,7 +196,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([2 6 7 2])
+# find-cycle : ([2 3 4 2])
 ```
 
 Here we find all cycles in the graph:
@@ -308,7 +308,9 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE Path graphs
   - [X] DONE [Wheel graphs](https://en.wikipedia.org/wiki/Wheel_graph)
 - [X] DONE Construction of random graphs
-  - Potentially very complicated, since different kinds of vertex-edge distributions exists.
+  - Since different kinds of vertex-edge distributions exists, separate distributions objects are used.
+    - See `Graph::Distribution`.
+  - [X] DONE [Barabasi-Albert distribution](https://en.wikipedia.org/wiki/Barabási–Albert_model) 
   - [X] DONE Bernoulli distribution 
   - [X] DONE [de Solla Price's model distribution](https://en.wikipedia.org/wiki/Price%27s_model) 
   - [X] DONE "Simple" random `(m, n)` graphs with m-vertexes and n-edges between them

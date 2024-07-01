@@ -263,7 +263,9 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE Path graphs
   - [X] DONE [Wheel graphs](https://en.wikipedia.org/wiki/Wheel_graph)
 - [X] DONE Construction of random graphs
-  - Potentially very complicated, since different kinds of vertex-edge distributions exists.
+  - Since different kinds of vertex-edge distributions exists, separate distributions objects are used.
+    - See `Graph::Distribution`.
+  - [X] DONE [Barabasi-Albert distribution](https://en.wikipedia.org/wiki/Barabási–Albert_model) 
   - [X] DONE Bernoulli distribution 
   - [X] DONE [de Solla Price's model distribution](https://en.wikipedia.org/wiki/Price%27s_model) 
   - [X] DONE "Simple" random `(m, n)` graphs with m-vertexes and n-edges between them
