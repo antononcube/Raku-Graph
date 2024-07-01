@@ -1,0 +1,32 @@
+use v6.d;
+
+use lib <. lib>;
+
+use Graph;
+use Graph::Complete;
+use Graph::Cycle;
+use Graph::Path;
+
+use Test;
+
+## 1
+my $g1 = Graph::Path.new('a' .. 'h');
+ok $g1.edge-delete('g', 'h');
+
+## 2
+is-deeply
+        Graph::Path.new('a' .. 'h', :directed).edge-delete(from => 'g', to => 'h').edges.sort(*.key),
+        Graph::Path.new('a' .. 'g', :directed).edges.sort(*.key);
+
+## 3
+my $g3 = Graph::Path.new('a' .. 'h', :!directed);
+is-deeply
+        $g3.edge-delete(from => 'g', to => 'h').edges.map({ $_.kv.sort.List }).sort(*.head),
+        Graph::Path.new('a' .. 'g', :!directed).edges.map({ $_.kv.sort.List }).sort(*.head);
+
+## 4
+is-deeply
+        $g3.vertex-list.sort.Array,
+        ('a' ... 'g').Array;
+
+done-testing;

@@ -1,0 +1,36 @@
+use v6.d;
+
+use lib <. lib>;
+
+use Graph;
+use Graph::Cycle;
+use Graph::Path;
+
+use Test;
+
+## 1
+my $g1 = Graph::Path.new('a'..'h');
+ok $g1.vertex-delete('h');
+
+## 2
+my $g2 = Graph::Path.new('a'..'g');
+is
+        $g1.vertex-delete('h').vertex-list.sort,
+        $g2.vertex-list.sort;
+
+## 3
+is-deeply
+        Graph::Path.new('a'..'h').vertex-delete('a'..'c').vertex-list.sort,
+        Graph::Path.new('d'..'h').vertex-list.sort;
+
+## 4
+is-deeply
+        Graph::Path.new(<p1 p2 p3 c1 c2 c3>).vertex-delete(<p1 p2 p3>).vertex-list.sort,
+        Graph::Path.new(<c1 c2 c3>).vertex-list.sort;
+
+## 5
+is-deeply
+        Graph::Path.new(<p1 p2 p3 c1 c2 c3>).vertex-delete(/ p . /).vertex-list.sort,
+        Graph::Path.new(<c1 c2 c3>).vertex-list.sort;
+
+done-testing;
