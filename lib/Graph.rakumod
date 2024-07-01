@@ -550,4 +550,29 @@ class Graph {
         my $me = %eccentricities.values.max;
         return %eccentricities.grep({ $_.value == $me });
     }
+
+    #======================================================
+    # Unary Operations
+    #======================================================
+    method reverse(--> Graph) {
+        if !$!directed { return self.clone; }
+        my @edges = self.edges(:dataset);
+        @edges = @edges.map({ <from to weight>.Array Z=> $_<to from weight>.Array })».Hash;
+        my $grRes = Graph.new(@edges, :directed);
+        return $grRes;
+    }
+
+    method complement(--> Graph) {
+        my @vertexes = self.vertex-list;
+        my @edges;
+        for @vertexes -> $v1 {
+            for @vertexes -> $v2 {
+                if ! ( %!adjacency-list{$v1}{$v2} // False) {
+                    @edges.push(%(from => $v1, to => $v2, weight => 1))
+                }
+            }
+        }
+        my $grRes = Graph.new(@edges, directed => self.directed);
+        return $grRes;
+    }
 }
