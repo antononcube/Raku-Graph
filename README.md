@@ -145,22 +145,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-9 --- 10
-9 --- 4
-6 --- 7
-6 --- 2
-12 --- 5
+4 --- 3
+4 --- 2
+4 --- 9
+5 --- 1
+5 --- 12
 12 --- 2
 12 --- 11
-2 --- 4
-2 --- 10
-2 --- 8
-2 --- 7
-2 --- 3
-1 --- 7
-1 --- 5
-4 --- 3
+7 --- 2
+7 --- 6
+7 --- 1
+9 --- 10
+8 --- 2
 8 --- 3
+6 --- 2
+2 --- 3
+2 --- 10
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -187,7 +187,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [11 12 5 1 7 6 2 10 9 4 3 8]
+# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
 ```
 
 Here we find a cycle:
@@ -196,7 +196,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([2 3 4 2])
+# find-cycle : ([2 6 7 2])
 ```
 
 Here we find all cycles in the graph:
@@ -285,10 +285,11 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 ### Operations
 
 - [ ] TODO Unary graph operations
+  - [X] TODO Reversed graph
+  - [X] TODO Complement graph
   - [ ] TODO Edge contraction
   - [ ] TODO Line graph
   - [ ] TODO Dual graph
-  - [ ] TODO Complement graph
 - [ ] TODO Binary graph operations
   - [ ] TODO Disjoint union of graphs
   - [ ] TODO Cartesian product of graphs

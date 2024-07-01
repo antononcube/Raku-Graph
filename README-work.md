@@ -240,10 +240,11 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 ### Operations
 
 - [ ] TODO Unary graph operations
+  - [X] TODO Reversed graph
+  - [X] TODO Complement graph
   - [ ] TODO Edge contraction
   - [ ] TODO Line graph
   - [ ] TODO Dual graph
-  - [ ] TODO Complement graph
 - [ ] TODO Binary graph operations
   - [ ] TODO Disjoint union of graphs
   - [ ] TODO Cartesian product of graphs
