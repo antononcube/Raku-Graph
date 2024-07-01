@@ -49,13 +49,87 @@ class Graph {
                 if !(@edge.elems ≥ 2 && @edge[^2].all ~~ Str:D) {
                     die "When the edges are specified as a Positional of Positionals " ~
                             "then edge record is expected to have two or three elements. " ~
-                        "The first two record elements are expected to be strings; the third, if present, a number.";
+                            "The first two record elements are expected to be strings; the third, if present, a number.";
                 }
                 self.add-edge(@edge[0], @edge[1], @edge[3] // 1, :$directed);
             }
         } else {
             die "The first argument is expected to be a Positional of Maps or a Positional of Positionals.";
         }
+        return self;
+    }
+
+    #======================================================
+    # Vertex removal
+    #======================================================
+    multi method vertex-delete(Str:D $v) {
+        %!adjacency-list{$v}:delete;
+       for %!adjacency-list.kv -> $k, %vertexes {
+            if %vertexes{$v}:exists {
+                %vertexes{$v}:delete
+            }
+        }
+        return self;
+    }
+
+    multi method vertex-delete(@vs) {
+        for @vs -> $v { self.vertex-delete($v) }
+        return self;
+    }
+
+    multi method vertex-delete(Regex $rx) {
+        my @vs = self.vertex-list.grep({ $_ ~~ $rx });
+        return self.vertex-delete(@vs);
+    }
+
+    #======================================================
+    # Edge removal
+    #======================================================
+    multi method edge-delete(Str:D :$from, Str:D :$to) {
+        with %!adjacency-list{$from}{$to} {
+            %!adjacency-list{$from}{$to}:delete;
+            if %!adjacency-list{$from}.elems == 0 { %!adjacency-list{$from}:delete; }
+        }
+        if !$!directed && %!adjacency-list{$to}{$from}.defined {
+            %!adjacency-list{$to}{$from}:delete;
+            if %!adjacency-list{$to}.elems == 0 { %!adjacency-list{$to}:delete; }
+        }
+        #`[
+        my @edges = self.edges(:dataset);
+        @edges = do if $!directed {
+            @edges.grep({ !($_<from> eq $from && $_<to> eq $to) })
+        } else {
+            @edges.grep({ !($_<from> eq $from && $_<to> eq $to || $_<to> eq $from && $_<from> eq $to) })
+        }
+
+        %!adjacency-list = Empty;
+        self.add-edges(@edges, :$!directed);
+        ]
+        return self;
+    }
+
+    multi method edge-delete(Str:D $from, Str:D $to) {
+        return self.edge-delete(:$from, :$to);
+    }
+
+    multi method edge-delete(Pair $p) {
+        return self.edge-delete(from => $p.key, to => $p.value);
+    }
+
+    multi method edge-delete(%edge) {
+        if (%edge<from> // False) && (%edge<to> // False) {
+            return self.edge-delete(%edge<from>, %edge<to>);
+        }
+        return self;
+    }
+
+    multi method edge-delete(@edges where @edges.all ~~ Pair:D) {
+        for @edges -> $p { self.edge-delete($p) }
+        return self;
+    }
+
+    multi method edge-delete(@edges where @edges.all ~~ Map:D) {
+        for @edges -> %e { self.edge-delete(%e) }
         return self;
     }
 
