@@ -185,18 +185,18 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE Vertex degree
   - [X] DONE in-degree, edges-at
   - [X] DONE out-degree, edges-from
+  - [X] DONE Delete vertex(es)
   - [ ] TODO Vertex tags support
   - [ ] TODO Add vertex
   - [ ] TODO Has vertex
-  - [ ] TODO Delete vertex(es)
 - [ ] TODO Edges
   - [X] DONE Edge list
   - [X] DONE Edge dataset
   - [X] DONE Edge count
+  - [X] DONE Add edge
+  - [X] DONE Delete edge(s)
   - [ ] TODO Edge tags support
-  - [ ] TODO Add edge
   - [ ] TODO Has edge
-  - [ ] TODO Delete edge(s)
 - [ ] TODO Matrix representation
   - Sparse matrices are needed before "seriously" considering this.
   - Sparse matrices should be easy to create using the (already implemented) edge dataset.

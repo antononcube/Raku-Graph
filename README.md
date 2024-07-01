@@ -145,22 +145,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-4 --- 3
-4 --- 2
-4 --- 9
-5 --- 1
-5 --- 12
-12 --- 2
-12 --- 11
-7 --- 2
-7 --- 6
-7 --- 1
-9 --- 10
-8 --- 2
-8 --- 3
-6 --- 2
+2 --- 7
+2 --- 4
+2 --- 8
 2 --- 3
 2 --- 10
+2 --- 12
+2 --- 6
+11 --- 12
+6 --- 7
+12 --- 5
+9 --- 4
+9 --- 10
+8 --- 3
+5 --- 1
+4 --- 3
+1 --- 7
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -187,7 +187,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [11 12 5 1 7 6 2 8 3 4 9 10]
 ```
 
 Here we find a cycle:
@@ -230,18 +230,18 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE Vertex degree
   - [X] DONE in-degree, edges-at
   - [X] DONE out-degree, edges-from
+  - [X] DONE Delete vertex(es)
   - [ ] TODO Vertex tags support
   - [ ] TODO Add vertex
   - [ ] TODO Has vertex
-  - [ ] TODO Delete vertex(es)
 - [ ] TODO Edges
   - [X] DONE Edge list
   - [X] DONE Edge dataset
   - [X] DONE Edge count
+  - [X] DONE Add edge
+  - [X] DONE Delete edge(s)
   - [ ] TODO Edge tags support
-  - [ ] TODO Add edge
   - [ ] TODO Has edge
-  - [ ] TODO Delete edge(s)
 - [ ] TODO Matrix representation
   - Sparse matrices are needed before "seriously" considering this.
   - Sparse matrices should be easy to create using the (already implemented) edge dataset.
