@@ -25,6 +25,11 @@ class Graph {
         self.bless(adjacency-list => %(), :$directed, :@edges);
     }
 
+    method clone() {
+        # This can be probably made faster by cloning the adjacency-list directly.
+        return Graph.new(self.edges(:dataset), :$!directed);
+    }
+
     #======================================================
     # Construction
     #======================================================
@@ -53,6 +58,8 @@ class Graph {
                 }
                 self.add-edge(@edge[0], @edge[1], @edge[3] // 1, :$directed);
             }
+        } elsif @edges.all ~~ Pair:D {
+            return self.add-edges(@edges».kv».List.List);
         } else {
             die "The first argument is expected to be a Positional of Maps or a Positional of Positionals.";
         }
