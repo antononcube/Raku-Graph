@@ -145,22 +145,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-2 --- 7
-2 --- 4
-2 --- 8
-2 --- 3
-2 --- 10
-2 --- 12
-2 --- 6
+8 --- 3
+8 --- 2
 11 --- 12
 6 --- 7
+6 --- 2
+3 --- 4
+3 --- 2
+4 --- 9
+4 --- 2
 12 --- 5
-9 --- 4
-9 --- 10
-8 --- 3
-5 --- 1
-4 --- 3
-1 --- 7
+12 --- 2
+10 --- 9
+10 --- 2
+2 --- 7
+7 --- 1
+1 --- 5
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -187,7 +187,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [11 12 5 1 7 6 2 8 3 4 9 10]
+# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
 ```
 
 Here we find a cycle:
@@ -196,7 +196,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([2 6 7 2])
+# find-cycle : ([10 2 3 4 9 10])
 ```
 
 Here we find all cycles in the graph:
@@ -216,9 +216,8 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 
 - [ ] TODO Object methods
   - [X] DONE Str and gist methods
-  - [ ] TODO Deep copy
-  - [ ] TODO Undirected deep copy
-  - [ ] TODO Make undirected
+  - [X] DONE Deep copy
+  - [X] DONE Creation from another graph.
   - [ ] TODO Ingest vertexes and edges of another `Graph` object
   - [ ] TODO Comparison: `eqv` and `ne`.
 - [ ] TODO Disjoint graphs
@@ -287,6 +286,11 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 - [ ] TODO Unary graph operations
   - [X] TODO Reversed graph
   - [X] TODO Complement graph
+  - [ ] TODO Make undirected
+    - Can be implemented as `Graph.new($g, :!directed)`.
+    - But maybe it is more efficient to directly manipulate `adjacency-list`.
+  - [ ] TODO Make directed
+    - That is just a flag change. (Of `$!directed`.)
   - [ ] TODO Edge contraction
   - [ ] TODO Line graph
   - [ ] TODO Dual graph

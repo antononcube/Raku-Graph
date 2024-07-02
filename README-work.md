@@ -171,9 +171,8 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 
 - [ ] TODO Object methods
   - [X] DONE Str and gist methods
-  - [ ] TODO Deep copy
-  - [ ] TODO Undirected deep copy
-  - [ ] TODO Make undirected
+  - [X] DONE Deep copy
+  - [X] DONE Creation from another graph.
   - [ ] TODO Ingest vertexes and edges of another `Graph` object
   - [ ] TODO Comparison: `eqv` and `ne`.
 - [ ] TODO Disjoint graphs
@@ -242,6 +241,11 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 - [ ] TODO Unary graph operations
   - [X] TODO Reversed graph
   - [X] TODO Complement graph
+  - [ ] TODO Make undirected
+    - Can be implemented as `Graph.new($g, :!directed)`.
+    - But maybe it is more efficient to directly manipulate `adjacency-list`.
+  - [ ] TODO Make directed
+    - That is just a flag change. (Of `$!directed`.)
   - [ ] TODO Edge contraction
   - [ ] TODO Line graph
   - [ ] TODO Dual graph
