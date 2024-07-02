@@ -38,7 +38,7 @@ is $graph1.edge-count, @edges.elems;
 is $graph1.vertex-count, 12;
 
 ## 4
-is-deeply $graph1.vertex-list.sort, (1..12)».Str.sort.List;
+is-deeply $graph1.vertex-list.sort, (1 .. 12)».Str.sort.List;
 
 ## 5
 is-deeply $graph1.find-shortest-path('1', '4'), ["1", "7", "2", "4"];
@@ -77,7 +77,19 @@ is $graph1.vertex-in-degree('5'), $graph1.vertex-degree('5');
 
 ## 16
 is-deeply
-        Graph::Path.new('a'..'h', :directed).vertex-list.Array,
-        ('a'...'h').Array;
+        Graph::Path.new('a' .. 'h', :directed).vertex-list.Array,
+        ('a' ... 'h').Array;
+
+## 17
+my $gr17 = Graph::Path.new('a' .. 'h', :directed);
+is-deeply
+        $gr17.vertex-list,
+        Graph.new($gr17, directed => Whatever).vertex-list;
+
+
+## 18
+is-deeply
+        $gr17.edge-list.sort,
+        Graph.new($gr17).edge-list.sort;
 
 done-testing;
