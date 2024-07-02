@@ -25,6 +25,16 @@ class Graph {
         self.bless(adjacency-list => %(), :$directed, :@edges);
     }
 
+    multi method new(Graph:D $gr, :d(:directed-edges(:$directed)) is copy = Whatever) {
+
+        if $directed.isa(Whatever) { $directed = $gr.directed; }
+        die "When the first argument is a graph then the value of \$directed is expected to be a Boolean or Whatever."
+        unless $directed ~~ Bool:D;
+
+        my @edges = $gr.edges(:dataset);
+        self.bless(adjacency-list => %(), :$directed, :@edges);
+    }
+
     method clone() {
         # This can be probably made faster by cloning the adjacency-list directly.
         return Graph.new(self.edges(:dataset), :$!directed);
