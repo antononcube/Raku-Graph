@@ -69,7 +69,7 @@ class Graph {
                 self.add-edge(@edge[0], @edge[1], @edge[3] // 1, :$directed);
             }
         } elsif @edges.all ~~ Pair:D {
-            return self.add-edges(@edges».kv».List.List);
+            return self.add-edges(@edges».kv».List.List, :$directed);
         } else {
             die "The first argument is expected to be a Positional of Maps or a Positional of Positionals.";
         }
@@ -257,7 +257,9 @@ class Graph {
             $args = ', ' ~ %args.map({ "{$_.key} -> { to-wl-value($_.value) }" }).join(', ');
         }
 
-        return "Graph[\{$edges\}, EdgeWeight -> \{$weights\}, DirectedEdges -> { $!directed }{ $args }]";
+        my $vertexes = '"' ~ self.vertex-list.join('", "') ~ '"';
+
+        return "Graph[\{$vertexes\}, \{$edges\}, EdgeWeight -> \{$weights\}, DirectedEdges -> { $!directed }{ $args }]";
     }
 
     #------------------------------------------------------
@@ -295,7 +297,9 @@ class Graph {
                     @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\" [weight={$_<weight>.Str }, label={$_<weight>.Str }]" }).join("\n");
                 }
 
-        "{$!directed ?? 'digraph' !! 'graph'} \{\n$edges\n\}";
+        my $vertexes = '"' ~ self.vertex-list.join('"; "') ~ '";';
+
+        "{$!directed ?? 'digraph' !! 'graph'} \{\n$vertexes\n$edges\n\}";
     }
 
     #------------------------------------------------------
