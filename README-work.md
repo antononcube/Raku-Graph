@@ -2,6 +2,8 @@
 
 Raku package for (discrete mathematics) graph data structures and algorithms.
 
+For a quick introduction see the video ["Graph demo in Raku (teaser)"](https://www.youtube.com/watch?v=0uJl9q7jIf8), [AAv1], (5 min.)
+
 **Remark:** This package is *not* for drawing and rendering images. 
 It is for the abstract data structure [***graph***](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)). 
 
@@ -339,3 +341,10 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 [Graph Perl package](https://metacpan.org/dist/Graph/view/lib/Graph.pod),
 (1998-2014),
 [MetaCPAN](https://metacpan.org).
+
+### Videos
+
+[AAv1] Anton Antonov,
+["Graph demo in Raku (teaser)"](https://www.youtube.com/watch?v=0uJl9q7jIf8),
+(2024),
+[YouTube/@AAA4Prediction](https://www.youtube.com/@AAA4Prediction).

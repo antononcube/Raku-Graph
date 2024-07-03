@@ -2,6 +2,8 @@
 
 Raku package for (discrete mathematics) graph data structures and algorithms.
 
+For a quick introduction see the video ["Graph demo in Raku (teaser)"](https://www.youtube.com/watch?v=0uJl9q7jIf8), [AAv1], (5 min.)
+
 **Remark:** This package is *not* for drawing and rendering images. 
 It is for the abstract data structure [***graph***](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)). 
 
@@ -145,22 +147,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-8 --- 3
-8 --- 2
-11 --- 12
-6 --- 7
-6 --- 2
-3 --- 4
-3 --- 2
-4 --- 9
-4 --- 2
-12 --- 5
-12 --- 2
-10 --- 9
-10 --- 2
+2 --- 10
 2 --- 7
-7 --- 1
+2 --- 3
+2 --- 4
+2 --- 8
+2 --- 12
+2 --- 6
+12 --- 11
+12 --- 5
+3 --- 4
+3 --- 8
+10 --- 9
+1 --- 7
 1 --- 5
+7 --- 6
+9 --- 4
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -187,7 +189,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [11 12 5 1 7 6 2 10 9 4 3 8]
 ```
 
 Here we find a cycle:
@@ -196,7 +198,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([10 2 3 4 9 10])
+# find-cycle : ([10 2 8 3 4 9 10])
 ```
 
 Here we find all cycles in the graph:
@@ -384,3 +386,10 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 [Graph Perl package](https://metacpan.org/dist/Graph/view/lib/Graph.pod),
 (1998-2014),
 [MetaCPAN](https://metacpan.org).
+
+### Videos
+
+[AAv1] Anton Antonov,
+["Graph demo in Raku (teaser)"](https://www.youtube.com/watch?v=0uJl9q7jIf8),
+(2024),
+[YouTube/@AAA4Prediction](https://www.youtube.com/@AAA4Prediction).
