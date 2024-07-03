@@ -11,7 +11,7 @@ class Graph::Random is Graph {
             when ($_ ~~ Graph::Distribution::Bernoulli:D) || ($_ ~~ Graph::Distribution::Uniform:D) {
                 my @all-edges = gather {
                     for 1 .. $!dist.vertex-count -> $i {
-                        for 1 .. $!dist.vertex-count -> $j {
+                        for ($directed ?? 1 !! $i + 1) .. $!dist.vertex-count -> $j {
                             next if $i == $j;
                             take ("{ $prefix }{ $i }", "{ $prefix }{ $j }");
                         }
@@ -20,15 +20,22 @@ class Graph::Random is Graph {
 
                 @all-edges =
                         do if $_ ~~ (Graph::Distribution::Bernoulli:D) {
-                            # Divide by the probability by two since
-                            # we use the Cartesian product of vertexes.
-                            @all-edges.grep({ rand ≤ $!dist.p / 2 });
+                            @all-edges.grep({ rand ≤ $!dist.p });
                         } else {
                             @all-edges.pick($!dist.edges-count);
                         }
 
                 for @all-edges -> ($from, $to) {
                     self.add-edge($from, $to, :$directed);
+                }
+
+                # Find the vertices without edges
+                my @singleVertexes = (1 .. $!dist.vertex-count).map({ $prefix ~ $_ });
+                @singleVertexes = (@singleVertexes (-) self.vertex-list).keys;
+
+                # Add the single vertices
+                for @singleVertexes -> $v {
+                    self.adjacency-list.push($v => %());
                 }
             }
 
