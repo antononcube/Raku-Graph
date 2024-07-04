@@ -27,6 +27,6 @@ is-deeply
 ## 4
 is-deeply
         $g3.vertex-list.sort.Array,
-        ('a' ... 'g').Array;
+        ('a' ... 'h').Array;
 
 done-testing;
