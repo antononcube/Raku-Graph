@@ -117,11 +117,13 @@ class Graph {
     multi method edge-delete(Str:D :$from, Str:D :$to) {
         with %!adjacency-list{$from}{$to} {
             %!adjacency-list{$from}{$to}:delete;
-            if %!adjacency-list{$from}.elems == 0 { %!adjacency-list{$from}:delete; }
+            # We do not do the following, because removing an edge does not mean removing its vertexes too.
+            # if %!adjacency-list{$from}.elems == 0 { %!adjacency-list{$from}:delete; }
         }
         if !$!directed && %!adjacency-list{$to}{$from}.defined {
             %!adjacency-list{$to}{$from}:delete;
-            if %!adjacency-list{$to}.elems == 0 { %!adjacency-list{$to}:delete; }
+            # We do not do the following, because removing an edge does not mean removing its vertexes too.
+            # if %!adjacency-list{$to}.elems == 0 { %!adjacency-list{$to}:delete; }
         }
         #`[
         my @edges = self.edges(:dataset);
