@@ -38,13 +38,13 @@ zef install https://github.com/antononcube/Raku-Graph.git
 
 - The central entity is the `Graph` class.
 - `Graph` is as generic as possible.
-  - Meaning it is directed graphs.
+  - Meaning it is for directed graphs.
   - Undirected graphs are represented as directed graphs.
     - I.e. with twice as many edges than necessary.
   - The current graph representation is with hash-of-hashes, (`adjacency-list`), that keeps from-to-weight relationships.
     - For example, `$g.adjacency-list<1><2>` gives the weight of the edge connecting vertex "1" to vertex "2".
   - The vertexes are only strings.
-    - Not a "strong" design decision.
+    - Not a "hard" design decision.
     - More general vertexes can be imitated (in the future) with vertex tags.
       - This is related to having (in Raku) sparse matrices with named rows and columns. 
 - Since I know Mathematica / Wolfram Language (WL) very well, many of the method names and signatures are
@@ -66,8 +66,9 @@ zef install https://github.com/antononcube/Raku-Graph.git
 - Visualizing the graphs (the objects of the class `Graph`) is very important.
   - Has to be done from the very beginning of the development.
     - (Again, for me at least...)
-- The class `Graph` has the methods `wl` and `mermaid` for representing the graphs for Wolfram Language (WL) and mermaid-js respectively.
-- Mermaid's graph nodes and edges arrangement algorithm can produces "unexpected" images for the standard, named graphs.
+- The class `Graph` has the methods `dot`, `graphml`, `mermaid`, and `wl` for representing the graphs for 
+  GraphViz, GraphML, Mermaid-JS, and Wolfram Language (WL) respectively.
+- Mermaid's graph nodes and edges arrangement algorithm can produce "unexpected" images for the standard, parameterized graphs.
   - Like, "grid graph", "cycle graph", etc.
 
 ### Performance
@@ -79,7 +80,7 @@ zef install https://github.com/antononcube/Raku-Graph.git
     for say country / continent route systems.
     - With the larger, 1,000-vertex random graphs finding paths with the method "a-star" is ≈50 faster than with the method "dijkstra". 
       - See [here](./examples/Performance.raku).
-- Setting up comprehensive performance profiling and correctness testing is some involved.
+- Setting up comprehensive performance profiling and correctness testing is somewhat involved.
   - One main impediment is that in Raku one cannot expect and specify same random numbers between different sessions. 
 
 ------
@@ -141,7 +142,7 @@ Here we find the shortest path between nodes "1" and "4":
 say 'find-shortest-path : ', $graph.find-shortest-path('1', '4');
 ```
 
-Here we find all paths between "1" and "4", (and sort them by length and vertex names.):
+Here we find all paths between "1" and "4", (and sort them by length and vertex names):
 
 ```perl6
 say 'find-path : ' , $graph.find-path('1', '4', count => Inf).sort({ $_.elems ~ ' ' ~ $_.join(' ') });
@@ -295,6 +296,8 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 - [ ] TODO Unit tests
   - [X] DONE Sanity
   - [X] DONE Undirected graphs
+  - [X] DONE Vertex removal
+  - [X] DONE Edge removal
   - [ ] TODO Directed graphs cycles
 - [ ] TODO Cross-verification with Mathematica
   - [X] DONE General workflow programming/setup
