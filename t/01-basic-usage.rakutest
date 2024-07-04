@@ -86,10 +86,17 @@ is-deeply
         $gr17.vertex-list,
         Graph.new($gr17, directed => Whatever).vertex-list;
 
-
 ## 18
 is-deeply
         $gr17.edge-list.sort,
         Graph.new($gr17).edge-list.sort;
+
+## 19
+ok Graph.new('a'..'h', [ a => 'b', c => 'd'] );
+
+## 20
+is
+        Graph.new('a'..'h', [ a => 'b', c => 'd'] ).vertex-list,
+        'a'..'h';
 
 done-testing;
