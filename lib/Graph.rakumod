@@ -609,6 +609,54 @@ class Graph {
     }
 
     #======================================================
+    # Spanning tree
+    #======================================================
+    method find-spanning-tree(:$method is copy = Whatever) {
+
+        if $method.isa(Whatever) { $method = 'kruskal'; }
+        die 'The value of $method is expected to be a string or Whatever'
+        unless $method ~~ Str:D;
+
+        return do given $method {
+            when 'kruskal' {
+                Graph.new(self!minimum-spanning-tree-kruskal())
+            }
+            default {
+                die 'Unknown specified method.';
+            }
+        }
+
+    }
+
+    method !minimum-spanning-tree-kruskal() {
+        my @dsEdges = self.edges(:dataset);
+        @dsEdges = @dsEdges.sort({ $_<weight> });
+
+        my @vertexes = self.vertex-list;
+        my $n = @vertexes.elems;
+        my %hh;
+        my @span;
+
+        for @vertexes -> $v {
+            %hh{$v} = [$v,];
+        }
+
+        for @dsEdges -> %edge {
+            my ($c1, $c2) = (%hh{%edge<from>}, %hh{%edge<to>});
+            if !($c1 eqv $c2) {
+                @span.push: %edge;
+                my @c1c2 = [|$c1, |$c2].flat.unique.sort;
+                for @c1c2 -> $k {
+                    %hh{$k} = @c1c2;
+                }
+                last if %hh{%edge<from>}.elems == $n;
+            }
+        }
+
+        return @span;
+    }
+
+    #======================================================
     # Measures
     #======================================================
     method vertex-eccentricity($v --> Numeric) {
