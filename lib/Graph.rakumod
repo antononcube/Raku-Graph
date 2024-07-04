@@ -10,9 +10,17 @@ class Graph {
     #======================================================
     # Creators
     #======================================================
-    submethod BUILD(:%!adjacency-list = %(), Bool:D :directed-edges(:$!directed) = False, :@edges?) {
+    submethod BUILD(:%!adjacency-list = %(), Bool:D :directed-edges(:$!directed) = False, :@vertexes = Empty, :@edges = Empty) {
         if @edges {
             self.add-edges(@edges, :$!directed)
+        }
+
+        if @vertexes {
+            for @vertexes -> $v {
+                if %!adjacency-list{$v}:!exists {
+                    self.adjacency-list.push( $v => %() );
+                }
+            }
         }
     }
 
@@ -23,6 +31,10 @@ class Graph {
 
     multi method new(@edges, Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(adjacency-list => %(), :$directed, :@edges);
+    }
+
+    multi method new(@vertexes, @edges, Bool:D :d(:directed-edges(:$directed)) = False) {
+        self.bless(adjacency-list => %(), :$directed, :@vertexes, :@edges);
     }
 
     multi method new(Graph:D $gr, :d(:directed-edges(:$directed)) is copy = Whatever) {
@@ -37,7 +49,7 @@ class Graph {
 
     method clone() {
         # This can be probably made faster by cloning the adjacency-list directly.
-        return Graph.new(self.edges(:dataset), :$!directed);
+        return Graph.new(self.vertex-list, self.edges(:dataset), :$!directed);
     }
 
     #======================================================
