@@ -1,5 +1,12 @@
 # Graph
 
+[![Actions Status](https://github.com/antononcube/Raku-Graph/actions/workflows/linux.yml/badge.svg)](https://github.com/antononcube/Raku-Graph/actions)
+[![Actions Status](https://github.com/antononcube/Raku-Graph/actions/workflows/macos.yml/badge.svg)](https://github.com/antononcube/Raku-Graph/actions)
+[![Actions Status](https://github.com/antononcube/Raku-Graph/actions/workflows/windows.yml/badge.svg)](https://github.com/antononcube/Raku-Graph/actions)
+
+[![](https://raku.land/zef:antononcube/Graph/badges/version)](https://raku.land/zef:antononcube/Graph)
+[![License: Artistic-2.0](https://img.shields.io/badge/License-Artistic%202.0-0298c3.svg)](https://opensource.org/licenses/Artistic-2.0)
+
 Raku package for (discrete mathematics) graph data structures and algorithms.
 
 For a quick introduction see the video ["Graph demo in Raku (teaser)"](https://www.youtube.com/watch?v=0uJl9q7jIf8), [AAv1], (5 min.)
@@ -148,22 +155,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-11 --- 12
-9 --- 4
-9 --- 10
-8 --- 3
-8 --- 2
+5 --- 1
+5 --- 12
+3 --- 2
+3 --- 4
+3 --- 8
+6 --- 2
+6 --- 7
+1 --- 7
+10 --- 2
+10 --- 9
 4 --- 2
-4 --- 3
-7 --- 1
-7 --- 6
+4 --- 9
 7 --- 2
-1 --- 5
-12 --- 5
-12 --- 2
-2 --- 10
-2 --- 6
-2 --- 3
+2 --- 12
+2 --- 8
+12 --- 11
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -190,7 +197,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [11 12 5 1 7 6 2 8 3 4 9 10]
+# find-hamiltonian-path : [10 9 4 3 8 2 6 7 1 5 12 11]
 ```
 
 Here we find a cycle:
@@ -199,7 +206,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([1 5 12 2 6 7 1])
+# find-cycle : ([1 5 12 2 7 1])
 ```
 
 Here we find all cycles in the graph:

@@ -1,5 +1,12 @@
 # Graph
 
+[![Actions Status](https://github.com/antononcube/Raku-Graph/actions/workflows/linux.yml/badge.svg)](https://github.com/antononcube/Raku-Graph/actions)
+[![Actions Status](https://github.com/antononcube/Raku-Graph/actions/workflows/macos.yml/badge.svg)](https://github.com/antononcube/Raku-Graph/actions)
+[![Actions Status](https://github.com/antononcube/Raku-Graph/actions/workflows/windows.yml/badge.svg)](https://github.com/antononcube/Raku-Graph/actions)
+
+[![](https://raku.land/zef:antononcube/Graph/badges/version)](https://raku.land/zef:antononcube/Graph)
+[![License: Artistic-2.0](https://img.shields.io/badge/License-Artistic%202.0-0298c3.svg)](https://opensource.org/licenses/Artistic-2.0)
+
 Raku package for (discrete mathematics) graph data structures and algorithms.
 
 For a quick introduction see the video ["Graph demo in Raku (teaser)"](https://www.youtube.com/watch?v=0uJl9q7jIf8), [AAv1], (5 min.)
