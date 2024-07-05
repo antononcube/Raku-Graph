@@ -614,12 +614,15 @@ class Graph {
     method find-spanning-tree(:$method is copy = Whatever) {
 
         if $method.isa(Whatever) { $method = 'kruskal'; }
-        die 'The value of $method is expected to be a string or Whatever'
+        die 'The value of $method is expected to be a string or Whatever.'
         unless $method ~~ Str:D;
 
         return do given $method {
             when 'kruskal' {
                 Graph.new(self!minimum-spanning-tree-kruskal())
+            }
+            when 'prim' {
+                Graph.new(adjacency-list => self!minimum-spanning-tree-prim(), :!directed)
             }
             default {
                 die 'Unknown specified method.';
@@ -654,6 +657,31 @@ class Graph {
         }
 
         return @span;
+    }
+
+    method !minimum-spanning-tree-prim() {
+        my $start = self.vertex-list.pick;
+        my %mst;
+        my %visited;
+        my @edges;
+
+        %visited{$start} = True;
+        @edges.push: [ $start, $_, %.adjacency-list{$start}{$_} ] for %.adjacency-list{$start}.keys;
+
+        while @edges {
+            @edges = @edges.sort({ $^a[2] <=> $^b[2] });
+            my ($from, $to, $weight) = @edges.shift;
+
+            next if %visited{$to};
+
+            %mst{$from}{$to} = $weight;
+            %mst{$to}{$from} = $weight;
+
+            %visited{$to} = True;
+            @edges.push: [ $to, $_, %.adjacency-list{$to}{$_} ] for %.adjacency-list{$to}.keys.grep: { !%visited{$_} };
+        }
+
+        return %mst;
     }
 
     #======================================================
