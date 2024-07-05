@@ -27,6 +27,7 @@ my $g = Graph.new(@dsEdges);
 
 say $g.wl;
 
-my $res = $g.find-spanning-tree;
+my $method = 'prim';
+my $res = $g.find-spanning-tree(:$method);
 
 say $res.wl;
