@@ -1,6 +1,5 @@
 use v6.d;
 
-use Hash::Merge;
 use Data::TypeSystem;
 
 class Graph {
