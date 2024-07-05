@@ -374,8 +374,14 @@ class Graph {
         my $visited = SetHash.new;
 
         while @nodes {
-            @nodes .= sort({ %distances{$^a} <=> %distances{$^b} });
-            my $closest = @nodes.shift;
+            ## Original implementation
+#            @nodes = @nodes.sort({ %distances{$^a} <=> %distances{$^b} });
+#            my $closest = @nodes.shift;
+            ## Optimization
+            my $ind = @nodes.min({ %distances{$^a} <=> %distances{$^b} }, :k).head;
+            my $closest = @nodes[$ind];
+            @nodes.splice($ind,1);
+            ## Better optimization is to use heaps.
 
             last if %distances{$closest} == Inf;
             last if $closest eq $end;
@@ -411,7 +417,15 @@ class Graph {
         my @queue = [[$start, 0], ];
 
         while @queue {
-            my ($current, $dist) = @queue.shift;
+            ## Original implementation
+#            @queue = @queue.sort({ $^a[1] <=> $^b[1] });
+#            my ($current, $dist) = @queue.shift;
+            # Optimization
+            my $ind = @queue.min({ $^a[1] <=> $^b[1] }, :k).head;
+            my ($current, $dist) = |@queue[$ind];
+            @queue.splice($ind,1);
+            ## Better optimization is to use heaps.
+
             next if %visited{$current}:exists;
             %visited{$current} = True;
             %distances{$current} = $dist;
@@ -421,7 +435,6 @@ class Graph {
                     @queue.push([$neighbor, $dist + %.adjacency-list{$current}{$neighbor}] );
                 }
             }
-            @queue .= sort({ $^a[1] <=> $^b[1] });
         }
 
         return %distances;
@@ -441,7 +454,10 @@ class Graph {
         my %f-score = $start => heuristic($start, $end);
 
         while %open-set {
-            my $current = %open-set.keys.sort({ %f-score{$_} }).first;
+            ## Original implementation
+            #my $current = %open-set.keys.sort({ %f-score{$_} }).first;
+            # Optimization
+            my $current = %open-set.keys.min({ %f-score{$_} });
             return gather {
                 my $node = $current;
                 while %came-from{$node}:exists {
