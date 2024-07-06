@@ -14,7 +14,7 @@ my $g1 = Graph.new([
     %('from' => '2', 'to' => '3', 'weight' => 1),
     %('from' => '3', 'to' => '1', 'weight' => 1)], :directed);
 
-is $g1.is-connected, True;
+is $g1.is-weakly-connected, True;
 
 ## 2
 my $g2 = Graph.new(<1 2 3 4>,
@@ -24,7 +24,7 @@ my $g2 = Graph.new(<1 2 3 4>,
             %('from' => '2', 'to' => '3', 'weight' => 1)
         ], :directed);
 
-is $g2.is-connected, False;
+is $g2.is-weakly-connected, False;
 
 ## 3
 my $g3 = Graph.new([
@@ -33,7 +33,7 @@ my $g3 = Graph.new([
     %('from' => '2', 'to' => '3', 'weight' => 1)
 ]);
 
-is $g3.is-connected, True;
+is $g3.is-weakly-connected, True;
 
 ## 4
 my $g4 = Graph.new([
@@ -43,7 +43,7 @@ my $g4 = Graph.new([
     %('from' => '3', 'to' => '4', 'weight' => 1)
 ], :directed);
 
-is $g4.is-connected, False;
+is $g4.is-weakly-connected, True;
 
 ## 5
 my $g5 = Graph.new([
@@ -52,12 +52,24 @@ my $g5 = Graph.new([
     %('from' => '1', 'to' => '4', 'weight' => 1)
 ]);
 
-is $g5.is-connected, True;
+is $g5.is-weakly-connected, True;
 
 ## 6
-is Graph::Path.new((^10)».Str).is-connected, True;
+is Graph::Path.new((^10)».Str).is-weakly-connected, True;
 
 ## 7
-is Graph::Petersen.new.is-connected, True;
+is Graph::Petersen.new.is-weakly-connected, True;
+
+
+## 8
+my $g8 = Graph.new([
+    %('from' => '1', 'to' => '2', 'weight' => 1), %('from' => '2', 'to' => '3', 'weight' => 1),
+    %('from' => '3', 'to' => '1', 'weight' => 1), %('from' => '3', 'to' => '4', 'weight' => 1),
+    %('from' => '3', 'to' => '5', 'weight' => 1), %('from' => '4', 'to' => '5', 'weight' => 1)
+], :directed);
+
+say $g8.wl;
+say "res: ", $g8.weakly-connected-components;
+isa-ok $g8.weakly-connected-components, Positional;
 
 done-testing;
