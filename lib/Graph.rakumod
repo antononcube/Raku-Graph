@@ -702,7 +702,13 @@ class Graph {
     #======================================================
     # Connected components
     #======================================================
-    method is-connected() {
+    method is-weakly-connected() {
+
+        if $!directed {
+            # Is there are faster way of doing this?
+            return Graph.new(self.vertex-list, self.edges, :!directed).is-weakly-connected;
+        }
+
         my %visited;
         my @stack = %.adjacency-list.keys[0];
 
@@ -717,13 +723,19 @@ class Graph {
         return %visited.elems == %.adjacency-list.keys.elems;
     }
 
-    method connected-components() {
+    method weakly-connected-components() {
+
+        if $!directed {
+            # Is there are faster way of doing this?
+            return Graph.new(self.vertex-list, self.edges, :!directed).weakly-connected-components;
+        }
+
         my %visited;
         my @components;
 
         for %.adjacency-list.keys -> $vertex {
             unless %visited{$vertex} {
-                my @stack = $vertex;
+                my @stack = [$vertex, ];
                 my @component;
 
                 while @stack {
@@ -735,11 +747,12 @@ class Graph {
                     }
                 }
 
+                note @component;
                 @components.push(@component);
             }
         }
 
-        return @components;
+        return @components.sort(*.elems).reverse.Array;
     }
 
     #======================================================
