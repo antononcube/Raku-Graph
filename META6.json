@@ -8,6 +8,7 @@
   ],
   "auth": "zef:antononcube",
   "depends": [
+    "BinaryHeap:ver<0.0.7>:auth<zef:dumarchie>:api<1>",
     "Data::TypeSystem:ver<0.1.6+>:auth<zef:antononcube>:api<1>"
   ],
   "build-depends": [],
