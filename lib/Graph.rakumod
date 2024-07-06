@@ -1,6 +1,7 @@
 use v6.d;
 
 use Data::TypeSystem;
+use BinaryHeap;
 
 class Graph {
     has %.adjacency-list;
@@ -370,18 +371,13 @@ class Graph {
         my %distances = %.adjacency-list.keys.map({ $_ => Inf }).Hash;
         %distances{$start} = 0;
         my %previous;
-        my @nodes = %.adjacency-list.keys;
         my $visited = SetHash.new;
 
-        while @nodes {
-            ## Original implementation
-#            @nodes = @nodes.sort({ %distances{$^a} <=> %distances{$^b} });
-#            my $closest = @nodes.shift;
-            ## Optimization
-            my $ind = @nodes.min({ %distances{$^a} <=> %distances{$^b} }, :k).head;
-            my $closest = @nodes[$ind];
-            @nodes.splice($ind,1);
-            ## Better optimization is to use heaps.
+        my BinaryHeap::MinHeap[{ $^a.tail cmp $^b.tail }] $h;
+        $h.push([$start, %distances{$start}]);
+
+        while $h {
+            my ($closest, $dist) = $h.pop;
 
             last if %distances{$closest} == Inf;
             last if $closest eq $end;
@@ -392,6 +388,7 @@ class Graph {
                     if $alt < %distances{$neighbor} {
                         %distances{$neighbor} = $alt;
                         %previous{$neighbor} = $closest;
+                        $h.push([$neighbor, $alt])
                     }
                 }
             }
@@ -416,15 +413,11 @@ class Graph {
         my %visited;
         my @queue = [[$start, 0], ];
 
-        while @queue {
-            ## Original implementation
-#            @queue = @queue.sort({ $^a[1] <=> $^b[1] });
-#            my ($current, $dist) = @queue.shift;
-            # Optimization
-            my $ind = @queue.min({ $^a[1] <=> $^b[1] }, :k).head;
-            my ($current, $dist) = |@queue[$ind];
-            @queue.splice($ind,1);
-            ## Better optimization is to use heaps.
+        my BinaryHeap::MinHeap[{ $^a[1] <=> $^b[1] }] $h;
+        $h.push(@queue.head);
+
+        while $h {
+            my ($current, $dist) = $h.pop;
 
             next if %visited{$current}:exists;
             %visited{$current} = True;
@@ -432,7 +425,7 @@ class Graph {
 
             for %.adjacency-list{$current}.keys -> $neighbor {
                 unless %visited{$neighbor}:exists {
-                    @queue.push([$neighbor, $dist + %.adjacency-list{$current}{$neighbor}] );
+                    $h.push([$neighbor, $dist + %.adjacency-list{$current}{$neighbor}] );
                 }
             }
         }
@@ -453,11 +446,15 @@ class Graph {
         my %g-score = $start => 0;
         my %f-score = $start => heuristic($start, $end);
 
+        my BinaryHeap::MinHeap[{ $^a.tail <=> $^b.tail }] $h;
+        $h.push([$start, %f-score{$start}]);
+
         while %open-set {
-            ## Original implementation
-            #my $current = %open-set.keys.sort({ %f-score{$_} }).first;
-            # Optimization
-            my $current = %open-set.keys.min({ %f-score{$_} });
+            ## Original implementation -- should explain why I keep %open-set below.
+            #my $current = %open-set.keys.min({ %f-score{$_} });
+            ## Optimization
+            my ($current, $score) = $h.pop;
+
             return gather {
                 my $node = $current;
                 while %came-from{$node}:exists {
@@ -474,7 +471,10 @@ class Graph {
                     %came-from{$neighbor} = $current;
                     %g-score{$neighbor} = $tentative-g-score;
                     %f-score{$neighbor} = %g-score{$neighbor} + heuristic($neighbor, $end);
-                    %open-set{$neighbor} = %f-score{$neighbor} unless %open-set{$neighbor}:exists;
+                    {
+                        %open-set{$neighbor} = %f-score{$neighbor};
+                        $h.push([$neighbor, %f-score{$neighbor}]);
+                    } unless %open-set{$neighbor}:exists;
                 }
             }
         }
