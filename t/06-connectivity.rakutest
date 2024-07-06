@@ -1,0 +1,63 @@
+use v6.d;
+use Test;
+
+
+use lib <. lib>;
+
+use Graph;
+use Graph::Path;
+use Graph::Petersen;
+
+## 1
+my $g1 = Graph.new([
+    %('from' => '1', 'to' => '2', 'weight' => 1),
+    %('from' => '2', 'to' => '3', 'weight' => 1),
+    %('from' => '3', 'to' => '1', 'weight' => 1)], :directed);
+
+is $g1.is-connected, True;
+
+## 2
+my $g2 = Graph.new(<1 2 3 4>,
+        [
+            %('from' => '1', 'to' => '2', 'weight' => 1),
+            %('from' => '1', 'to' => '3', 'weight' => 1),
+            %('from' => '2', 'to' => '3', 'weight' => 1)
+        ], :directed);
+
+is $g2.is-connected, False;
+
+## 3
+my $g3 = Graph.new([
+    %('from' => '1', 'to' => '2', 'weight' => 1),
+    %('from' => '1', 'to' => '3', 'weight' => 1),
+    %('from' => '2', 'to' => '3', 'weight' => 1)
+]);
+
+is $g3.is-connected, True;
+
+## 4
+my $g4 = Graph.new([
+    %('from' => '1', 'to' => '2', 'weight' => 1),
+    %('from' => '2', 'to' => '3', 'weight' => 1),
+    %('from' => '3', 'to' => '1', 'weight' => 1),
+    %('from' => '3', 'to' => '4', 'weight' => 1)
+], :directed);
+
+is $g4.is-connected, False;
+
+## 5
+my $g5 = Graph.new([
+    %('from' => '1', 'to' => '2', 'weight' => 1),
+    %('from' => '1', 'to' => '3', 'weight' => 1),
+    %('from' => '1', 'to' => '4', 'weight' => 1)
+]);
+
+is $g5.is-connected, True;
+
+## 6
+is Graph::Path.new((^10)».Str).is-connected, True;
+
+## 7
+is Graph::Petersen.new.is-connected, True;
+
+done-testing;
