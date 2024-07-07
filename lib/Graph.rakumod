@@ -47,9 +47,25 @@ class Graph {
         self.bless(adjacency-list => %(), :$directed, :@edges);
     }
 
-    method clone() {
+    method clone(:d(:$directed) = Whatever) {
+        my $directed-new = $!directed;
+        if $directed ~~ Bool:D {
+            $directed-new = $directed ?? True !! False;
+        }
+        die 'The value of the argument $directed is expected to be a Boolean or Whaterver.'
+        unless $directed-new ~~ Bool:D;
+
         # This can be probably made faster by cloning the adjacency-list directly.
-        return Graph.new(self.vertex-list, self.edges(:dataset), :$!directed);
+        my @edges = self.edges(:dataset);
+        given ($directed-new, $!directed) {
+            when (True, False) {
+                @edges = [|@edges, |@edges.map({ %( from => $_<to>, to => $_<from>, weight => $_<weight>) })];
+            }
+            # when (True, True) { done by default with creation }
+            # when (False, False) { done by default with creation }
+            # when (False, True) { done by default with creation }
+        }
+        return Graph.new(self.vertex-list, @edges, directed => $directed-new);
     }
 
     #======================================================
