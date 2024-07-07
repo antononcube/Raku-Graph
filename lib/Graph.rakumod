@@ -860,13 +860,15 @@ class Graph {
 
     multi method subgraph(@subedges where @subedges.all ~~ Pair:D) {
         my @edges = self.edges(:!dataset);
+        my $set = @subedges».Str;
         if $!directed {
-            @edges .= grep({ $_ ∈ @subedges });
+            @edges .= grep({ $_.Str ∈ $set });
         } else {
-            @edges .= grep({ $_ ∈ @subedges || Pair.new($_.value, $_.key) ∈ @subedges});
+            @edges .= grep({ ($_.Str ∈ $set) || (Pair.new($_.value, $_.key).Str ∈ $set)});
         }
-        my @subvertexes = [|@edges.keys, |@edges.values].unique;
-        return self.subgraph(@subvertexes);
+        my @subvertexes = [|@edges».key, |@edges».value].unique;
+        my @edgesNew = self.edges(:!dataset).grep({ $_.key ∈ @subvertexes && $_.value ∈ @subvertexes });
+        return Graph.new(@edgesNew, :$!directed);
     }
 
     multi method subgraph(@subedges where @subedges.all ~~ Map:D) {
