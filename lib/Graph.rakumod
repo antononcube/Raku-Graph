@@ -824,6 +824,9 @@ class Graph {
     #======================================================
     # Unary Operations
     #======================================================
+    # Should we have synonyms? For example:
+    # method transpose(--> Graph) { return self.reverse; }
+
     method reverse(--> Graph) {
         if !$!directed { return self.clone; }
         my @edges = self.edges(:dataset);
@@ -844,5 +847,34 @@ class Graph {
         }
         my $grRes = Graph.new(@edges, directed => self.directed);
         return $grRes;
+    }
+
+    #======================================================
+    # Subgraph
+    #======================================================
+    multi method subgraph(@subvertexes where @subvertexes.all ~~ Str:D) {
+        my @edges = self.edges(:dataset);
+        @edges .= grep({ $_<from> ∈ @subvertexes || $_<to> ∈ @subvertexes });
+        return Graph.new(@edges, :$!directed);
+    }
+
+    multi method subgraph(@subedges where @subedges.all ~~ Pair:D) {
+        my @edges = self.edges(:!dataset);
+        if $!directed {
+            @edges .= grep({ $_ ∈ @subedges });
+        } else {
+            @edges .= grep({ $_ ∈ @subedges || Pair.new($_.value, $_.key) ∈ @subedges});
+        }
+        my @subvertexes = [|@edges.keys, |@edges.values].unique;
+        return self.subgraph(@subvertexes);
+    }
+
+    multi method subgraph(@subedges where @subedges.all ~~ Map:D) {
+        my @edges = @subedges.grep({ $_<from>.defined && $_<to>.defined });
+        if @subedges && !@edges {
+            note 'The given Positional of Maps did not have graph edge records with keys "from" and "to".';
+        }
+        @edges .= map({ $_<from> => $_<to> });
+        return self.subgraph(@edges);
     }
 }
