@@ -746,8 +746,6 @@ class Graph {
                         @stack.append(%.adjacency-list{$current}.keys.grep({ !%visited{$_} }));
                     }
                 }
-
-                note @component;
                 @components.push(@component);
             }
         }
