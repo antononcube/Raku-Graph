@@ -1,0 +1,19 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+
+use Graph;
+use Graph::Grid;
+
+## 1
+my $g1 = Graph::Grid.new(4, 6);
+my @vs1 = ((^3) X (^2)).map({ $_.join('_') });
+isa-ok $g1.subgraph(@vs1), Graph;
+
+## 2
+my $g2 = $g1.subgraph(@vs1);
+
+isa-ok $g1.subgraph($g2.edges), Graph;
+
+done-testing;
