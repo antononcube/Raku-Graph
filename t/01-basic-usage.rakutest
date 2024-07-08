@@ -4,6 +4,7 @@ use lib <. lib>;
 
 use Graph;
 use Graph::Path;
+use Graph::Complete;
 
 use Test;
 
@@ -98,5 +99,28 @@ ok Graph.new('a'..'h', [ a => 'b', c => 'd'] );
 is
         Graph.new('a'..'h', [ a => 'b', c => 'd'] ).vertex-list,
         'a'..'h';
+
+## 21
+is
+        Graph::Complete.new(5, :!directed).edge-count,
+        10;
+
+## 22
+is
+        Graph::Complete.new(5, :directed).edge-count,
+        20;
+
+## 23
+my @edges23 = <1 2 3 4> X=> <1 2 3 4>;
+my $g23 = Graph.new(@edges23, :directed);
+is
+        $g23.edge-count,
+        16;
+
+## 24
+my $g24 = Graph.new(@edges23, :!directed);
+is
+        $g24.edge-count,
+        $g23.vertex-list.combinations(2).elems + $g23.vertex-count;
 
 done-testing;
