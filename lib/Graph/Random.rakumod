@@ -5,6 +5,7 @@ use Graph::Distribution;
 
 class Graph::Random is Graph {
     has $.dist is required;
+    has $.vertex-coordinates = Whatever;
 
     submethod BUILD(:$!dist, :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         given $!dist {
@@ -81,7 +82,7 @@ class Graph::Random is Graph {
         sqrt([+] (@v1 Z @v2).map({ ($_[0] - $_[1]) ** 2 }));
     }
     method !generate-spatial-graph(Int:D $n, Numeric:D $r, Int:D $d, Str:D :$prefix = '') {
-        my @vertices = (^$n).map({ rand xx $d });
+        my @vertices = (^$n).map({ (rand xx $d).List });
         for @vertices.kv -> $i, $vi {
             for @vertices[$i+1 .. *].kv -> $j, $vj {
                 if dist($vi, $vj) ≤ $r {
@@ -89,6 +90,7 @@ class Graph::Random is Graph {
                 }
             }
         }
+        $!vertex-coordinates = @vertices.kv.rotor(2).map({ $prefix ~ $_.head => $_.tail }).cache.Hash;
     }
 
     #------------------------------------------------------
