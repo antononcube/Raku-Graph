@@ -50,7 +50,24 @@ class Price is export {
         self.bless(:$vertex-count, :$edges-count, :$attractiveness);
     }
 }
-#= de Solla Price's graph distribution objects are specified with parameters for number vertexes, number of increment edges, and an attractiveness parameter.
+#= de Solla Price's graph distribution objects are specified with parameters for number of vertexes, number of increment edges, and an attractiveness parameter.
+
+#| Spatial graph distribution class
+class Spatial is export {
+    has Int:D $.vertex-count is required;
+    has Numeric:D $.radius is required;
+    has Int:D $.dimension is required;
+
+    multi method new(Int:D $vertex-count, Numeric:D $radius, Int:D $dimension = 2) {
+        self.bless(:$vertex-count, :$radius, :$dimension);
+    }
+
+    multi method new(Int:D :n(:$vertex-count), Numeric:D :r(:$radius), Int:D :d(:$dimension) = 2) {
+        self.bless(:$vertex-count, :$radius, :$dimension);
+    }
+}
+#= Spatial graph distribution objects are specified with parameters for number of vertexes, max length of the edges (radius), and dimension of the unit hyper-cube.
+
 
 #| Watts-Strogatz's model graph distribution class
 class WattsStrogatz is export {

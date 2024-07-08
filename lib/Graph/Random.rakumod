@@ -43,6 +43,10 @@ class Graph::Random is Graph {
                 self!generate-barabasi-albert-graph($!dist.vertex-count, $!dist.edges-count, :$prefix);
             }
 
+            when Graph::Distribution::Spatial:D {
+                self!generate-spatial-graph($!dist.vertex-count, $!dist.radius, $!dist.dimension, :$prefix);
+            }
+
             when Graph::Distribution::Price:D {
                 self!generate-de-solla-price-graph($!dist.vertex-count, $!dist.edges-count, $!dist.attractiveness, :$prefix);
             }
@@ -68,6 +72,22 @@ class Graph::Random is Graph {
             $vertexBag.pick($k).map({ self.add-edge($prefix ~ $i, $_, 1, :!directed) });
 
             @vertexes.push($prefix ~ $i);
+        }
+    }
+
+    #------------------------------------------------------
+    # For SpatialGraphDistribution
+    sub dist(@v1, @v2) {
+        sqrt([+] (@v1 Z @v2).map({ ($_[0] - $_[1]) ** 2 }));
+    }
+    method !generate-spatial-graph(Int:D $n, Numeric:D $r, Int:D $d, Str:D :$prefix = '') {
+        my @vertices = (^$n).map({ rand xx $d });
+        for @vertices.kv -> $i, $vi {
+            for @vertices[$i+1 .. *].kv -> $j, $vj {
+                if dist($vi, $vj) ≤ $r {
+                    self.add-edge($prefix ~ $i.Str, $prefix ~ ($i + $j + 1).Str, 1);
+                }
+            }
         }
     }
 
