@@ -212,8 +212,12 @@ class Graph {
 
     #------------------------------------------------------
     method edge-count(--> Int) {
-        my $res = %!adjacency-list.map(*.value.elems).sum;
-        return $!directed ?? $res !! $res div 2;
+        if $!directed {
+            # Assuming this is faster.
+            return %!adjacency-list.map(*.value.elems).sum;
+        } else {
+            return self.edges.elems;
+        }
     }
 
     #------------------------------------------------------
