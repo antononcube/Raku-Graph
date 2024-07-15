@@ -155,22 +155,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-5 --- 1
-5 --- 12
-3 --- 2
-3 --- 4
-3 --- 8
-6 --- 2
-6 --- 7
-1 --- 7
 10 --- 2
 10 --- 9
-4 --- 2
-4 --- 9
-7 --- 2
+8 --- 3
+8 --- 2
+2 --- 4
+2 --- 3
+2 --- 6
+2 --- 7
 2 --- 12
-2 --- 8
-12 --- 11
+9 --- 4
+6 --- 7
+5 --- 1
+5 --- 12
+3 --- 4
+7 --- 1
+11 --- 12
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -206,7 +206,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([1 5 12 2 7 1])
+# find-cycle : ([10 2 4 9 10])
 ```
 
 Here we find all cycles in the graph:
@@ -230,9 +230,10 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE Creation from another graph.
   - [ ] TODO Ingest vertexes and edges of another `Graph` object
   - [ ] TODO Comparison: `eqv` and `ne`.
-- [ ] TODO Disjoint graphs
+- [X] DONE Disjoint graphs
   - The graphs can be disjoint as long as the components have edges.
-  - I.e. the class `Graph` does not support "lone vertices."
+  - Related, the class `Graph` does supports "lone vertices."
+    - They have empty adjacency values.
 - [ ] TODO Vertexes
   - [X] DONE Vertex list
   - [X] DONE Vertex count
@@ -240,21 +241,30 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE in-degree, edges-at
   - [X] DONE out-degree, edges-from
   - [X] DONE Delete vertex(es)
+  - [X] DONE Add vertex
+  - [X] DONE Has vertex
   - [ ] TODO Vertex tags support
-  - [ ] TODO Add vertex
-  - [ ] TODO Has vertex
 - [ ] TODO Edges
   - [X] DONE Edge list
   - [X] DONE Edge dataset
   - [X] DONE Edge count
   - [X] DONE Add edge
   - [X] DONE Delete edge(s)
+  - [X] DONE Has edge
   - [ ] TODO Edge tags support
-  - [ ] TODO Has edge
 - [ ] TODO Matrix representation
   - Sparse matrices are needed before "seriously" considering this.
   - Sparse matrices should be easy to create using the (already implemented) edge dataset.
-          
+
+### Graph programming
+
+- [ ] Depth first scan / traversal
+  - Scan a graph in a depth-first order.
+  - This is already implemented, it has to be properly refactored.
+    - See Depth-First Search (DFS) named (private) methods.
+- [ ] Breadth first scan / traversal  
+  - Scan a graph in a breadth-first order.
+
 ### Paths, cycles, flows
 
 - [X] DONE Shortest paths
@@ -302,6 +312,7 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [ ] TODO Make directed
     - That is just a flag change. (Of `$!directed`.)
   - [ ] TODO Edge contraction
+  - [ ] TODO Vertex contraction
   - [ ] TODO Line graph
   - [ ] TODO Dual graph
 - [ ] TODO Binary graph operations
