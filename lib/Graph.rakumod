@@ -1,9 +1,10 @@
 use v6.d;
 
-use Data::TypeSystem;
 use BinaryHeap;
+use Data::TypeSystem;
+use Graph::Tourish;
 
-class Graph {
+class Graph does Graph::Tourish {
     has %.adjacency-list;
     has Bool:D $.directed = False;
 
