@@ -123,4 +123,12 @@ is
         $g24.edge-count,
         $g23.vertex-list.combinations(2).elems + $g23.vertex-count;
 
+## 25
+my $g25 = $g24.clone;
+subtest {
+        ok $g25.vertex-add('a');
+        ok $g25.vertex-add(<a b c>);
+        is $g25.vertex-list.sort, <1 2 3 4 a b c>;
+}
+
 done-testing;
