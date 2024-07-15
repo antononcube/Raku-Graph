@@ -97,6 +97,7 @@ class Graph does Graph::Tourish {
                 self.adjacency-list{$v} = %();
             }
         }
+        return self;
     }
 
     #------------------------------------------------------
