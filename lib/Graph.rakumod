@@ -70,8 +70,36 @@ class Graph does Graph::Tourish {
     }
 
     #======================================================
+    # Basic predicates
+    #======================================================
+    method has-vertex(Str:D $v --> Bool:D) {
+        return (%!adjacency-list{$v}:exists) || %!adjacency-list{*;$v}.flat.grep(*.defined).elems > 0;
+    }
+
+    #------------------------------------------------------
+    method has-edge(Str:D $from, Str:D $to --> Bool:D) {
+        # For undirected graphs both
+        # %!adjacency-list{$from}{$to} and %!adjacency-list{$to}{$from}
+        # should be in.
+        return %!adjacency-list{$from}{$to};
+    }
+
+    #======================================================
     # Construction
     #======================================================
+    multi method vertex-add(Str:D $v) {
+        return self.vertex-add([$v,])
+    }
+
+    multi method vertex-add(@vertexes) {
+        for @vertexes -> $v {
+            if !self.has-vertex($v) {
+                self.adjacency-list{$v} = %();
+            }
+        }
+    }
+
+    #------------------------------------------------------
     method add-edge(Str $from, Str $to, Numeric $weight = 1, Bool:D :d(:$directed) = False) {
         %!adjacency-list{$from}{$to} = $weight;
 
