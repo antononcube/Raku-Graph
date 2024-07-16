@@ -11,7 +11,7 @@ role Graph::Tourish {
             for @odd-vertices.combinations(2) -> ($v1, $v2) {
                 @edges.push: ($v1, $v2, %adj-list{$v1}{$v2} // Inf);
             }
-            @edges.sort({ $^a[2] <=> $^b[2] });
+            @edges = @edges.grep({ $_.tail < Inf }).sort({ $^a[2] <=> $^b[2] });
             my %matching;
             for @edges -> $edge {
                 my ($v1, $v2) = $edge;
