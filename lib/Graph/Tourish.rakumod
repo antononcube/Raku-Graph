@@ -27,7 +27,7 @@ role Graph::Tourish {
             my @stack = %adj-list.keys.head;
             my @circuit;
             while @stack {
-                my $v = @stack[*-1];
+                my $v = @stack.tail;
                 if %adj-list{$v}.elems {
                     my $u = %adj-list{$v}.keys.head;
                     @stack.push: $u;
