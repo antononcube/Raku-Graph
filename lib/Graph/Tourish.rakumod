@@ -7,14 +7,16 @@ role Graph::Tourish {
         }
 
         sub find-minimum-weight-matching(@odd-vertices, %adj-list) {
-            my @edges;
+            my @extEdges;
             for @odd-vertices.combinations(2) -> ($v1, $v2) {
-                @edges.push: ($v1, $v2, %adj-list{$v1}{$v2} // Inf);
+                my @path = self.find-shortest-path($v1, $v2);
+                my $weight = @path.rotor(2 => -1).map({ self.adjacency-list{$_.head}{$_.tail} }).sum;
+                @extEdges.push: ($v1, $v2, $weight);
             }
-            @edges = @edges.grep({ $_.tail < Inf }).sort({ $^a[2] <=> $^b[2] });
+            @extEdges = @extEdges.sort({ $^a[2] <=> $^b[2] });
             my %matching;
-            for @edges -> $edge {
-                my ($v1, $v2) = $edge;
+            for @extEdges -> $edge {
+                my ($v1, $v2, $w) = $edge;
                 unless %matching{$v1} || %matching{$v2} {
                     %matching{$v1} = $v2;
                     %matching{$v2} = $v1;
@@ -42,13 +44,30 @@ role Graph::Tourish {
 
         my %adj-list = %.adjacency-list.clone;
         %adj-list = %adj-list.map({ $_.key => $_.value.clone });
+
         my @odd-vertices = find-odd-degree-vertices(%adj-list);
+        if @odd-vertices > 2 {
+            die "The method find-postman-tour only works on Eulerian graphs.";
+        }
+
+        my %matching;
         if @odd-vertices.elems {
-            my %matching = find-minimum-weight-matching(@odd-vertices, %adj-list);
+            %matching = find-minimum-weight-matching(@odd-vertices, %adj-list);
             for %matching.kv -> $v1, $v2 {
                 %adj-list{$v1}{$v2} = %adj-list{$v2}{$v1} = 0;
             }
         }
-        eulerian-circuit(%adj-list);
+
+        my @res = eulerian-circuit(%adj-list);
+
+        @res = @res.rotor(2 => -1).map({
+            if (%matching{$_.head}:exists) && %matching{$_.head} eq $_.tail {
+                self.find-shortest-path($_.head, $_.tail).head(*-1)
+            } else {
+                $_.head
+            }
+        }).flat.Array.append(@res.tail);
+
+        return @res;
     }
 }
