@@ -15,6 +15,7 @@
   "test-depends": [],
   "provides": {
     "Graph": "lib/Graph.rakumod",
+    "Graph::Bipartitish": "lib/Graph/Bipartitish.rakumod",
     "Graph::Circulant": "lib/Graph/Circulant.rakumod",
     "Graph::Complete": "lib/Graph/Complete.rakumod",
     "Graph::CompleteKaryTree": "lib/Graph/CompleteKaryTree.rakumod",
