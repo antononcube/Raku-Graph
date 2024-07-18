@@ -1,0 +1,50 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+
+use Graph;
+use Graph::Cycle;
+use Graph::Grid;
+use Graph::Wheel;
+use Graph::CompleteKaryTree;
+
+## 1
+subtest {
+    for [4, 8, 120] -> $c {
+        my $g = Graph::Cycle.new($c);
+        is $g.is-bipartite, True;
+    }
+
+    for [3, 5, 123] -> $c {
+        my $g = Graph::Cycle.new($c);
+        is $g.is-bipartite, False;
+    }
+}
+
+## 2
+subtest {
+    for [3, 5, 17] -> $m {
+        for [3, 5, 12] -> $n {
+            my $g = Graph::Grid.new($m, $n);
+            is $g.is-bipartite, True;
+        }
+    }
+}
+
+## 3
+my $g3 = Graph::Wheel.new(5);
+is $g3.is-bipartite, False;
+
+## 4
+my $g4 = Graph::CompleteKaryTree.new(3, 5);
+is $g4.is-bipartite, True;
+
+## 5
+# Cubical graph
+my @edges = [1, 2], [1, 3], [1, 5], [2, 4], [2, 6], [3, 4], [3, 7], [4, 8], [5, 6], [5, 7], [6, 8], [7, 8];
+@edges = @edges.map({ $_.head.Str => $_.tail.Str });
+my $g5 = Graph.new(@edges);
+is $g5.is-bipartite, True;
+
+done-testing;
