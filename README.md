@@ -155,22 +155,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-10 --- 2
-10 --- 9
-8 --- 3
-8 --- 2
-2 --- 4
+12 --- 2
+12 --- 5
+12 --- 11
 2 --- 3
-2 --- 6
+2 --- 10
+2 --- 8
 2 --- 7
-2 --- 12
-9 --- 4
-6 --- 7
+2 --- 6
+2 --- 4
 5 --- 1
-5 --- 12
 3 --- 4
-7 --- 1
-11 --- 12
+3 --- 8
+4 --- 9
+1 --- 7
+7 --- 6
+9 --- 10
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -197,7 +197,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [10 9 4 3 8 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
 ```
 
 Here we find a cycle:
@@ -206,7 +206,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([10 2 4 9 10])
+# find-cycle : ([2 3 4 2])
 ```
 
 Here we find all cycles in the graph:
@@ -293,6 +293,8 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
     - [X] All cycles
   - [ ] TODO Find shortest tour
   - [ ] TODO Find postman tour
+    - [X] DONE Eulerian and semi-Eulerian graphs
+    - [ ] TODO General graphs
   - [ ] TODO Find Eulerian cycle
   - [ ] TODO Find Hamiltonian cycle
   - [ ] TODO Find cycle matrix
@@ -300,6 +302,12 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE Find paths
   - [ ] TODO Find edge independent paths
   - [ ] TODO Find edge vertex paths
+
+### Matching, coloring
+
+- [X] DONE Check is a graph bipartite
+- [ ] TODO Perfect match for bipartite graphs
+- [ ] TODO Matching edges
 
 ### Operations
 
@@ -361,6 +369,7 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE Undirected graphs
   - [X] DONE Vertex removal
   - [X] DONE Edge removal
+  - [X] DONE Bipartite graph check
   - [ ] TODO Directed graphs cycles
 - [ ] TODO Cross-verification with Mathematica
   - [X] DONE General workflow programming/setup

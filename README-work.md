@@ -248,6 +248,8 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
     - [X] All cycles
   - [ ] TODO Find shortest tour
   - [ ] TODO Find postman tour
+    - [X] DONE Eulerian and semi-Eulerian graphs
+    - [ ] TODO General graphs
   - [ ] TODO Find Eulerian cycle
   - [ ] TODO Find Hamiltonian cycle
   - [ ] TODO Find cycle matrix
@@ -255,6 +257,12 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE Find paths
   - [ ] TODO Find edge independent paths
   - [ ] TODO Find edge vertex paths
+
+### Matching, coloring
+
+- [X] DONE Check is a graph bipartite
+- [ ] TODO Perfect match for bipartite graphs
+- [ ] TODO Matching edges
 
 ### Operations
 
@@ -316,6 +324,7 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE Undirected graphs
   - [X] DONE Vertex removal
   - [X] DONE Edge removal
+  - [X] DONE Bipartite graph check
   - [ ] TODO Directed graphs cycles
 - [ ] TODO Cross-verification with Mathematica
   - [X] DONE General workflow programming/setup
