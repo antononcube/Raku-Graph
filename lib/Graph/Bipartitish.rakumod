@@ -1,7 +1,7 @@
 use v6.d;
 
 role Graph::Bipartitish {
-    method is-bipartite(--> Bool) {
+    method bipartite-coloring(--> Map) {
         my %color;
         my @queue;
 
@@ -16,7 +16,7 @@ role Graph::Bipartitish {
 
                 for %.adjacency-list{$current}.keys -> $neighbor {
                     if %color{$neighbor}:exists {
-                        return False if %color{$neighbor} == $current-color;
+                        return %() if %color{$neighbor} == $current-color;
                     } else {
                         %color{$neighbor} = 1 - $current-color;
                         @queue.push($neighbor);
@@ -25,6 +25,11 @@ role Graph::Bipartitish {
             }
         }
 
-        return True;
+        return %color;
+    }
+
+    method is-bipartite(--> Bool) {
+        my %color = self.bipartite-coloring;
+        return so %color;
     }
 }
