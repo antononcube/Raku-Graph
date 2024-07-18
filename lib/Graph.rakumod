@@ -2,9 +2,12 @@ use v6.d;
 
 use BinaryHeap;
 use Data::TypeSystem;
+use Graph::Bipartitish;
 use Graph::Tourish;
 
-class Graph does Graph::Tourish {
+class Graph
+        does Graph::Tourish
+        does Graph::Bipartitish {
     has %.adjacency-list;
     has Bool:D $.directed = False;
 
