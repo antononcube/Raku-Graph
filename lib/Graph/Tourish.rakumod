@@ -47,7 +47,7 @@ role Graph::Tourish {
 
         my @odd-vertices = find-odd-degree-vertices(%adj-list);
         if @odd-vertices > 2 {
-            die "The method find-postman-tour only works on Eulerian graphs.";
+            die "The method find-postman-tour only works on Eulerian and semi-Eulerian graphs.";
         }
 
         my %matching;
