@@ -1,7 +1,7 @@
 {
   "name": "Graph",
   "description": "Common graph functionalities.",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
@@ -24,6 +24,7 @@
     "Graph::Grid": "lib/Graph/Grid.rakumod",
     "Graph::Hypercube": "lib/Graph/Hypercube.rakumod",
     "Graph::KnightTour": "lib/Graph/KnightTour.rakumod",
+    "Graph::Neighborhoodish": "lib/Graph/Neighborhoodish.rakumod",
     "Graph::Path": "lib/Graph/Path.rakumod",
     "Graph::Petersen": "lib/Graph/Petersen.rakumod",
     "Graph::Random": "lib/Graph/Random.rakumod",
