@@ -1,0 +1,37 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+
+use Graph;
+use Graph::Petersen;
+use Graph::Grid;
+
+## 1
+subtest {
+    my $g = Graph::Grid.new(4, 6);
+    my $g2 = $g.neighborhood-graph('2_1', d => 1);
+    is $g2.vertex-count, 5;
+    is $g2.edge-count, 4;
+
+    my $g3 = $g.neighborhood-graph('2_1', d => 2);
+    is $g3.vertex-count, 11;
+    is $g3.edge-count, 14;
+    is $g3.vertex-list, <0_1 1_0 1_1 1_2 2_0 2_1 2_2 2_3 3_0 3_1 3_2>;
+}
+
+## 2
+subtest {
+    my $g = Graph::Petersen.new;
+    my $g2 = $g.neighborhood-graph('3', d => 1);
+    is $g2.vertex-count, 4;
+    is $g2.edge-count, 3;
+
+    my $g3 = $g.neighborhood-graph(["0", "1"], d => 1);
+    is $g3.vertex-count, 7;
+    is $g3.edge-count, 8;
+    is $g3.vertex-list, <0 1 2 3 4 5 6>;
+}
+
+
+done-testing;

@@ -4,10 +4,12 @@ use BinaryHeap;
 use Data::TypeSystem;
 use Graph::Bipartitish;
 use Graph::Tourish;
+use Graph::Neighborhoodish;
 
 class Graph
         does Graph::Tourish
-        does Graph::Bipartitish {
+        does Graph::Bipartitish
+        does Graph::Neighborhoodish {
     has %.adjacency-list;
     has Bool:D $.directed = False;
 
@@ -915,5 +917,20 @@ class Graph
         }
         @edges .= map({ $_<from> => $_<to> });
         return self.subgraph(@edges);
+    }
+
+    #======================================================
+    # NeighborhoodGraph
+    #======================================================
+    multi method neighborhood-graph(Str:D $v, UInt:D :d(:$max-path-length) = 1) {
+        return self.neighborhood-graph([$v, ], :$max-path-length);
+    }
+
+    multi method neighborhood-graph(Graph $g, UInt:D $d = 1) {
+        return self.neighborhood-graph($g.vertex-list, $d);
+    }
+
+    multi method neighborhood-graph(@spec, UInt:D :d(:$max-path-length) = 1) {
+        return Graph.new(self!neighborhood-graph-edges(@spec, :$max-path-length));
     }
 }
