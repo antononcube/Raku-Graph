@@ -33,5 +33,13 @@ subtest {
     is $g3.vertex-list, <0 1 2 3 4 5 6>;
 }
 
+## 3
+subtest {
+    my $g = Graph::Grid.new(3, 4, :directed);
+    my $g2 = $g.neighborhood-graph(['0_0', '1_3'], d => 1);
+    is $g2.vertex-count, 7;
+    is $g2.edge-count, 5;
+    is $g2.vertex-list, <0_0 0_1 0_3 1_0 1_2 1_3 2_3>;
+}
 
 done-testing;
