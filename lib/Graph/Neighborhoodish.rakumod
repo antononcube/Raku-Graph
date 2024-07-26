@@ -2,6 +2,11 @@ use v6.d;
 
 role Graph::Neighborhoodish {
     method !neighborhood-graph-edges(@spec, UInt:D :d(:$max-path-length) = 1) {
+
+        if $.directed {
+            die 'The graph is expected to be undirected.'
+        }
+
         my @vertices = @spec.grep({ $_ ~~ Str:D });
         my @edges = @spec.grep({  $_ ~~ Pair:D });
 
@@ -38,7 +43,8 @@ role Graph::Neighborhoodish {
         # Make the Cartesian product of the gathered vertices and get all edges that correspond to them
         @vertices = %neighborhood.values.map(*.Slip).unique;
 
-        @edges = (@vertices X @vertices).map({
+        # If Cartesian product is used for undirected graphs, then twice as many edges would be produced
+        @edges = @vertices.combinations(2).map({
             %.adjacency-list{$_.head}{$_.tail}:exists ?? %(from => $_.head, to => $_.tail, weight => %.adjacency-list{$_.head}{$_.tail}) !! Empty
         });
         # Note that is likely too slow -- known edges are also tested.

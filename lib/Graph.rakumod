@@ -931,6 +931,23 @@ class Graph
     }
 
     multi method neighborhood-graph(@spec, UInt:D :d(:$max-path-length) = 1) {
-        return Graph.new(self!neighborhood-graph-edges(@spec, :$max-path-length));
+        if !$!directed {
+            return Graph.new(self!neighborhood-graph-edges(@spec, :$max-path-length));
+        } else {
+            # This might not be very efficient for large graphs,
+            # but it is obviously correct and descriptive.
+            my $g = Graph.new(self, :!directed);
+            my $g2 = $g.neighborhood-graph(@spec, :$max-path-length);
+            my @edges = $g2.edges(:dataset).map({
+                if %!adjacency-list{$_<from>}{$_<to>}:exists {
+                    $_
+                } elsif %!adjacency-list{$_<to>}{$_<from>}:exists {
+                    %(from => $_<to>, to => $_<from>, weight => $_<weight>)
+                } else {
+                    Empty
+                }
+            });
+            return Graph.new(@edges, :directed);
+        }
     }
 }
