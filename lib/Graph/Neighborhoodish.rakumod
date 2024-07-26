@@ -35,7 +35,7 @@ role Graph::Neighborhoodish {
             }.cache
         }
 
-        # Make the Cartesian product of the gathered last level vertices and get all edges that correspond to them
+        # Make the Cartesian product of the gathered vertices and get all edges that correspond to them
         @vertices = %neighborhood.values.map(*.Slip).unique;
 
         @edges = (@vertices X @vertices).map({
