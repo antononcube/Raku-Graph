@@ -1,0 +1,58 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+
+use Graph;
+use Graph::Wheel;
+
+## 1
+subtest {
+    my $g = Graph::Wheel.new(6, :directed);
+    my $g2 = $g.undirected-graph();
+    is $g2.vertex-count, 7;
+    is $g2.edge-count, 12;
+    is-deeply $g2.vertex-list.sort, $g.vertex-list.sort;
+    is $g2.directed, False;
+}
+
+## 2
+subtest {
+    my $g = Graph::Wheel.new(6, :directed);
+    my $g2 = $g.directed-graph();
+    is $g2.vertex-count, 7;
+    is $g2.edge-count, 12;
+    is-deeply $g2.vertex-list.sort, $g.vertex-list.sort;
+    is $g2.directed, True;
+    is-deeply $g2.edge-list.sort, $g.edge-list.sort;
+}
+
+## 3
+subtest {
+    my $g = Graph.new([
+        %('from' => '1', 'to' => '2', 'weight' => 1),
+        %('from' => '1', 'to' => '3', 'weight' => 1),
+        %('from' => '2', 'to' => '3', 'weight' => 1),
+        %('from' => '3', 'to' => '4', 'weight' => 1)], :!directed);
+
+    my $g2 = $g.directed-graph();
+    is $g2.vertex-count, 4;
+    is $g2.edge-count, 8;
+    is-deeply $g2.vertex-list.sort, $g.vertex-list.sort;
+    is $g2.directed, True;
+
+    my $g3 = $g.directed-graph(method => 'acyclic');
+    is $g3.vertex-count, 4;
+    is $g3.edge-count, 4;
+    is-deeply $g3.vertex-list.sort, $g.vertex-list.sort;
+    is $g3.directed, True;
+    is $g3.find-cycle, [];
+
+    my $g4 = $g.directed-graph(method => 'random');
+    is $g4.vertex-count, 4;
+    is $g4.edge-count, 4;
+    is-deeply $g4.vertex-list.sort, $g.vertex-list.sort;
+    is $g4.directed, True;
+}
+
+done-testing;
