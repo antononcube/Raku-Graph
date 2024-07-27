@@ -267,13 +267,18 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 ### Operations
 
 - [ ] TODO Unary graph operations
-  - [X] TODO Reversed graph
-  - [X] TODO Complement graph
-  - [ ] TODO Make undirected
+  - [X] DONE Reversed graph
+  - [X] DONE Complement graph
+  - [X] DONE Subgraph
+    - For given vertices and/or edges.
+  - [X] DONE Neighborhood graph
+    - For given vertices and/or edges.
+  - [X] DONE Make undirected
     - Can be implemented as `Graph.new($g, :!directed)`.
     - But maybe it is more efficient to directly manipulate `adjacency-list`.
-  - [ ] TODO Make directed
-    - That is just a flag change. (Of `$!directed`.)
+  - [X] DONE Make directed
+    - It is not just a flag change of `$!directed`.
+    - Implement the methods: `Whatever`, "Acyclic", "Random".
   - [ ] TODO Edge contraction
   - [ ] TODO Vertex contraction
   - [ ] TODO Line graph

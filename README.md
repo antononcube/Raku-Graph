@@ -155,22 +155,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-12 --- 2
+8 --- 3
+8 --- 2
+1 --- 7
+1 --- 5
 12 --- 5
 12 --- 11
-2 --- 3
-2 --- 10
-2 --- 8
-2 --- 7
-2 --- 6
-2 --- 4
-5 --- 1
-3 --- 4
-3 --- 8
+12 --- 2
+4 --- 3
 4 --- 9
-1 --- 7
-7 --- 6
-9 --- 10
+4 --- 2
+6 --- 2
+6 --- 7
+2 --- 7
+2 --- 10
+2 --- 3
+10 --- 9
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -206,7 +206,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([2 3 4 2])
+# find-cycle : ([1 5 12 2 6 7 1])
 ```
 
 Here we find all cycles in the graph:
@@ -312,13 +312,18 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 ### Operations
 
 - [ ] TODO Unary graph operations
-  - [X] TODO Reversed graph
-  - [X] TODO Complement graph
-  - [ ] TODO Make undirected
+  - [X] DONE Reversed graph
+  - [X] DONE Complement graph
+  - [X] DONE Subgraph
+    - For given vertices and/or edges.
+  - [X] DONE Neighborhood graph
+    - For given vertices and/or edges.
+  - [X] DONE Make undirected
     - Can be implemented as `Graph.new($g, :!directed)`.
     - But maybe it is more efficient to directly manipulate `adjacency-list`.
-  - [ ] TODO Make directed
-    - That is just a flag change. (Of `$!directed`.)
+  - [X] DONE Make directed
+    - It is not just a flag change of `$!directed`.
+    - Implement the methods: `Whatever`, "Acyclic", "Random".
   - [ ] TODO Edge contraction
   - [ ] TODO Vertex contraction
   - [ ] TODO Line graph
