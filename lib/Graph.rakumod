@@ -53,25 +53,22 @@ class Graph
         self.bless(adjacency-list => %(), :$directed, :@edges);
     }
 
-    method clone(:d(:$directed) = Whatever) {
-        my $directed-new = $!directed;
-        if $directed ~~ Bool:D {
-            $directed-new = $directed ?? True !! False;
-        }
+    method clone(:d(:$directed) is copy = Whatever) {
+        if $directed.isa(Whatever) {$directed = $!directed}
         die 'The value of the argument $directed is expected to be a Boolean or Whaterver.'
-        unless $directed-new ~~ Bool:D;
+        unless $directed ~~ Bool:D;
 
         # This can be probably made faster by cloning the adjacency-list directly.
         my @edges = self.edges(:dataset);
-        given ($directed-new, $!directed) {
-            when (True, False) {
+        given ($directed, $!directed) {
+            when $_ eqv (True, False) {
                 @edges = [|@edges, |@edges.map({ %( from => $_<to>, to => $_<from>, weight => $_<weight>) })];
             }
             # when (True, True) { done by default with creation }
             # when (False, False) { done by default with creation }
             # when (False, True) { done by default with creation }
         }
-        return Graph.new(self.vertex-list, @edges, directed => $directed-new);
+        return Graph.new(self.vertex-list, @edges, :$directed);
     }
 
     #======================================================
@@ -292,6 +289,39 @@ class Graph
             self.vertex-out-degree($v) - self.vertex-in-degree($v);
         } else {
             self.adjacency-list{$v}.elems // 0;
+        }
+    }
+
+    #======================================================
+    # Basic conversions
+    #======================================================
+    method undirected-graph() {
+        return self.clone(:!directed);
+    }
+
+    method directed-graph(:m(:$method) = Whatever) {
+        return do if $!directed {
+            self.clone;
+        } else {
+            given $method {
+                when Whatever {
+                    self.clone(:directed)
+                }
+                when $_ ~~ Str:D && $_.lc eq 'acyclic' {
+                    my @edges = self.edges(:dataset);
+                    my %vertexToInd = self.vertex-list.sort.kv.Hash.invert;
+                    @edges = @edges.map({ %vertexToInd{$_<from>} < %vertexToInd{$_<to>} ?? $_ !! %( from => $_<to>, to => $_<from>, weight => $_<weight>) });
+                    Graph.new(@edges, :directed)
+                }
+                when $_ ~~ Str:D && $_.lc eq 'random' {
+                    my @edges = self.edges(:dataset);
+                    @edges = @edges.map({ rand < 0.5 ?? $_ !! %( from => $_<to>, to => $_<from>, weight => $_<weight>) });
+                    Graph.new(@edges, :directed)
+                }
+                default {
+                    die 'The value of $method is expected to be "Acyclic", "Random", or Whatever.';
+                }
+            }
         }
     }
 
