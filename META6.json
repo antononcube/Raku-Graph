@@ -18,6 +18,7 @@
     "Graph::Bipartitish": "lib/Graph/Bipartitish.rakumod",
     "Graph::Circulant": "lib/Graph/Circulant.rakumod",
     "Graph::Complete": "lib/Graph/Complete.rakumod",
+    "Graph::Componentish": "lib/Graph/Componentish.rakumod",
     "Graph::CompleteKaryTree": "lib/Graph/CompleteKaryTree.rakumod",
     "Graph::Cycle": "lib/Graph/Cycle.rakumod",
     "Graph::Distribution": "lib/Graph/Distribution.rakumod",
