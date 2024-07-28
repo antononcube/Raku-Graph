@@ -90,7 +90,13 @@ class Graph::Random is Graph {
                 }
             }
         }
+
         $!vertex-coordinates = @vertices.kv.rotor(2).map({ $prefix ~ $_.head => $_.tail }).cache.Hash;
+
+        my $vSet = self.vertex-list.Set;
+        for (^$n).map({ $prefix ~ $_ }) -> $v {
+            if $v ∉ $vSet { self.adjacency-list{$v} = %() }
+        }
     }
 
     #------------------------------------------------------
