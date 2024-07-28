@@ -58,7 +58,7 @@ role Graph::Componentish {
 
     #------------------------------------------------------
     # See https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm
-    method !tarjan-scc {
+    method !tarjan-scc(--> List) {
         my %index-of;
         my %lowlink-of;
         my @stack;
