@@ -5,6 +5,7 @@ use lib <. lib>;
 use Graph;
 use Graph::Path;
 use Graph::Complete;
+use Graph::Star;
 
 use Test;
 
@@ -130,5 +131,10 @@ subtest {
         ok $g25.vertex-add(<a b c>);
         is $g25.vertex-list.sort, <1 2 3 4 a b c>;
 }
+
+## 26
+is
+        Graph::Star.new(5, prefix => 'st_', :!directed).edge-count,
+        5;
 
 done-testing;
