@@ -1,0 +1,16 @@
+use v6.d;
+use Test;
+
+
+use lib <. lib>;
+
+use Graph;
+use Graph::Distribution;
+use Graph::Random;
+
+my $g = Graph::Random.new(Graph::Distribution::Spatial.new(25, 0.75 / 10));
+
+is $g.directed, False;
+is-deeply $g.vertex-list.sort, (^25)».Str.sort;
+
+done-testing;
