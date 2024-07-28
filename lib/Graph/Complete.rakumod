@@ -21,6 +21,10 @@ class Graph::Complete is Graph {
         self.bless(:$n, :$prefix, :$directed);
     }
 
+    multi method new(Int:D $n, Str:D :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
+        self.bless(:$n, :$prefix, :$directed);
+    }
+
     multi method new(Int:D :$n, Str:D :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$n, :$prefix, :$directed);
     }
