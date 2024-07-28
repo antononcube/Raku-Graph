@@ -63,13 +63,16 @@ is Graph::Petersen.new.is-weakly-connected, True;
 
 ## 8
 my $g8 = Graph.new([
-    %('from' => '1', 'to' => '2', 'weight' => 1), %('from' => '2', 'to' => '3', 'weight' => 1),
-    %('from' => '3', 'to' => '1', 'weight' => 1), %('from' => '3', 'to' => '4', 'weight' => 1),
-    %('from' => '3', 'to' => '5', 'weight' => 1), %('from' => '4', 'to' => '5', 'weight' => 1)
+    %('from' => '1', 'to' => '2', 'weight' => 1),
+    %('from' => '2', 'to' => '3', 'weight' => 1),
+    %('from' => '3', 'to' => '1', 'weight' => 1),
+    %('from' => '3', 'to' => '4', 'weight' => 1),
+    %('from' => '3', 'to' => '5', 'weight' => 1),
+    %('from' => '4', 'to' => '5', 'weight' => 1)
 ], :directed);
 
-say $g8.wl;
-say "res: ", $g8.weakly-connected-components;
+#say $g8.wl;
+#say "res: ", $g8.weakly-connected-components;
 isa-ok $g8.weakly-connected-components, Positional;
 
 done-testing;
