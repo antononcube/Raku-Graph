@@ -131,4 +131,13 @@ role Graph::Componentish {
     method is-connected() {
         return self.connected-components.elems == 1;
     }
+
+    #------------------------------------------------------
+    method topological-sort() {
+        if !self.directed { return Empty }
+        my %candidates = self.vertex-list.map({ $_ => self.vertex-in-degree($_) }).grep({ $_.value == 0 });
+        if ! %candidates { return Empty }
+        my @sccs = self.connected-components(method => 'tarjan').reverse;
+        return @sccs.map(*.Slip).List;
+    }
 }
