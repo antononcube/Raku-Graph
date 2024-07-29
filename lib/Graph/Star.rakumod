@@ -15,6 +15,10 @@ class Graph::Star is Graph {
         for 1..$!n -> $i {
             self.add-edge($!center, "$prefix$i", :$directed);
         }
+
+        self.vertex-coordinates =
+                self.vertex-list.grep({ $_ ne $center }).map({ my $i = $_.subst($prefix).Int - 1; $_ => [cos(2 * pi / $!n * $i), sin(2 * pi / $!n * $i)]}).Hash;
+        self.vertex-coordinates{$center} = [0, 0];
     }
 
     multi method new(Int:D $n, $center = Whatever, Str:D $prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
