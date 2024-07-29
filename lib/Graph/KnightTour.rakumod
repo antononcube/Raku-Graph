@@ -27,11 +27,18 @@ class Graph::KnightTour is Graph {
                 }
             }
         }
+
+        self.vertex-coordinates = self.vertex-list.map({ $_ => $_.subst($prefix).split($sep)».Int.List }).Hash;
     }
 
     multi method new(Int:D $rows, Int:D $columns, Str:D $prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$rows, :$columns, :$prefix, :$sep, :$directed);
     }
+
+    multi method new(Int:D $rows, Int:D $columns, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
+        self.bless(:$rows, :$columns, :$prefix, :$sep, :$directed);
+    }
+
     multi method new(Int:D :m(:$rows), Int:D :n(:$columns), Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$rows, :$columns, :$prefix, :$sep, :$directed);
     }
