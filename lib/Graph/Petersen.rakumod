@@ -13,6 +13,11 @@ class Graph::Petersen is Graph {
                 self.add-edge($prefix ~ @r[1], $prefix ~ @r[0], :!directed);
             }
         }
+
+        self.vertex-coordinates =
+                [|<0 2 7 6 5>.pairs.map({ "{$prefix}{$_.value}" => [cos(pi / 2 + 2 * pi / 5 * $_.key), sin(pi / 2 + 2 * pi / 5 * $_.key)] >>*>> 2}),
+                 |<3 4 8 1 9>.pairs.map({ "{$prefix}{$_.value}" => [cos(pi / 2 + 2 * pi / 5 * $_.key), sin(pi / 2 + 2 * pi / 5 * $_.key)]})];
+        self.vertex-coordinates .= Hash;
     }
 
     multi method new(Str:D :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
