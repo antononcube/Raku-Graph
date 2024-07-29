@@ -155,22 +155,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-8 --- 3
-8 --- 2
-1 --- 7
-1 --- 5
-12 --- 5
-12 --- 11
-12 --- 2
-4 --- 3
-4 --- 9
-4 --- 2
-6 --- 2
 6 --- 7
-2 --- 7
-2 --- 10
+6 --- 2
+11 --- 12
+8 --- 2
+8 --- 3
+9 --- 10
+9 --- 4
+4 --- 3
+4 --- 2
+12 --- 2
+12 --- 5
+10 --- 2
+7 --- 2
+7 --- 1
 2 --- 3
-10 --- 9
+5 --- 1
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -197,7 +197,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [11 12 5 1 7 6 2 8 3 4 9 10]
 ```
 
 Here we find a cycle:
@@ -206,7 +206,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([1 5 12 2 6 7 1])
+# find-cycle : ([2 3 8 2])
 ```
 
 Here we find all cycles in the graph:
@@ -285,8 +285,12 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE Graph diameter
   - [X] DONE Graph center
   - [X] DONE Graph periphery
-- [ ] TODO Topological paths
-  - [ ] TODO Topological sort
+- [X] DONE Weakly connected component  
+- [X] DONE Strongly connected component
+  - [X] DONE [Tarjan's algorithm](https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm)
+  - [ ] TODO [Kosaraju's algorithm](https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm) 
+- [X] DONE Topological sort
+  - Using Tarjan's algorithm
 - [ ] TODO Cycles and tours
   - [X] DONE Find cycle
     - [X] Just one cycle

@@ -240,8 +240,12 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [X] DONE Graph diameter
   - [X] DONE Graph center
   - [X] DONE Graph periphery
-- [ ] TODO Topological paths
-  - [ ] TODO Topological sort
+- [X] DONE Weakly connected component  
+- [X] DONE Strongly connected component
+  - [X] DONE [Tarjan's algorithm](https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm)
+  - [ ] TODO [Kosaraju's algorithm](https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm) 
+- [X] DONE Topological sort
+  - Using Tarjan's algorithm
 - [ ] TODO Cycles and tours
   - [X] DONE Find cycle
     - [X] Just one cycle
