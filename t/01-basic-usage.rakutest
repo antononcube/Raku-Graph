@@ -3,9 +3,10 @@ use v6.d;
 use lib <. lib>;
 
 use Graph;
-use Graph::Path;
 use Graph::Complete;
 use Graph::Star;
+use Graph::Path;
+use Graph::Petersen;
 
 use Test;
 
@@ -136,5 +137,11 @@ subtest {
 is
         Graph::Star.new(5, prefix => 'st_', :!directed).edge-count,
         5;
+
+## 27
+say Graph::Petersen.new.vertex-coordinates.raku;
+isa-ok
+        Graph::Petersen.new.vertex-coordinates,
+        Map:D;
 
 done-testing;
