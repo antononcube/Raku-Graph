@@ -14,6 +14,7 @@ class Graph
         does Graph::Tourish {
     has %.adjacency-list;
     has Bool:D $.directed = False;
+    has $.vertex-coordinates is rw = Whatever;
 
     #======================================================
     # Creators

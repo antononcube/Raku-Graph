@@ -5,7 +5,6 @@ use Graph::Distribution;
 
 class Graph::Random is Graph {
     has $.dist is required;
-    has $.vertex-coordinates = Whatever;
 
     submethod BUILD(:$!dist, :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         given $!dist {
@@ -91,7 +90,7 @@ class Graph::Random is Graph {
             }
         }
 
-        $!vertex-coordinates = @vertices.kv.rotor(2).map({ $prefix ~ $_.head => $_.tail }).cache.Hash;
+        self.vertex-coordinates = @vertices.kv.rotor(2).map({ $prefix ~ $_.head => $_.tail }).cache.Hash;
 
         my $vSet = self.vertex-list.Set;
         for (^$n).map({ $prefix ~ $_ }) -> $v {
