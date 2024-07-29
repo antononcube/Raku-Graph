@@ -15,8 +15,8 @@ class Graph::Petersen is Graph {
         }
 
         self.vertex-coordinates =
-                [|<0 2 7 6 5>.pairs.map({ "{$prefix}{$_.value}" => [cos(pi / 2 + 2 * pi / 5 * $_.key), sin(pi / 2 + 2 * pi / 5 * $_.key)] >>*>> 2}),
-                 |<3 4 8 1 9>.pairs.map({ "{$prefix}{$_.value}" => [cos(pi / 2 + 2 * pi / 5 * $_.key), sin(pi / 2 + 2 * pi / 5 * $_.key)]})];
+                [|(5..9).pairs.map({ "{$prefix}{$_.value}" => [cos(pi / 2 + 2 * pi / 5 * $_.key), sin(pi / 2 + 2 * pi / 5 * $_.key)] >>*>> 2}),
+                 |(^5).pairs.map({ "{$prefix}{$_.value}" => [cos(pi / 2 + 2 * pi / 5 * $_.key), sin(pi / 2 + 2 * pi / 5 * $_.key)]})];
         self.vertex-coordinates .= Hash;
     }
 
