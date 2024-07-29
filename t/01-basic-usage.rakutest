@@ -139,7 +139,6 @@ is
         5;
 
 ## 27
-say Graph::Petersen.new.vertex-coordinates.raku;
 isa-ok
         Graph::Petersen.new.vertex-coordinates,
         Map:D;
