@@ -1,0 +1,21 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+
+use Graph;
+
+subtest {
+    my @edges = %('from' => 'B', 'to' => 'A', 'weight' => 1),
+                %('from' => 'B', 'to' => 'E', 'weight' => 1),
+                %('from' => 'C', 'to' => 'A', 'weight' => 1),
+                %('from' => 'D', 'to' => 'B', 'weight' => 1),
+                %('from' => 'D', 'to' => 'C', 'weight' => 1),
+                %('from' => 'E', 'to' => 'A', 'weight' => 1),
+                %('from' => 'E', 'to' => 'C', 'weight' => 1);
+
+    my $g = Graph.new(@edges):d;
+    is-deeply $g.topological-sort, <D B E C A>;
+}
+
+done-testing;
