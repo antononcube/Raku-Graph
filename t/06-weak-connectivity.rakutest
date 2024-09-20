@@ -75,4 +75,14 @@ my $g8 = Graph.new([
 #say "res: ", $g8.weakly-connected-components;
 isa-ok $g8.weakly-connected-components, Positional;
 
+## 9
+my $g9 = Graph.new((1..9)>>.Str,
+        [
+            %('from' => '2', 'to' => '6', 'weight' => 1), %('from' => '3', 'to' => '7', 'weight' => 1),
+            %('from' => '3', 'to' => '10', 'weight' => 1), %('from' => '4', 'to' => '7', 'weight' => 1),
+            %('from' => '4', 'to' => '8', 'weight' => 1), %('from' => '4', 'to' => '10', 'weight' => 1),
+            %('from' => '5', 'to' => '6', 'weight' => 1), %('from' => '9', 'to' => '10', 'weight' => 1)]);
+#say $g9.wl;
+is-deeply $g9.weakly-connected-components>>.elems, (6, 3, 1);
+
 done-testing;
