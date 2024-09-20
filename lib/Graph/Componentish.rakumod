@@ -109,7 +109,8 @@ role Graph::Componentish {
         }
 
         # Result
-        return @sccs».List.List;
+        # Give largest components first.
+        return @sccs».List.sort(-*.elems).List;
     }
 
     #------------------------------------------------------
