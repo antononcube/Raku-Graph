@@ -365,7 +365,7 @@ class Graph
     }
 
     #------------------------------------------------------
-    method mermaid(Str:D :d(:$direction) = 'LR', :$weights is copy = Whatever) {
+    method mermaid(Str:D :d(:$direction) = 'LR', :$weights is copy = Whatever, Bool:D :f(:fence(:code-fence(:$code-block))) = False ) {
 
         my @dsEdges = self.edges(:dataset);
 
@@ -380,7 +380,8 @@ class Graph
                     @dsEdges.map({ "{ $_<from> } $arrow |{ $_<weight>.Str }|{ $_<to> }" }).join("\n");
                 }
 
-        "graph $direction\n$edges";
+        my $res = "graph $direction\n$edges";
+        return $code-block ?? "```mermaid\n{$res}\n```" !! $res;
     }
 
     #------------------------------------------------------
