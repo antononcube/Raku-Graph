@@ -210,6 +210,8 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 - [ ] TODO Matrix representation
   - Sparse matrices are needed before "seriously" considering this.
   - Sparse matrices should be easy to create using the (already implemented) edge dataset.
+  - [ ] Adjacency matrix
+  - [ ] Incidence matrix
 
 ### Graph programming
 
@@ -325,7 +327,12 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [ ] TODO Franklin graph
   - [X] DONE [Petersen graph](https://en.wikipedia.org/wiki/Petersen_graph)
   - [ ] TODO Wagner graph
-
+- Creation from 
+  - [ ] Adjacency matrix (dense)
+  - [ ] Adjacency matrix (sparse)
+  - [ ] Incidence matrix (dense)
+  - [ ] Incidence matrix (sparse)
+  
 ### Tests
 
 - [ ] TODO Unit tests

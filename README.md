@@ -370,7 +370,12 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [ ] TODO Franklin graph
   - [X] DONE [Petersen graph](https://en.wikipedia.org/wiki/Petersen_graph)
   - [ ] TODO Wagner graph
-
+- Creation from
+  - [ ] Adjacency matrix (dense)
+  - [ ] Adjacency matrix (sparse)
+  - [ ] Incidence matrix (dense)
+  - [ ] Incidence matrix (sparse)
+  
 ### Tests
 
 - [ ] TODO Unit tests
