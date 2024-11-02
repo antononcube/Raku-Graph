@@ -22,6 +22,7 @@
     "Graph::CompleteKaryTree": "lib/Graph/CompleteKaryTree.rakumod",
     "Graph::Cycle": "lib/Graph/Cycle.rakumod",
     "Graph::Distribution": "lib/Graph/Distribution.rakumod",
+    "Graph::Formatish": "lib/Graph/Formatish.rakumod",
     "Graph::Grid": "lib/Graph/Grid.rakumod",
     "Graph::Hypercube": "lib/Graph/Hypercube.rakumod",
     "Graph::KnightTour": "lib/Graph/KnightTour.rakumod",
