@@ -239,7 +239,7 @@ class Graph
         if $dataset {
             return @edges
         }
-        return @edges.map({ $_<from> => $_<to> }).Array;
+        return @edges.sort(*<from to>).map({ $_<from> => $_<to> }).Array;
     }
 
     #------------------------------------------------------
