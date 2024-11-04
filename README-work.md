@@ -175,6 +175,42 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 
 -------
 
+## Graph plotting
+
+### Graph formats
+
+The class `Graph` has the following methods of graph visualization:
+
+- `wl` for making [Wolfram Language graphs](https://reference.wolfram.com/language/ref/Graph.html)
+- `dot` for visualizing via [Graphviz](https://graphviz.org) using the [DOT language](https://graphviz.org/doc/info/lang.html)
+- `graphml` for [GraphML](http://graphml.graphdrawing.org) visualizations
+- `mermaid` for [Mermaid-JS](https://mermaid.js.org) visualizations
+
+### Visualizing via DOT format
+
+In Jupyter notebooks with a Raku kernel graph visualization can be done with the method `dot` and its adverb ":svg".
+
+First, [install Graphviz](https://graphviz.org/download/).
+
+On macOS the installation can be done with:
+
+```
+brew install graphviz
+```
+
+Here a wheel graph is made and its DOT format is converted into SVG format (rendered automatically in Jupyter notebooks):
+
+```perl6, eval=FALSE
+use Graph::Wheel;
+Graph::Wheel.new(12).dot(:svg)
+```
+
+### Visualizing via D3.js
+
+*TBD...*
+
+-------
+
 ## TODO
 
 ### Main, core features

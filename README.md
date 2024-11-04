@@ -155,22 +155,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-6 --- 7
-6 --- 2
-11 --- 12
-8 --- 2
-8 --- 3
-9 --- 10
-9 --- 4
-4 --- 3
-4 --- 2
-12 --- 2
-12 --- 5
 10 --- 2
-7 --- 2
-7 --- 1
-2 --- 3
+10 --- 9
+9 --- 4
 5 --- 1
+5 --- 12
+1 --- 7
+2 --- 6
+2 --- 8
+2 --- 3
+2 --- 4
+2 --- 7
+2 --- 12
+12 --- 11
+7 --- 6
+8 --- 3
+4 --- 3
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -197,7 +197,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [11 12 5 1 7 6 2 8 3 4 9 10]
+# find-hamiltonian-path : [10 9 4 3 8 2 6 7 1 5 12 11]
 ```
 
 Here we find a cycle:
@@ -206,7 +206,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([2 3 8 2])
+# find-cycle : ([2 6 7 2])
 ```
 
 Here we find all cycles in the graph:
@@ -217,6 +217,42 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 ```
 # find-cycle (all): ([2 3 4 2] [2 3 8 2] [2 6 7 2] [10 2 4 9 10] [2 4 3 8 2] [1 5 12 2 7 1] [10 2 3 4 9 10] [1 5 12 2 6 7 1] [10 2 8 3 4 9 10])
 ```
+
+-------
+
+## Graph plotting
+
+### Graph formats
+
+The class `Graph` has the following methods of graph visualization:
+
+- `wl` for making [Wolfram Language graphs](https://reference.wolfram.com/language/ref/Graph.html)
+- `dot` for visualizing via [Graphviz](https://graphviz.org) using the [DOT language](https://graphviz.org/doc/info/lang.html)
+- `graphml` for [GraphML](http://graphml.graphdrawing.org) visualizations
+- `mermaid` for [Mermaid-JS](https://mermaid.js.org) visualizations
+
+### Visualizing via DOT format
+
+In Jupyter notebooks with a Raku kernel graph visualization can be done with the method `dot` and its adverb ":svg".
+
+First, [install Graphviz](https://graphviz.org/download/).
+
+On macOS the installation can be done with:
+
+```
+brew install graphviz
+```
+
+Here a wheel graph is made and its DOT format is converted into SVG format (rendered automatically in Jupyter notebooks):
+
+```perl6, eval=FALSE
+use Graph::Wheel;
+Graph::Wheel.new(12).dot(:svg)
+```
+
+### Visualizing via D3.js
+
+*TBD...*
 
 -------
 
@@ -255,6 +291,8 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
 - [ ] TODO Matrix representation
   - Sparse matrices are needed before "seriously" considering this.
   - Sparse matrices should be easy to create using the (already implemented) edge dataset.
+  - [ ] Adjacency matrix
+  - [ ] Incidence matrix
 
 ### Graph programming
 
@@ -370,7 +408,7 @@ say 'find-cycle (all): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' '
   - [ ] TODO Franklin graph
   - [X] DONE [Petersen graph](https://en.wikipedia.org/wiki/Petersen_graph)
   - [ ] TODO Wagner graph
-- Creation from
+- Creation from 
   - [ ] Adjacency matrix (dense)
   - [ ] Adjacency matrix (sparse)
   - [ ] Incidence matrix (dense)
