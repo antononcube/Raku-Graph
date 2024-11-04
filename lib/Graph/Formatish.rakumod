@@ -81,12 +81,17 @@ role Graph::Formatish {
 
 
     #------------------------------------------------------
-    multi method dot($weights is copy = Whatever) {
-        my %core = self!dot-core(:$weights);
-        return "{self.directed ?? 'digraph' !! 'graph'} \{\n{%core<vertexes>}\n{%core<edges>}\n\}";
+    method dot(*%args) {
+        if %args.elems == 0 || %args.elems == 1 && %args.keys.head eq 'weights' {
+            my $weights = %args<weights> // Whatever;
+            my %core = self!dot-core(:$weights);
+            return "{ self.directed ?? 'digraph' !! 'graph' } \{\n{ %core<vertexes> }\n{ %core<edges> }\n\}";
+        } else {
+            return self!dot-full(|%args);
+        }
     }
 
-    multi method dot(
+    method !dot-full(
             :$weights is copy = Whatever,
             Str:D :$background = '#1F1F1F',
             Str:D :$node-shape = 'circle',
