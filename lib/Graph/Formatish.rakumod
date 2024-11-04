@@ -94,26 +94,32 @@ role Graph::Formatish {
     method !dot-full(
             :$weights is copy = Whatever,
             Str:D :$background = '#1F1F1F',
-            Str:D :$node-shape = 'circle',
-            Str:D :$node-color = 'black',
-            Numeric:D :$node-size = 0.1,
-            Str:D :$node-fill-color = 'steelblue',
-            Str:D :$node-font-color = 'white',
-            Int:D :$node-font-size = 10,
-            Str:D :$node-label-location = 'c',
-            Str:D :$edge-color = 'steelblue',
+            Str:D :vertex-shape(:$node-shape) = 'circle',
+            Str:D :vertex-color(:$node-color) = 'Black',
+            Numeric:D :vertex-width(:$node-width) = 0.3,
+            Numeric:D :vertex-height(:$node-height) = 0.3,
+            :vertex-fixed-size(:$node-fixed-size) is copy = True,
+            Str:D :vertex-fill-color(:$node-fill-color) = 'SteelBlue',
+            Str:D :vertex-font-color(:$node-font-color) = 'White',
+            Int:D :vertex-font-size(:$node-font-size) = 12,
+            Str:D :vertex-lable-location(:$node-label-location) = 'c',
+            Str:D :$edge-color = 'SteelBlue',
             Numeric:D :$edge-width = 2,
             Bool :$svg = False,
+            :format(:$output-format) is copy = Whatever,
             Str:D :$engine = 'dot') {
 
         my %core = self!dot-core(:$weights);
         my $format = "bgcolor=\"$background\";";
-        $format ~= "\nnode [style=filled, shape=$node-shape, color=\"$node-color\", fillcolor=\"$node-fill-color\", fontsize=$node-font-size, fontcolor=\"$node-font-color\", labelloc=$node-label-location, width=$node-size, height=$node-size];";
+        if $node-fixed-size ~~ Bool:D { $node-fixed-size = $node-fixed-size ?? 'true' !! 'false' }
+        $format ~= "\nnode [style=filled, fixedsize=$node-fixed-size, shape=$node-shape, color=\"$node-color\", fillcolor=\"$node-fill-color\", fontsize=$node-font-size, fontcolor=\"$node-font-color\", labelloc=$node-label-location, width=$node-width, height=$node-height];";
         $format ~= "\nedge [color=\"$edge-color\", penwidth=$edge-width];";
 
         my $res = "{self.directed ?? 'digraph' !! 'graph'} \{\n$format\n{%core<vertexes>}\n{%core<edges>}\n\}";
 
-        return $svg ?? self!dot-svg($res, :$engine) !! $res;
+        if $svg { $output-format = 'svg' }
+        if $output-format.isa(Whatever) { $output-format = 'dot' }
+        return $output-format eq 'dot' ?? $res !! self!dot-svg($res, :$engine, format => $output-format);
     }
 
     method !dot-core(:$weights is copy = Whatever) {
@@ -130,15 +136,19 @@ role Graph::Formatish {
                     @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\" [weight={$_<weight>.Str }, label={$_<weight>.Str }]" }).join("\n");
                 }
 
-        my $vertexes = '"' ~ self.vertex-list.join('"; "') ~ '";';
+        my $vertexes = do if self.vertex-coordinates {
+            self.vertex-coordinates.map({"\"{$_.key}\" [pos=\"{$_.value.join(',')}!\"]" }).join(";\n");
+        } else {
+            '"' ~ self.vertex-list.join('"; "') ~ '";';
+        }
 
         return %(:$vertexes, :$edges);
     }
 
-    method !dot-svg($input, :$engine) {
+    method !dot-svg($input, Str:D :$engine = 'dot', Str:D :$format = 'svg') {
         my $temp-file = $*TMPDIR.child("temp-graph.dot");
         $temp-file.spurt: $input;
-        my $svg-output = run($engine, $temp-file, '-Tsvg', :out).out.slurp-rest;
+        my $svg-output = run($engine, $temp-file, "-T$format", :out).out.slurp-rest;
         unlink $temp-file;
         return $svg-output;
     }
