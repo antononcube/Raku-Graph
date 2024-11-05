@@ -97,6 +97,7 @@ role Graph::Formatish
     method !dot-full(
             :$weights is copy = Whatever,
             :$highlight = Whatever,
+            :size(:$graph-size) is copy = Whatever,
             Str:D :$background = '#1F1F1F',
             Bool:D :vertex-labels(:$node-labels) is copy = True,
             Str:D :vertex-shape(:$node-shape) = 'circle',
@@ -124,11 +125,18 @@ role Graph::Formatish
             $format .= subst('node [', 'node [ label="", ')
         }
 
+        $graph-size = do given $graph-size {
+            when Str:D { "graph [size=\"$graph-size\"];" }
+            when Numeric:D { "graph [size=\"{$_},{$_}!\"];" }
+            when $_ ~~ (Array:D | List:D | Seq:D) && $_.elems ≥ 2 { "graph [size=\"{$_.join(',')}!\"];" }
+            default { "" }
+        }
+
         my $res;
         if $highlight.isa(Whatever) {
-            $res = "{ self.directed ?? 'digraph' !! 'graph' } \{\n$format\n{ %core<vertexes> }\n{ %core<edges> }\n\}";
+            $res = "{ self.directed ?? 'digraph' !! 'graph' } \{\n$graph-size\n$format\n{ %core<vertexes> }\n{ %core<edges> }\n\}";
         } else {
-            $res = "{self.directed ?? 'digraph' !! 'graph'} \{\n$format\n{%core<vertexes>}\n";
+            $res = "{self.directed ?? 'digraph' !! 'graph'} \{\n$graph-size\n$format\n{%core<vertexes>}\n";
 
             # In order to prevent multiple edge plotting, the highlighted edges have to be removed
             my @core-edges = |%core<edges>.split("\n");
