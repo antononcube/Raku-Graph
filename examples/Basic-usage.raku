@@ -26,6 +26,12 @@ my @edges =
 my $graph = Graph.new;
 $graph.add-edges(@edges);
 
+# Export graph as EPS image
+#$graph.dot(engine => 'sfdp', output-format => 'eps') ==> spurt('./graph.eps');
+
+# DOT graph spec with highlight
+#note $graph.dot(highlight => [|<4 5 6 7>, "8" => "2"]);
+
 say 'vertex count : ', $graph.vertex-count;
 say 'vertex list : ', $graph.vertex-list;
 say 'edge count : ', $graph.edge-count;
