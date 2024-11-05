@@ -1,6 +1,9 @@
 use v6.d;
 
-role Graph::Formatish {
+use Graph::HighlightProcessing;
+
+role Graph::Formatish
+        does Graph::HighlightProcessing {
 
     #------------------------------------------------------
     sub to-wl-value($x) {
@@ -93,7 +96,9 @@ role Graph::Formatish {
 
     method !dot-full(
             :$weights is copy = Whatever,
+            :$highlight = Whatever,
             Str:D :$background = '#1F1F1F',
+            Bool:D :vertex-labels(:$node-labels) is copy = True,
             Str:D :vertex-shape(:$node-shape) = 'circle',
             Str:D :vertex-color(:$node-color) = 'Black',
             Numeric:D :vertex-width(:$node-width) = 0.3,
@@ -115,7 +120,38 @@ role Graph::Formatish {
         $format ~= "\nnode [style=filled, fixedsize=$node-fixed-size, shape=$node-shape, color=\"$node-color\", fillcolor=\"$node-fill-color\", fontsize=$node-font-size, fontcolor=\"$node-font-color\", labelloc=$node-label-location, width=$node-width, height=$node-height];";
         $format ~= "\nedge [color=\"$edge-color\", penwidth=$edge-width];";
 
-        my $res = "{self.directed ?? 'digraph' !! 'graph'} \{\n$format\n{%core<vertexes>}\n{%core<edges>}\n\}";
+        if !$node-labels {
+            $format .= subst('node [', 'node [ label="", ')
+        }
+
+        my $res;
+        if $highlight.isa(Whatever) {
+            $res = "{ self.directed ?? 'digraph' !! 'graph' } \{\n$format\n{ %core<vertexes> }\n{ %core<edges> }\n\}";
+        } else {
+            $res = "{self.directed ?? 'digraph' !! 'graph'} \{\n$format\n{%core<vertexes>}\n";
+
+            # In order to prevent multiple edge plotting, the highlighted edges have to be removed
+            my @core-edges = |%core<edges>.split("\n");
+
+            # Should be the same as the arrow determined in !dot-core
+            my $arrow = self.directed ?? '->' !! '--';
+
+            my %processed = self.process-highlight-spec($highlight, :directed-edges);
+            my $highlight-part = '';
+            for %processed.kv -> $color, %h {
+                my $pre = "edge [color=\"$color\", penwidth=$edge-width];";
+                # Make sure it is as in !dot-core
+                my @edge-specs = %h<edges>.map({ "\"{$_.head}\" $arrow \"{$_.tail}\"" });
+                my @edge-specs-rev = %h<edges>.map({ "\"{$_.tail}\" $arrow \"{$_.head}\"" });
+                @core-edges = (@core-edges (-) [|@edge-specs, |@edge-specs-rev]).keys;
+                $highlight-part = $highlight-part ~ "\n\n" ~ [
+                    $pre,
+                    %h<vertexes>.map({ "\"{$_}\" [fillcolor=\"$color\"];",}).join("\n"),
+                    @edge-specs.join("\n")
+                ].join("\n");
+            }
+            $res = $res ~ "\n" ~ @core-edges.join("\n") ~ $highlight-part ~ "\n\}";
+        }
 
         if $svg { $output-format = 'svg' }
         if $output-format.isa(Whatever) { $output-format = 'dot' }
