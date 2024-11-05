@@ -110,7 +110,7 @@ role Graph::Formatish
             Int:D :vertex-font-size(:$node-font-size) = 12,
             Str:D :vertex-lable-location(:$node-label-location) = 'c',
             Str:D :$edge-color = 'SteelBlue',
-            Numeric:D :$edge-width = 2,
+            Numeric:D :edge-thickness(:$edge-width) = 2,
             Bool :$svg = False,
             :format(:$output-format) is copy = Whatever,
             Str:D :$engine = 'dot') {
