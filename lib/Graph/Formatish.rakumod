@@ -97,7 +97,11 @@ role Graph::Formatish
     method !dot-full(
             :$weights is copy = Whatever,
             :$highlight = Whatever,
+            :label(:$graph-label) is copy = Whatever,
             :size(:$graph-size) is copy = Whatever,
+            Str:D :labelloc(:$label-location) = 't',
+            Str:D :fontcolor(:$font-color) = 'White',
+            Int:D :fontsize(:$font-size) = 16,
             Str:D :$background = '#1F1F1F',
             Bool:D :vertex-labels(:$node-labels) is copy = True,
             Str:D :vertex-shape(:$node-shape) = 'circle',
@@ -125,6 +129,15 @@ role Graph::Formatish
             $format .= subst('node [', 'node [ label="", ')
         }
 
+        # Graph label
+        $graph-label = do given $graph-label {
+            when Str:D {
+                "fontcolor = \"$font-color\";\nfontsize = \"$font-size\";\nlabelloc = \"$label-location\";label = \"$graph-label\";"
+            }
+            default { "" }
+        }
+
+        # Graph size
         $graph-size = do given $graph-size {
             when Str:D { "graph [size=\"$graph-size\"];" }
             when Numeric:D { "graph [size=\"{$_},{$_}!\"];" }
@@ -132,11 +145,16 @@ role Graph::Formatish
             default { "" }
         }
 
+        # Preliminary part
+        my $pre = "$graph-label\n$graph-size\n";
+        if $pre.trim.chars == 0 { $pre = ''}
+
+        # Main part
         my $res;
         if $highlight.isa(Whatever) {
-            $res = "{ self.directed ?? 'digraph' !! 'graph' } \{\n$graph-size\n$format\n{ %core<vertexes> }\n{ %core<edges> }\n\}";
+            $res = "{ self.directed ?? 'digraph' !! 'graph' } \{\n{$pre}{$format}\n{%core<vertexes>}\n{%core<edges>}\n\}";
         } else {
-            $res = "{self.directed ?? 'digraph' !! 'graph'} \{\n$graph-size\n$format\n{%core<vertexes>}\n";
+            $res = "{self.directed ?? 'digraph' !! 'graph'} \{\n{$pre}{$format}\n{%core<vertexes>}\n";
 
             # In order to prevent multiple edge plotting, the highlighted edges have to be removed
             my @core-edges = |%core<edges>.split("\n");
@@ -161,8 +179,11 @@ role Graph::Formatish
             $res = $res ~ "\n" ~ @core-edges.join("\n") ~ $highlight-part ~ "\n\}";
         }
 
+        # Output format
         if $svg { $output-format = 'svg' }
         if $output-format.isa(Whatever) { $output-format = 'dot' }
+
+        # Result
         return $output-format eq 'dot' ?? $res !! self!dot-svg($res, :$engine, format => $output-format);
     }
 
