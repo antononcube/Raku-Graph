@@ -24,7 +24,7 @@ role Graph::HighlightProcessing {
     proto method process-highlight-spec($highlight, Bool :directed(:$directed-edges) = False) is export {*}
 
     multi method process-highlight-spec(Bool :directed(:$directed-edges) = False) {
-        return self.process-highlight-spec([|self.vertex-list, |self.edges], directed-edges => self.directed);
+        return self.process-highlight-spec([|self.vertex-list, |self.edges], :directed-edges);
     }
 
     multi method process-highlight-spec($highlight, Bool :directed(:$directed-edges) = False) {
