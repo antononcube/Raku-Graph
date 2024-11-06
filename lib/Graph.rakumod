@@ -21,7 +21,11 @@ class Graph
     #======================================================
     # Creators
     #======================================================
-    submethod BUILD(:%!adjacency-list = %(), Bool:D :directed-edges(:$!directed) = False, :@vertexes = Empty, :@edges = Empty) {
+    submethod BUILD(:%!adjacency-list = %(),
+                    Bool:D :directed-edges(:$!directed) = False,
+                    :@vertexes = Empty,
+                    :@edges = Empty,
+                    :$!vertex-coordinates = Whatever) {
         if @edges {
             self.add-edges(@edges, :$!directed)
         }
@@ -36,26 +40,26 @@ class Graph
     }
 
     #------------------------------------------------------
-    multi method new(:%adjacency-list = %(), Bool:D :d(:directed-edges(:$directed)) = False) {
-        self.bless(:%adjacency-list, :$directed);
+    multi method new(:%adjacency-list = %(), Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
+        self.bless(:%adjacency-list, :$directed, :$vertex-coordinates);
     }
 
-    multi method new(@edges, Bool:D :d(:directed-edges(:$directed)) = False) {
-        self.bless(adjacency-list => %(), :$directed, :@edges);
+    multi method new(@edges, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
+        self.bless(adjacency-list => %(), :$directed, :@edges, :$vertex-coordinates);
     }
 
-    multi method new(@vertexes, @edges, Bool:D :d(:directed-edges(:$directed)) = False) {
-        self.bless(adjacency-list => %(), :$directed, :@vertexes, :@edges);
+    multi method new(@vertexes, @edges, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
+        self.bless(adjacency-list => %(), :$directed, :@vertexes, :@edges, :$vertex-coordinates);
     }
 
-    multi method new(Graph:D $gr, :d(:directed-edges(:$directed)) is copy = Whatever) {
+    multi method new(Graph:D $gr, :d(:directed-edges(:$directed)) is copy = Whatever, :$vertex-coordinates = Whatever) {
 
         if $directed.isa(Whatever) { $directed = $gr.directed; }
         die "When the first argument is a graph then the value of \$directed is expected to be a Boolean or Whatever."
         unless $directed ~~ Bool:D;
 
         my @edges = $gr.edges(:dataset);
-        self.bless(adjacency-list => %(), :$directed, :@edges);
+        self.bless(adjacency-list => %(), :$directed, :@edges, :$vertex-coordinates);
     }
 
     method clone(:d(:$directed) is copy = Whatever) {
@@ -73,7 +77,7 @@ class Graph
             # when (False, False) { done by default with creation }
             # when (False, True) { done by default with creation }
         }
-        return Graph.new(self.vertex-list, @edges, :$directed);
+        return Graph.new(self.vertex-list, @edges, :$directed, :$!vertex-coordinates);
     }
 
     #======================================================
@@ -833,5 +837,15 @@ class Graph
             });
             return Graph.new(@edges, :directed);
         }
+    }
+
+    #======================================================
+    # Highlight spec
+    #======================================================
+    # Graph is not defined in the role file, hence this multi method definition.
+    multi method process-highlight-spec(Graph:D $g, Bool :directed(:$directed-edges) = False) {
+        # Why the following line does not work?
+        # return $g.process-highlight-spec(:$directed-edges);
+        return self.process-highlight-spec([|$g.vertex-list, |$g.edges], :directed-edges);
     }
 }
