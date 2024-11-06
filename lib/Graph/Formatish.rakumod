@@ -106,6 +106,7 @@ role Graph::Formatish
             Bool:D :vertex-labels(:$node-labels) is copy = True,
             Str:D :vertex-shape(:$node-shape) = 'circle',
             Str:D :vertex-color(:$node-color) = 'Black',
+            Int:D :vertex-stroke-width(:node-stroke-width(:$node-penwidth)) = 1,
             Numeric:D :vertex-width(:$node-width) = 0.3,
             Numeric:D :vertex-height(:$node-height) = 0.3,
             :vertex-fixed-size(:$node-fixed-size) is copy = True,
@@ -114,7 +115,8 @@ role Graph::Formatish
             Int:D :vertex-font-size(:$node-font-size) = 12,
             Str:D :vertex-lable-location(:$node-label-location) = 'c',
             Str:D :$edge-color = 'SteelBlue',
-            Numeric:D :edge-thickness(:$edge-width) = 2,
+            Numeric:D :edge-thickness(:edge-width(:$edge-penwidth)) = 2,
+            Str:D :$preamble is copy = '',
             Bool :$svg = False,
             :format(:$output-format) is copy = Whatever,
             Str:D :$engine = 'dot') {
@@ -122,8 +124,8 @@ role Graph::Formatish
         my %core = self!dot-core(:$weights);
         my $format = "bgcolor=\"$background\";";
         if $node-fixed-size ~~ Bool:D { $node-fixed-size = $node-fixed-size ?? 'true' !! 'false' }
-        $format ~= "\nnode [style=filled, fixedsize=$node-fixed-size, shape=$node-shape, color=\"$node-color\", fillcolor=\"$node-fill-color\", fontsize=$node-font-size, fontcolor=\"$node-font-color\", labelloc=$node-label-location, width=$node-width, height=$node-height];";
-        $format ~= "\nedge [color=\"$edge-color\", penwidth=$edge-width];";
+        $format ~= "\nnode [style=filled, fixedsize=$node-fixed-size, shape=$node-shape, color=\"$node-color\", fillcolor=\"$node-fill-color\", penwidth=$node-penwidth, fontsize=$node-font-size, fontcolor=\"$node-font-color\", labelloc=$node-label-location, width=$node-width, height=$node-height];";
+        $format ~= "\nedge [color=\"$edge-color\", penwidth=$edge-penwidth];";
 
         if !$node-labels {
             $format .= subst('node [', 'node [ label="", ')
@@ -146,15 +148,18 @@ role Graph::Formatish
         }
 
         # Preliminary part
-        my $pre = "$graph-label\n$graph-size\n";
-        if $pre.trim.chars == 0 { $pre = ''}
+        if !$preamble {
+            my $pre = "$graph-label\n$graph-size\n";
+            if $pre.trim.chars == 0 { $pre = '' }
+            $preamble = $pre ~ "\n" ~ $format;
+        }
 
         # Main part
         my $res;
         if $highlight.isa(Whatever) {
-            $res = "{ self.directed ?? 'digraph' !! 'graph' } \{\n{$pre}{$format}\n{%core<vertexes>}\n{%core<edges>}\n\}";
+            $res = "{ self.directed ?? 'digraph' !! 'graph' } \{\n$preamble\n{%core<vertexes>}\n{%core<edges>}\n\}";
         } else {
-            $res = "{self.directed ?? 'digraph' !! 'graph'} \{\n{$pre}{$format}\n{%core<vertexes>}\n";
+            $res = "{self.directed ?? 'digraph' !! 'graph'} \{\n$preamble\n{%core<vertexes>}\n";
 
             # In order to prevent multiple edge plotting, the highlighted edges have to be removed
             my @core-edges = |%core<edges>.split("\n");
@@ -165,7 +170,7 @@ role Graph::Formatish
             my %processed = self.process-highlight-spec($highlight, :directed-edges);
             my $highlight-part = '';
             for %processed.kv -> $color, %h {
-                my $pre = "edge [color=\"$color\", penwidth=$edge-width];";
+                my $pre = "edge [color=\"$color\", penwidth=$edge-penwidth];";
                 # Make sure it is as in !dot-core
                 my @edge-specs = %h<edges>.map({ "\"{$_.head}\" $arrow \"{$_.tail}\"" });
                 my @edge-specs-rev = %h<edges>.map({ "\"{$_.tail}\" $arrow \"{$_.head}\"" });
