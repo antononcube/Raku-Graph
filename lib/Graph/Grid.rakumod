@@ -22,7 +22,7 @@ class Graph::Grid is Graph {
         self.vertex-coordinates = self.vertex-list.map({ $_ => $_.subst($prefix).split($sep)».Int.reverse.List }).Hash;
     }
 
-    multi method new(Int:D $rows, Int:D $columns, Str:D $prefix = '', Str:D $sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
+    multi method new(Int:D $rows, Int:D $columns, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$rows, :$columns, :$prefix, :$sep, :$directed);
     }
     multi method new(Int:D :m(:$rows), Int:D :n(:$columns), Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
