@@ -154,6 +154,9 @@ class Graph
             if %vertexes{$v}:exists {
                 %vertexes{$v}:delete
             }
+            if ($!vertex-coordinates ~~ Map:D) && ($!vertex-coordinates{$v}:exists) {
+                $!vertex-coordinates{$v}:delete
+            }
         }
         return self;
     }
@@ -234,7 +237,8 @@ class Graph
                     @edges.push({ :$from, :$to, :$weight })
                 } else {
                     if !(%mark{$to}{$from} // False) {
-                        @edges.push({ :$from, :$to, :$weight });
+                        my ($f, $t) = ($from, $to).sort;
+                        @edges.push({ from => $f, to => $t, :$weight });
                         %mark{$from}{$to} = True;
                     }
                 }
@@ -782,7 +786,9 @@ class Graph
     multi method subgraph(@subvertexes where @subvertexes.all ~~ Str:D) {
         my @edges = self.edges(:dataset);
         @edges .= grep({ $_<from> ∈ @subvertexes || $_<to> ∈ @subvertexes });
-        return Graph.new(@edges, :$!directed);
+        my %vertex-coordinates =
+                $!vertex-coordinates ~~ Map:D ?? $!vertex-coordinates.grep({ $_.key ∈ @subvertexes }) !! Whatever;
+        return Graph.new(@edges, :$!directed, :%vertex-coordinates);
     }
 
     multi method subgraph(@subedges where @subedges.all ~~ Pair:D) {
@@ -795,7 +801,9 @@ class Graph
         }
         my @subvertexes = [|@edges».key, |@edges».value].unique;
         my @edgesNew = self.edges(:!dataset).grep({ $_.key ∈ @subvertexes && $_.value ∈ @subvertexes });
-        return Graph.new(@edgesNew, :$!directed);
+        my %vertex-coordinates =
+                $!vertex-coordinates ~~ Map:D ?? $!vertex-coordinates.grep({ $_.key ∈ @subvertexes }) !! Whatever;
+        return Graph.new(@edgesNew, :$!directed, :%vertex-coordinates);
     }
 
     multi method subgraph(@subedges where @subedges.all ~~ Map:D) {
