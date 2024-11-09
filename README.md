@@ -155,22 +155,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-10 --- 2
-10 --- 9
-9 --- 4
-5 --- 1
-5 --- 12
-1 --- 7
+6 --- 7
 2 --- 6
-2 --- 8
-2 --- 3
+4 --- 9
+3 --- 4
 2 --- 4
+11 --- 12
+1 --- 5
+12 --- 5
+1 --- 7
+10 --- 9
+2 --- 8
+12 --- 2
+2 --- 3
 2 --- 7
-2 --- 12
-12 --- 11
-7 --- 6
-8 --- 3
-4 --- 3
+10 --- 2
+3 --- 8
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -197,7 +197,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [10 9 4 3 8 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [11 12 5 1 7 6 2 8 3 4 9 10]
 ```
 
 Here we find a cycle:
@@ -206,7 +206,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([2 6 7 2])
+# find-cycle : ([10 2 8 3 4 9 10])
 ```
 
 Here we find all cycles in the graph:
@@ -371,11 +371,18 @@ Graph::Wheel.new(12).dot(:svg)
   - [ ] TODO Line graph
   - [ ] TODO Dual graph
 - [ ] TODO Binary graph operations
+  - [X] DONE Union of graphs
+  - [X] DONE Intersection of graphs
+  - [X] DONE Difference of graphs
   - [ ] TODO Disjoint union of graphs
-  - [ ] TODO Cartesian product of graphs
-  - [ ] TODO Tensor product of graphs
-  - [ ] TODO Strong product of graphs
-  - [ ] TODO Lexicographic product of graphs
+  - [ ] TODO Product of graphs (AKA "box product")
+    - [ ] TODO Cartesian
+    - [ ] TODO Co-normal
+    - [ ] TODO Lexicographic
+    - [ ] TODO Normal
+    - [ ] TODO Rooted
+    - [ ] TODO Strong
+    - [ ] TODO Tensor
 
 ### Construction
 
@@ -388,6 +395,8 @@ Graph::Wheel.new(12).dot(:svg)
   - [X] DONE [Star graphs](https://en.wikipedia.org/wiki/Star_graph)
   - [X] DONE Path graphs
   - [X] DONE [Wheel graphs](https://en.wikipedia.org/wiki/Wheel_graph)
+  - [X] DONE Indexed graphs
+  - [X] DONE [Hexagonal grid graphs](https://mathworld.wolfram.com/HexagonalGridGraph.html) 
 - [X] DONE Construction of random graphs
   - Since different kinds of vertex-edge distributions exists, separate distributions objects are used.
     - See `Graph::Distribution`.

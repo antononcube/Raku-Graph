@@ -350,6 +350,8 @@ Graph::Wheel.new(12).dot(:svg)
   - [X] DONE [Star graphs](https://en.wikipedia.org/wiki/Star_graph)
   - [X] DONE Path graphs
   - [X] DONE [Wheel graphs](https://en.wikipedia.org/wiki/Wheel_graph)
+  - [X] DONE Indexed graphs
+  - [X] DONE [Hexagonal grid graphs](https://mathworld.wolfram.com/HexagonalGridGraph.html) 
 - [X] DONE Construction of random graphs
   - Since different kinds of vertex-edge distributions exists, separate distributions objects are used.
     - See `Graph::Distribution`.
