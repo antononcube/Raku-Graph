@@ -7,6 +7,8 @@ class Graph::HexagonalGrid is Graph {
     has Int:D $.rows is required;
     has Int:D $.columns is required;
 
+    constant $tol = 1e-12;
+
     submethod BUILD(:$!rows!,
                     :$!columns!,
                     :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
@@ -16,7 +18,7 @@ class Graph::HexagonalGrid is Graph {
                     my $angle = $i * pi / 3;
                     my $x = sqrt(3) * (2 * $j + $k - 2) + 2 * cos($angle + pi / 2);
                     my $y = 3 * $k - 2 + 2 * sin($angle + pi / 2);
-                    [$x, $y];
+                    [$x.round($tol), $y.round($tol)];
                 }).cache
             }
         };
