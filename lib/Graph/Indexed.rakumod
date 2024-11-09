@@ -3,12 +3,17 @@ use v6.d;
 use Graph;
 
 class Graph::Indexed is Graph {
-    multi method new(Graph:D $g, Int:D $r = 0) {
+    multi method new(Graph:D $g, Int:D $r = 0, :with(:&as) = WhateverCode) {
         my %index;
         my $index = $r;
-        for $g.vertex-list -> $vertex {
+
+        my @vs = $g.vertex-list;
+        @vs .= sort(&as) unless &as.isa(WhateverCode);
+
+        for @vs -> $vertex {
             %index{$vertex} = $index++;
         }
+
         my %new-adjacency-list;
         for $g.edges(:dataset) -> %e {
             %new-adjacency-list{%index{%e<from>}}{%index{%e<to>}} = %e<weight>;
@@ -19,7 +24,7 @@ class Graph::Indexed is Graph {
         self.bless(:adjacency-list(%new-adjacency-list), :directed($g.directed), :$vertex-coordinates);
     }
 
-    multi method new(@edges, Int:D $r = 0, Bool:D :d(:directed-edges(:$directed)) = False) {
-        return Graph::Indexed.new(Graph.new(@edges, :$directed), $r);
+    multi method new(@edges, Int:D $r = 0,  :with(:&as) = WhateverCode, Bool:D :d(:directed-edges(:$directed)) = False) {
+        return Graph::Indexed.new(Graph.new(@edges, :$directed), $r, :&as);
     }
 }
