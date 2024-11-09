@@ -24,6 +24,7 @@
     "Graph::Distribution": "lib/Graph/Distribution.rakumod",
     "Graph::Formatish": "lib/Graph/Formatish.rakumod",
     "Graph::Grid": "lib/Graph/Grid.rakumod",
+    "Graph::HexagonalGrid": "lib/Graph/HexagonalGrid.rakumod",
     "Graph::HighlightProcessing": "lib/Graph/HighlightProcessing.rakumod",
     "Graph::Hypercube": "lib/Graph/Hypercube.rakumod",
     "Graph::Indexed": "lib/Graph/Indexed.rakumod",
