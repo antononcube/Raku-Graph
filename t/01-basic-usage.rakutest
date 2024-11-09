@@ -7,6 +7,7 @@ use Graph::Complete;
 use Graph::Star;
 use Graph::Path;
 use Graph::Petersen;
+use Graph::Indexed;
 
 use Test;
 
@@ -142,5 +143,10 @@ is
 isa-ok
         Graph::Petersen.new.vertex-coordinates,
         Map:D;
+
+## 28
+isa-ok
+        Graph::Indexed.new($g24, 10),
+        Graph;
 
 done-testing;
