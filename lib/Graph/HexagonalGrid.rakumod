@@ -2,7 +2,6 @@ use v6.d;
 
 use Graph;
 use Graph::Indexed;
-use Data::TypeSystem;
 
 class Graph::HexagonalGrid is Graph {
     has Int:D $.rows is required;
