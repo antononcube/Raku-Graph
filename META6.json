@@ -26,6 +26,7 @@
     "Graph::Grid": "lib/Graph/Grid.rakumod",
     "Graph::HighlightProcessing": "lib/Graph/HighlightProcessing.rakumod",
     "Graph::Hypercube": "lib/Graph/Hypercube.rakumod",
+    "Graph::Indexed": "lib/Graph/Indexed.rakumod",
     "Graph::KnightTour": "lib/Graph/KnightTour.rakumod",
     "Graph::Neighborhoodish": "lib/Graph/Neighborhoodish.rakumod",
     "Graph::Path": "lib/Graph/Path.rakumod",
