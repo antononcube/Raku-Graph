@@ -4,10 +4,11 @@ use v6.d;
 
 use Graph;
 use Graph::Complete;
-use Graph::Star;
+use Graph::HexagonalGrid;
+use Graph::Indexed;
 use Graph::Path;
 use Graph::Petersen;
-use Graph::Indexed;
+use Graph::Star;
 
 use Test;
 
@@ -147,6 +148,11 @@ isa-ok
 ## 28
 isa-ok
         Graph::Indexed.new($g24, 10),
+        Graph;
+
+## 29
+isa-ok
+        Graph::HexagonalGrid.new(3, 4),
         Graph;
 
 done-testing;
