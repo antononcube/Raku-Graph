@@ -810,7 +810,7 @@ class Graph
                 do if self.vertex-coordinates ~~ Map:D && $g.vertex-coordinates ~~ Map:D {
                     $vertex-coordinates = [|self.vertex-coordinates, |$g.vertex-coordinates].Hash
                 } else { Whatever }
-        return Graph.new(@vertices, @edges, :$directed);
+        return Graph.new(@vertices, @edges, :$directed, :$vertex-coordinates);
     }
 
     #------------------------------------------------------
@@ -850,7 +850,7 @@ class Graph
                 do if self.vertex-coordinates ~~ Map:D && $g.vertex-coordinates ~~ Map:D {
                     $vertex-coordinates = [|self.vertex-coordinates, |$g.vertex-coordinates].Hash
                 } else { Whatever }
-        return Graph.new(@vertices, @edges, :$directed);
+        return Graph.new(@vertices, @edges, :$directed, :$vertex-coordinates);
     }
 
     #======================================================
