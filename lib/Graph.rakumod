@@ -52,6 +52,10 @@ class Graph
         self.bless(adjacency-list => %(), :$directed, :@vertexes, :@edges, :$vertex-coordinates);
     }
 
+    multi method new(:@vertexes!, :@edges!, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
+        self.bless(adjacency-list => %(), :$directed, :@vertexes, :@edges, :$vertex-coordinates);
+    }
+
     multi method new(Graph:D $gr, :d(:directed-edges(:$directed)) is copy = Whatever, :$vertex-coordinates = Whatever) {
 
         if $directed.isa(Whatever) { $directed = $gr.directed; }
@@ -92,7 +96,12 @@ class Graph
         # For undirected graphs both
         # %!adjacency-list{$from}{$to} and %!adjacency-list{$to}{$from}
         # should be in.
-        return %!adjacency-list{$from}{$to};
+        return so %!adjacency-list{$from}{$to};
+    }
+
+    #------------------------------------------------------
+    method is-empty(--> Bool:D) {
+        return %!adjacency-list.elems == 0 || %!adjacency-list.map(*.value.elems).sum == 0;
     }
 
     #======================================================
@@ -778,6 +787,58 @@ class Graph
         }
         my $grRes = Graph.new(@edges, directed => self.directed);
         return $grRes;
+    }
+
+    #======================================================
+    # Operations
+    #======================================================
+
+    #------------------------------------------------------
+    #| Union with another graph.
+    method union(Graph:D $g --> Graph) {
+        my @vertices = (self.vertex-list (|) $g.vertex-list).keys;
+        my @edges = self.edges(:dataset);
+
+        for $g.edges(:dataset) -> %e {
+            unless self.has-edge(%e<from>, %e<to>) {
+                @edges .= push(%e)
+            }
+        }
+
+        my $directed = $!directed || $g.directed;
+        return Graph.new(@vertices, @edges, :$directed);
+    }
+
+    #------------------------------------------------------
+    #| Intersection with another graph.
+    method intersection(Graph:D $g --> Graph) {
+        my @vertices = (self.vertex-list (|) $g.vertex-list).keys;
+        my @edges;
+
+        for $g.edges(:dataset) -> %e {
+            if self.has-edge(%e<from>, %e<to>) {
+                @edges .= push(%e)
+            }
+        }
+
+        my $directed = $!directed || $g.directed;
+        return Graph.new(@vertices, @edges, :$directed);
+    }
+
+    #------------------------------------------------------
+    #| Difference with another graph.
+    method difference(Graph:D $g --> Graph) {
+        my @vertices = (self.vertex-list (|) $g.vertex-list).keys;
+        my @edges;
+
+        for self.edges(:dataset) -> %e {
+            unless $g.has-edge(%e<from>, %e<to>) {
+                @edges .= push(%e)
+            }
+        }
+
+        my $directed = $!directed || $g.directed;
+        return Graph.new(@vertices, @edges, :$directed);
     }
 
     #======================================================
