@@ -806,6 +806,10 @@ class Graph
         }
 
         my $directed = $!directed || $g.directed;
+        my $vertex-coordinates =
+                do if self.vertex-coordinates ~~ Map:D && $g.vertex-coordinates ~~ Map:D {
+                    $vertex-coordinates = [|self.vertex-coordinates, |$g.vertex-coordinates].Hash
+                } else { Whatever }
         return Graph.new(@vertices, @edges, :$directed);
     }
 
@@ -822,7 +826,11 @@ class Graph
         }
 
         my $directed = $!directed || $g.directed;
-        return Graph.new(@vertices, @edges, :$directed);
+        my $vertex-coordinates =
+                do if self.vertex-coordinates ~~ Map:D && $g.vertex-coordinates ~~ Map:D {
+                    $vertex-coordinates = [|self.vertex-coordinates, |$g.vertex-coordinates].Hash
+                } else { Whatever }
+        return Graph.new(@vertices, @edges, :$directed, :$vertex-coordinates);
     }
 
     #------------------------------------------------------
@@ -838,6 +846,10 @@ class Graph
         }
 
         my $directed = $!directed || $g.directed;
+        my $vertex-coordinates =
+                do if self.vertex-coordinates ~~ Map:D && $g.vertex-coordinates ~~ Map:D {
+                    $vertex-coordinates = [|self.vertex-coordinates, |$g.vertex-coordinates].Hash
+                } else { Whatever }
         return Graph.new(@vertices, @edges, :$directed);
     }
 
