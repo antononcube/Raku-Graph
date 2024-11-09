@@ -326,11 +326,18 @@ Graph::Wheel.new(12).dot(:svg)
   - [ ] TODO Line graph
   - [ ] TODO Dual graph
 - [ ] TODO Binary graph operations
+  - [X] DONE Union of graphs
+  - [X] DONE Intersection of graphs
+  - [X] DONE Difference of graphs
   - [ ] TODO Disjoint union of graphs
-  - [ ] TODO Cartesian product of graphs
-  - [ ] TODO Tensor product of graphs
-  - [ ] TODO Strong product of graphs
-  - [ ] TODO Lexicographic product of graphs
+  - [ ] TODO Product of graphs (AKA "box product")
+    - [ ] TODO Cartesian
+    - [ ] TODO Co-normal
+    - [ ] TODO Lexicographic
+    - [ ] TODO Normal
+    - [ ] TODO Rooted
+    - [ ] TODO Strong
+    - [ ] TODO Tensor
 
 ### Construction
 
