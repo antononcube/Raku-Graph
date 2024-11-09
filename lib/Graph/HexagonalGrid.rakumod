@@ -29,9 +29,15 @@ class Graph::HexagonalGrid is Graph {
                     @t = @t.push([$_.tail, $_.head]);
                     @t.map({ %(from => $_.head.Str, to => $_.tail.Str) }).Array
                 }).map(*.Slip);
-        my @vertexes = @cells.map(*.Slip).unique;
+
+        my @vertexes = @cells.map(*.Slip).unique.sort;
+
         my $vertex-coordinates = @vertexes.map({ $_.Str => $_ }).Hash;
-        my $g = Graph::Indexed.new: Graph.new(@vertexes, @edges, :$vertex-coordinates, :$directed);
+
+        my $g = Graph::Indexed.new:
+                Graph.new(@vertexes, @edges, :$vertex-coordinates, :$directed),
+                as => { $_.split(/\s/, :skip-empty)».trim».Real };
+
         self.vertex-coordinates = $g.vertex-coordinates;
         self.adjacency-list = $g.adjacency-list;
     }
