@@ -13,7 +13,10 @@ class Graph::Indexed is Graph {
         for $g.edges(:dataset) -> %e {
             %new-adjacency-list{%index{%e<from>}}{%index{%e<to>}} = %e<weight>;
         }
-        self.bless(:adjacency-list(%new-adjacency-list), :directed($g.directed), :vertex-coordinates($g.vertex-coordinates));
+        my $vertex-coordinates = do if $g.vertex-coordinates ~~ Map:D {
+            $g.vertex-coordinates.map({ %index{$_.key} => $_.value }).Hash
+        } else { Whatever }
+        self.bless(:adjacency-list(%new-adjacency-list), :directed($g.directed), :$vertex-coordinates);
     }
 
     multi method new(@edges, Int:D $r = 0, Bool:D :d(:directed-edges(:$directed)) = False) {
