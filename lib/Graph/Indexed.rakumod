@@ -3,7 +3,7 @@ use v6.d;
 use Graph;
 
 class Graph::Indexed is Graph {
-    multi method new(Graph:D $g, Int:D $r = 0, :with(:&as) = WhateverCode) {
+    multi method new(Graph:D $g, Int:D $r = 0, :with(:&as) = WhateverCode, :$prefix = '') {
         my %index;
         my $index = $r;
 
@@ -11,7 +11,7 @@ class Graph::Indexed is Graph {
         @vs .= sort(&as) unless &as.isa(WhateverCode);
 
         for @vs -> $vertex {
-            %index{$vertex} = $index++;
+            %index{$vertex} = $prefix ~ $index++;
         }
 
         my %new-adjacency-list;
@@ -24,7 +24,7 @@ class Graph::Indexed is Graph {
         self.bless(:adjacency-list(%new-adjacency-list), :directed($g.directed), :$vertex-coordinates);
     }
 
-    multi method new(@edges, Int:D $r = 0,  :with(:&as) = WhateverCode, Bool:D :d(:directed-edges(:$directed)) = False) {
-        return Graph::Indexed.new(Graph.new(@edges, :$directed), $r, :&as);
+    multi method new(@edges, Int:D $r = 0,  :with(:&as) = WhateverCode, Bool:D :d(:directed-edges(:$directed)) = False, :$prefix = '') {
+        return Graph::Indexed.new(Graph.new(@edges, :$directed), $r, :&as, :$prefix);
     }
 }
