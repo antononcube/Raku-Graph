@@ -207,7 +207,16 @@ Graph::Wheel.new(12).dot(:svg)
 
 ### Visualizing via D3.js
 
-*TBD...*
+In Jupyter notebooks with a Raku kernel graph visualization can be done with the function `js-d3-graph-plot` 
+of the package ["JavaScript::D3"](https://github.com/antononcube/Raku-JavaScript-D3).
+
+The visualizations with "JavaScript::D3" are very capricious. Currently they:
+
+- Do not work with [JupyterLab](https://jupyter.org), but only with the "classical" Jupyter notebook.
+- Work nicely with the Jupyter notebook plugin(s) of Visual Studio Code, but often require re-loading of the notebooks.
+
+The points above were to main reason to develop the DOT format visualizations. 
+Most of the documentation notebooks show the graphs using both "JavaScript::D3" and DOT-SVG. 
 
 -------
 
@@ -428,6 +437,11 @@ Graph::Wheel.new(12).dot(:svg)
 (2022),
 [GitHub/antononcube](https://github.com/antononcube).
 
+[AAp3] Anton Antonov,
+[JavaScript:3 Raku package](https://github.com/antononcube/Raku-JavaScript-D3),
+(2022-2024),
+[GitHub/antononcube](https://github.com/antononcube).
+
 [JHp1] Jarkko Hietaniemi,
 [Graph Perl package](https://metacpan.org/dist/Graph/view/lib/Graph.pod),
 (1998-2014),
@@ -437,5 +451,15 @@ Graph::Wheel.new(12).dot(:svg)
 
 [AAv1] Anton Antonov,
 ["Graph demo in Raku (teaser)"](https://www.youtube.com/watch?v=0uJl9q7jIf8),
+(2024),
+[YouTube/@AAA4Prediction](https://www.youtube.com/@AAA4Prediction).
+
+[AAv2] Anton Antonov,
+["Graph neat examples in Raku (Set 1)"](https://www.youtube.com/watch?v=5qXgqqRZHow),
+(2024),
+[YouTube/@AAA4Prediction](https://www.youtube.com/@AAA4Prediction).
+
+[AAv3] Anton Antonov,
+["Sparse matrix neat examples in Raku"](https://www.youtube.com/watch?v=kQo3wpiUu6w),
 (2024),
 [YouTube/@AAA4Prediction](https://www.youtube.com/@AAA4Prediction).
