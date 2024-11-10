@@ -4,8 +4,8 @@ use Graph;
 use Graph::Indexed;
 
 # This very contrived code was supposed to be an "easy" derivative
-# of the code Graph::HexagonalGraph. The reason for using the "same code base"
-# (i.e. approach) was the making of hexagonal mazes.
+# of the code of Graph::HexagonalGraph.
+# The reason for using the "same code base" (i.e. approach) was the making of hexagonal mazes.
 # The code has to be refactored with much more straightforward derivation.
 class Graph::TriangularGrid is Graph {
     has Int:D $.rows is required;
