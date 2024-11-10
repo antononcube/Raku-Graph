@@ -856,6 +856,10 @@ class Graph
     #======================================================
     # Subgraph
     #======================================================
+    multi method subgraph($subvertex where $subvertex ~~ Str:D | Int:D) {
+        return self.subgraph([$subvertex.Str,]);
+    }
+
     multi method subgraph(@subvertexes where @subvertexes.all ~~ Str:D) {
         my @edges = self.edges(:dataset);
         @edges .= grep({ $_<from> ∈ @subvertexes || $_<to> ∈ @subvertexes });
