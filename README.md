@@ -156,21 +156,21 @@ $graph.mermaid(d=>'TD')
 ```mermaid
 graph TD
 1 --- 7
-2 --- 7
-6 --- 7
-3 --- 4
-2 --- 4
-4 --- 9
-3 --- 8
-2 --- 3
 1 --- 5
-2 --- 8
-2 --- 6
-10 --- 2
+4 --- 9
+10 --- 9
+12 --- 5
 12 --- 2
 11 --- 12
-12 --- 5
-10 --- 9
+2 --- 8
+2 --- 6
+2 --- 4
+2 --- 7
+10 --- 2
+2 --- 3
+3 --- 4
+3 --- 8
+6 --- 7
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -197,7 +197,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [11 12 5 1 7 6 2 8 3 4 9 10]
+# find-hamiltonian-path : [10 9 4 3 8 2 6 7 1 5 12 11]
 ```
 
 Here we find a cycle:
@@ -206,7 +206,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([1 5 12 2 7 1])
+# find-cycle : ([2 3 8 2])
 ```
 
 Here we find all cycles in the graph:
@@ -249,6 +249,8 @@ Here a wheel graph is made and its DOT format is converted into SVG format (rend
 use Graph::Wheel;
 Graph::Wheel.new(12).dot(:svg)
 ```
+
+For more details see notebook ["DOT-visualizations.ipynb"](./docs/DOT-visualizations.ipynb).
 
 ### Visualizing via D3.js
 
@@ -452,7 +454,8 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 - [ ] TODO Basic usage over directed graphs
 - [X] DONE Regular graphs creation (Grid, Wheel, etc.)
   - [Notebook with a gallery of graphs](./docs/Named-graphs-gallery.ipynb)
-- [ ] TODO Random graphs creation
+- [X] DONE Random graphs creation
+- [X] DONE DOT language visualizations
 
 -------
 

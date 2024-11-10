@@ -205,6 +205,8 @@ use Graph::Wheel;
 Graph::Wheel.new(12).dot(:svg)
 ```
 
+For more details see notebook ["DOT-visualizations.ipynb"](./docs/DOT-visualizations.ipynb).
+
 ### Visualizing via D3.js
 
 In Jupyter notebooks with a Raku kernel graph visualization can be done with the function `js-d3-graph-plot` 
@@ -407,7 +409,8 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 - [ ] TODO Basic usage over directed graphs
 - [X] DONE Regular graphs creation (Grid, Wheel, etc.)
   - [Notebook with a gallery of graphs](./docs/Named-graphs-gallery.ipynb)
-- [ ] TODO Random graphs creation
+- [X] DONE Random graphs creation
+- [X] DONE DOT language visualizations
 
 -------
 
