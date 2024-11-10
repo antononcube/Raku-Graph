@@ -9,6 +9,7 @@ use Graph::Indexed;
 use Graph::Path;
 use Graph::Petersen;
 use Graph::Star;
+use Graph::TriangularGrid;
 
 use Test;
 
@@ -153,6 +154,11 @@ isa-ok
 ## 29
 isa-ok
         Graph::HexagonalGrid.new(3, 4),
+        Graph;
+
+## 30
+isa-ok
+        Graph::TriangularGrid.new(3, 4),
         Graph;
 
 done-testing;
