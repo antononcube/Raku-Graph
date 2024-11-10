@@ -12,13 +12,14 @@ class Graph::HexagonalGrid is Graph {
     submethod BUILD(:$!rows!,
                     :$!columns!,
                     :$prefix = '',
+                    Numeric:D :$scale = 1,
                     Bool:D :d(:directed-edges(:$directed)) = False) {
         my @cells = gather for ^$!columns -> $j {
             for ^$!rows -> $k {
                 take (^6).map(-> $i {
                     my $angle = $i *  pi / 3;
-                    my $x = sqrt(3) * (2 * $j + $k - 2) + 2 * cos($angle + pi / 2);
-                    my $y = 3 * $k - 2 + 2 * sin($angle + pi / 2);
+                    my $x = $scale * (sqrt(3) * (2 * $j + $k - 2) + 2 * cos($angle + pi / 2));
+                    my $y = $scale * (3 * $k - 2 + 2 * sin($angle + pi / 2));
                     [$x.round($tol), $y.round($tol)];
                 }).cache
             }
@@ -46,14 +47,16 @@ class Graph::HexagonalGrid is Graph {
 
     multi method new(Int:D $rows, Int:D $columns,
                      Str:D :$prefix = '',
+                     Numeric:D :$scale = 1,
                      Bool:D :d(:directed-edges(:$directed)) = False) {
-        self.bless(:$rows, :$columns, :$prefix, :$directed);
+        self.bless(:$rows, :$columns, :$prefix, :$scale, :$directed);
     }
 
     multi method new(Int:D :m(:$rows), Int:D :n(:$columns),
                      Str:D :$prefix = '',
+                     Numeric:D :$scale = 1,
                      Bool:D :d(:directed-edges(:$directed)) = False) {
-        self.bless(:$rows, :$columns, :$prefix, :$directed);
+        self.bless(:$rows, :$columns, :$prefix, :$scale, :$directed);
     }
 }
 

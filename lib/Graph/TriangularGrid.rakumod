@@ -3,6 +3,10 @@ use v6.d;
 use Graph;
 use Graph::Indexed;
 
+# This very contrived code was supposed to be an "easy" derivative
+# of the code Graph::HexagonalGraph. The reason for using the "same code base"
+# (i.e. approach) was the making of hexagonal mazes.
+# The code has to be refactored with much more straightforward derivation.
 class Graph::TriangularGrid is Graph {
     has Int:D $.rows is required;
     has Int:D $.columns is required;
@@ -12,6 +16,7 @@ class Graph::TriangularGrid is Graph {
     submethod BUILD(:$!rows!,
                     :$!columns!,
                     :$prefix = '',
+                    Numeric:D :$scale = 1,
                     Bool:D :d(:directed-edges(:$directed)) = False) {
         # With 6 we get hexagonal grid
         my $n = 3;
@@ -23,8 +28,8 @@ class Graph::TriangularGrid is Graph {
                 my @cell;
                 for (^$n) -> $i {
                     my $angle = $i * 2 * pi / $n;
-                    my $x = sqrt(3) * (2 * $j + $k - 2) + 2 * cos($angle + pi / 2);
-                    my $y = 3 * $k - 2 + 2 * sin($angle + pi / 2);
+                    my $x = $scale * (sqrt(3) * (2 * $j + $k - 2) + 2 * cos($angle + pi / 2));
+                    my $y = $scale * (3 * $k - 2 + 2 * sin($angle + pi / 2));
 
                     my @p = $x.round($tol), $y.round($tol);
 
@@ -68,16 +73,16 @@ class Graph::TriangularGrid is Graph {
 
     multi method new(Int:D $rows, Int:D $columns,
                      Str:D :$prefix = '',
-                     Bool:D :t(:$triangular) = False,
+                     Numeric:D :$scale = 1,
                      Bool:D :d(:directed-edges(:$directed)) = False) {
-        self.bless(:$rows, :$columns, :$prefix, :$triangular, :$directed);
+        self.bless(:$rows, :$columns, :$prefix, :$scale, :$directed);
     }
 
     multi method new(Int:D :m(:$rows), Int:D :n(:$columns),
                      Str:D :$prefix = '',
-                     Bool:D :t(:$triangular) = False,
+                     Numeric:D :$scale = 1,
                      Bool:D :d(:directed-edges(:$directed)) = False) {
-        self.bless(:$rows, :$columns, :$prefix, :$triangular, :$directed);
+        self.bless(:$rows, :$columns, :$prefix, :$scale, :$directed);
     }
 }
 
