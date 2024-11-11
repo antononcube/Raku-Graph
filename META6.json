@@ -1,7 +1,7 @@
 {
   "name": "Graph",
   "description": "Common graph functionalities.",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
