@@ -177,7 +177,7 @@ role Graph::Formatish
                 @core-edges = (@core-edges (-) [|@edge-specs, |@edge-specs-rev]).keys;
                 $highlight-part = $highlight-part ~ "\n\n" ~ [
                     $pre,
-                    %h<vertexes>.map({ "\"{$_}\" [fillcolor=\"$color\"];",}).join("\n"),
+                    %h<vertexes>.map({ "\"{$_}\" [fillcolor=\"$color\", color=\"$color\"];",}).join("\n"),
                     @edge-specs.join("\n")
                 ].join("\n");
             }
