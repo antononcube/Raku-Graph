@@ -236,6 +236,8 @@ class Graph
     #======================================================
     # Properties
     #======================================================
+    #| Edges of the graph object.
+    #| C<:$dataset> -- whether the result to be a dataset or a list of pairs.
     method edges(Bool:D :$dataset = False) {
         my @edges;
         my %mark;
@@ -260,11 +262,13 @@ class Graph
     }
 
     #------------------------------------------------------
+    #| Gives the list of edges for the graph object.
     method edge-list(Bool:D :$dataset = False) {
         return self.edges(:!dataset);
     }
 
     #------------------------------------------------------
+    #| Gives a count of the number of edges in the graph object.
     method edge-count(--> Int) {
         if $!directed {
             # Assuming this is faster.
@@ -275,6 +279,7 @@ class Graph
     }
 
     #------------------------------------------------------
+    #| Gives the list of vertices for the graph object.
     method vertex-list() {
         my @res = %!adjacency-list.map({ $_.value.keys }).flat.unique;
         @res.append(%!adjacency-list.keys);
@@ -283,12 +288,19 @@ class Graph
     }
 
     #------------------------------------------------------
+    #| Gives a count of the number of vertices in the graph object.
     method vertex-count(--> Int) {
         return self.vertex-list().elems;
     }
 
     #------------------------------------------------------
-    method vertex-in-degree(Str:D $v--> Int) {
+    #| Gives the list of vertex in-degrees for all vertices in the graph object.
+    multi method vertex-in-degree() {
+        return self.vertex-list.map({ self.vertex-in-degree($_) });
+    }
+
+    #| Gives the vertex in-degree for the vertex argument
+    multi method vertex-in-degree(Str:D $v--> Int) {
         return do if $!directed {
             self.adjacency-list{*;$v}.flat.grep(*.defined).elems;
         } else {
@@ -297,7 +309,13 @@ class Graph
     }
 
     #------------------------------------------------------
-    method vertex-out-degree(Str:D $v--> Int) {
+    #| Gives the list of vertex out-degrees for all vertices in the graph object.
+    multi method vertex-out-degree() {
+        return self.vertex-list.map({ self.vertex-out-degree($_) });
+    }
+
+    #| Gives the vertex out-degree for the vertex argument
+    multi method vertex-out-degree(Str:D $v--> Int) {
         return do if $!directed {
             self.adjacency-list{$v}.elems // 0;
         } else {
@@ -306,7 +324,13 @@ class Graph
     }
 
     #------------------------------------------------------
-    method vertex-degree(Str:D $v--> Int) {
+    #| Gives the list of vertex degrees for all vertices in the graph object.
+    multi method vertex-degree() {
+        return self.vertex-list.map({ self.vertex-degree($_) });
+    }
+
+    #| Gives the vertex degree for the vertex argument.
+    multi method vertex-degree(Str:D $v--> Int) {
         return do if $!directed {
             self.vertex-out-degree($v) - self.vertex-in-degree($v);
         } else {
@@ -959,7 +983,7 @@ class Graph
                     Empty
                 }
             });
-            # Proper vertex-coordinates have to be transfered.
+            # The vertex-coordinates have to be transferred.
             return Graph.new(@edges, :directed);
         }
     }
