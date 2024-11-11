@@ -17,6 +17,9 @@ class Graph::Indexed is Graph {
         my %new-adjacency-list;
         for $g.edges(:dataset) -> %e {
             %new-adjacency-list{%index{%e<from>}}{%index{%e<to>}} = %e<weight>;
+            if !$g.directed {
+                %new-adjacency-list{%index{%e<to>}}{%index{%e<from>}} = %e<weight>;
+            }
         }
         my $vertex-coordinates = do if $g.vertex-coordinates ~~ Map:D {
             $g.vertex-coordinates.map({ %index{$_.key} => $_.value }).Hash
