@@ -317,11 +317,14 @@ class Graph
     #======================================================
     # Basic conversions
     #======================================================
+    #| Gives an undirected graph for directed graph object.
     method undirected-graph() {
         return self.clone(:!directed);
     }
 
-    method directed-graph(:m(:$method) = Whatever) {
+    #| Gives a directed graph for undirected graph object.
+    #| C<:$method> -- Conversion method "Acyclic", "Random", or Whatever.
+    method directed-graph(:m(:$method) = Whatever, Numeric:D :threshold(:$flip-threshold) = 0.5) {
         return do if $!directed {
             self.clone;
         } else {
@@ -333,12 +336,12 @@ class Graph
                     my @edges = self.edges(:dataset);
                     my %vertexToInd = self.vertex-list.sort.kv.Hash.invert;
                     @edges = @edges.map({ %vertexToInd{$_<from>} < %vertexToInd{$_<to>} ?? $_ !! %( from => $_<to>, to => $_<from>, weight => $_<weight>) });
-                    Graph.new(@edges, :directed)
+                    Graph.new(@edges, :$!vertex-coordinates, :directed)
                 }
                 when $_ ~~ Str:D && $_.lc eq 'random' {
                     my @edges = self.edges(:dataset);
-                    @edges = @edges.map({ rand < 0.5 ?? $_ !! %( from => $_<to>, to => $_<from>, weight => $_<weight>) });
-                    Graph.new(@edges, :directed)
+                    @edges = @edges.map({ rand ≥ $flip-threshold ?? $_ !! %( from => $_<to>, to => $_<from>, weight => $_<weight>) });
+                    Graph.new(@edges, :$!vertex-coordinates, :directed)
                 }
                 default {
                     die 'The value of $method is expected to be "Acyclic", "Random", or Whatever.';
@@ -361,6 +364,10 @@ class Graph
     #======================================================
     # Shortest paths algorithms
     #======================================================
+    #| Find shortest path.
+    #| C<$start> -- Start vertex.
+    #| C<$end> -- End vertex.
+    #| C<:$method> -- Method, one of "A-star", "Dijkstra", or Whatever.
     method find-shortest-path(Str $start, Str $end, :$method is copy = Whatever) {
         if $method.isa(Whatever) { $method = 'dijkstra' }
         die 'The value of $method is expected to be Whatever or one of "dijkstra" or "a-star-search".'
@@ -494,6 +501,12 @@ class Graph
     #======================================================
     # Find paths
     #======================================================
+    #| Find paths
+    #| C<$s> -- Start vertex.
+    #| C<$t> -- End vertex.
+    #| C<:$min-length> -- Minimum path length.
+    #| C<:$max-length> -- Maximum path length.
+    #| C<:$count> -- Number of paths to find.
     multi method find-path(Str $s, Str $t, :$min-length = 0, :$max-length = Inf, :$count = 1) {
         self!dfs($s, $t, :$min-length, :$max-length, :$count);
     }
@@ -521,10 +534,14 @@ class Graph
     #======================================================
     # Find Hamiltonian paths
     #======================================================
+    #| Find Hamiltonian path.
     multi method find-hamiltonian-path() {
         self!hamiltonian-path-helper();
     }
 
+    #| Find Hamiltonian path.
+    #| C<$s> -- Start vertex.
+    #| C<$t> -- End vertex.
     multi method find-hamiltonian-path(Str $s, Str $t) {
         self!hamiltonian-path-helper($s, $t);
     }
@@ -568,6 +585,10 @@ class Graph
     #======================================================
     # Find cycles
     #======================================================
+    #| Finds a cycle in the graph object.
+    #| C<:$min-length> -- Minimum cycle length.
+    #| C<:$max-length> -- Maximum cycle length.
+    #| C<:$count> -- Number of cycles to find.
     method find-cycle(:$min-length = 3, :$max-length = Inf, :$count = 1) {
         self!find-cycle-helper(:$min-length, :$max-length, :$count);
     }
@@ -636,6 +657,8 @@ class Graph
     #======================================================
     # Spanning tree
     #======================================================
+    #| Finds a spanning tree that minimizes the total distance between the vertices of the graph object.
+    #| C<:$method> -- Method, one of "Kruskal" or Whatever.
     method find-spanning-tree(:$method is copy = Whatever) {
 
         if $method.isa(Whatever) { $method = 'kruskal'; }
@@ -712,6 +735,8 @@ class Graph
     #======================================================
     # Measures
     #======================================================
+    #| Gives the length of the longest shortest path from the source $v to every other vertex in the graph g.
+    #| C<:$v> -- Source vertex.
     method vertex-eccentricity($v --> Numeric) {
         # The distance between two vertices in a graph is the number of edges in a shortest path connecting them.
         # The eccentricity ϵ(v) of a vertex v is the greatest distance between v and any other vertex.
@@ -720,6 +745,7 @@ class Graph
         return %distances.values.max;
     }
 
+    #| Gives the greatest distance between any pair of vertices in the graph object.
     method diameter(--> Numeric) {
         # To find the diameter of a graph, first find the shortest path between each pair of vertices.
         # The greatest length of any of these paths is the diameter of the graph.
@@ -735,6 +761,7 @@ class Graph
         return $max-distance;
     }
 
+    #| Gives the minimum eccentricity of the vertices in the graph object.
     method radius(--> Numeric) {
         # The radius of a graph is the minimum eccentricity of any vertex in that graph.
         # The radius is the smallest maximum distance from any vertex to all other vertices in the graph.
@@ -749,12 +776,14 @@ class Graph
         $min-eccentricity;
     }
 
+    #| Gives the set of vertices with minimum eccentricity in the graph object.
     method center(--> Numeric) {
         my %eccentricities = %.adjacency-list.keys.map({ $_ => self.vertex-eccentricity($_) });
         my $me = %eccentricities.values.min;
         return %eccentricities.grep({ $_.value == $me });
     }
 
+    #| Gives vertices that are maximally distant to at least one vertex in the graph object.
     method periphery(--> Numeric) {
         my %eccentricities = %.adjacency-list.keys.map({ $_ => self.vertex-eccentricity($_) });
         my $me = %eccentricities.values.max;
@@ -767,6 +796,7 @@ class Graph
     # Should we have synonyms? For example:
     # method transpose(--> Graph) { return self.reverse; }
 
+    #| Gives the reverse graph of the directed graph object.
     method reverse(--> Graph) {
         if !$!directed { return self.clone; }
         my @edges = self.edges(:dataset);
@@ -775,6 +805,7 @@ class Graph
         return $grRes;
     }
 
+    #| Gives the graph complement of the graph object.
     method complement(--> Graph) {
         my @vertexes = self.vertex-list;
         my @edges;
@@ -856,6 +887,7 @@ class Graph
     #======================================================
     # Subgraph
     #======================================================
+    #| Gives the subgraph of the graph object generated by the vertices given as first argument.
     multi method subgraph($subvertex where $subvertex ~~ Str:D | Int:D) {
         return self.subgraph([$subvertex.Str,]);
     }
@@ -895,15 +927,22 @@ class Graph
     #======================================================
     # NeighborhoodGraph
     #======================================================
+    #| Gives the graph neighborhood of a vertex $v in the graph object.
+    #| C<$v> -- Vertex.
     multi method neighborhood-graph(Str:D $v, UInt:D :d(:$max-path-length) = 1) {
         return self.neighborhood-graph([$v, ], :$max-path-length);
     }
 
+    #| Gives the graph neighborhood of a vertices of the $g in the graph object.
+    #| C<:$g> -- Graph.
     multi method neighborhood-graph(Graph $g, UInt:D $d = 1) {
         return self.neighborhood-graph($g.vertex-list, $d);
     }
 
-    multi method neighborhood-graph(@spec, UInt:D :d(:$max-path-length) = 1) {
+    #| Graph neighborhood for a list of vertices.
+    #| C<$spec> -- Vertices
+    #| C<:$max-path-length> -- Maximum distance.
+    multi method neighborhood-graph(@spec, UInt:D :d(:distance(:$max-path-length)) = 1) {
         if !$!directed {
             return Graph.new(self!neighborhood-graph-edges(@spec, :$max-path-length));
         } else {
@@ -920,6 +959,7 @@ class Graph
                     Empty
                 }
             });
+            # Proper vertex-coordinates have to be transfered.
             return Graph.new(@edges, :directed);
         }
     }
