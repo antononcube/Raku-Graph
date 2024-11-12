@@ -257,8 +257,10 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 - [ ] TODO Matrix representation
   - Sparse matrices are needed before "seriously" considering this.
   - Sparse matrices should be easy to create using the (already implemented) edge dataset.
-  - [ ] Adjacency matrix
-  - [ ] Incidence matrix
+  - [X] DONE Adjacency matrix (dense)
+  - [ ] TODO Adjacency matrix (sparse)
+  - [X] Incidence matrix (dense)
+  - [ ] Incidence matrix (sparse)
 
 ### Graph programming
 
