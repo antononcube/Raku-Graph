@@ -409,6 +409,23 @@ class Graph
         return self.adjacency-matrix(:!weighted);
     }
 
+    #| Gives the incidence matrix for the graph object.
+    method incidence-matrix() {
+        my @matrix;
+        for self.vertex-list -> $i {
+            my @row;
+            for self.edge-list -> $j {
+                if $!directed {
+                    @row.push($i eq $j.key ?? 1 !! ($i eq $j.tail ?? -1 !! 0))
+                } else {
+                    @row.push($i ∈ $j.kv ?? 1 !! 0)
+                }
+            }
+            @matrix.push(@row);
+        }
+        return @matrix;
+    }
+
     #======================================================
     # Shortest paths algorithms
     #======================================================
