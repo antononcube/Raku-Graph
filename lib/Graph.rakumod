@@ -385,6 +385,30 @@ class Graph
         return self.gist();
     }
 
+    #| Gives the adjacency matrix for the graph object.
+    #| C<:$weighted> -- Whether to give weighted adjacency matrix or not.
+    method adjacency-matrix(Bool:D :w(:$weighted) = False) {
+        my @matrix;
+        for self.vertex-list -> $i {
+            my @row;
+            for self.vertex-list -> $j {
+                my $v = do if $weighted {
+                    %!adjacency-list{$i}{$j} // 0;
+                } else {
+                    %!adjacency-list{$i}{$j} // False ?? 1 !! 0;
+                }
+                @row.push($v)
+            }
+            @matrix.push(@row);
+        }
+        return @matrix;
+    }
+
+    #| Synonym of adjacency-matrix.
+    method Array() {
+        return self.adjacency-matrix(:!weighted);
+    }
+
     #======================================================
     # Shortest paths algorithms
     #======================================================
