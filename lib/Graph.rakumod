@@ -931,7 +931,7 @@ class Graph
 
     #------------------------------------------------------
     #| Union with another graph.
-    method union(Graph:D $g --> Graph) {
+    multi method union(Graph:D $g --> Graph) {
         my @vertices = (self.vertex-list (|) $g.vertex-list).keys;
         my @edges = self.edges(:dataset);
 
@@ -949,10 +949,20 @@ class Graph
         return Graph.new(@vertices, @edges, :$directed, :$vertex-coordinates);
     }
 
+    #| Union with a list of other graphs.
+    multi method union(*@gs where @gs.all ~~ Graph:D --> Graph) {
+        return reduce({$^a.union($^b)}, self, |@gs);
+    }
+
     #------------------------------------------------------
     #| Disjoint union with another graph.
-    method disjoint-union(Graph:D $g --> Graph) {
+    multi method disjoint-union(Graph:D $g --> Graph) {
         return self.index-graph(0).union($g.index-graph(self.vertex-count));
+    }
+
+    #| Disjoint union with a list of other graphs.
+    multi method disjoint-union(*@gs where @gs.all ~~ Graph:D --> Graph) {
+        return reduce({$^a.disjoint-union($^b)}, self, |@gs);
     }
 
     #------------------------------------------------------
