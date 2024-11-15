@@ -950,6 +950,12 @@ class Graph
     }
 
     #------------------------------------------------------
+    #| Disjoint union with another graph.
+    method disjoint-union(Graph:D $g --> Graph) {
+        return self.index-graph(0).union($g.index-graph(self.vertex-count));
+    }
+
+    #------------------------------------------------------
     #| Intersection with another graph.
     method intersection(Graph:D $g --> Graph) {
         my @vertices = (self.vertex-list (|) $g.vertex-list).keys;
