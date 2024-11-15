@@ -7,7 +7,6 @@ class Graph::Indexed is Graph {
     }
 
     multi method new(Graph:D $g, Int:D $r = 0, :with(:&as) = WhateverCode, :d(:directed-edges(:$directed)) = Whatever, :$prefix = '') {
-        # This is equivalent to $g.index-graph($r, :&as, :$prefix)
-        return Graph::Indexed.new($g.edges(:dataset), $r, :&as, :$prefix);
+        return $g.index-graph($r, :&as, :$prefix);
     }
 }
