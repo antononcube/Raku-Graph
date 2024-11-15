@@ -155,22 +155,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-1 --- 7
-1 --- 5
-4 --- 9
-10 --- 9
-12 --- 5
-12 --- 2
-11 --- 12
-2 --- 8
-2 --- 6
-2 --- 4
-2 --- 7
-10 --- 2
+3 --- 8
 2 --- 3
 3 --- 4
-3 --- 8
+2 --- 8
 6 --- 7
+2 --- 7
+1 --- 7
+1 --- 5
+2 --- 6
+12 --- 2
+2 --- 4
+10 --- 2
+12 --- 5
+11 --- 12
+4 --- 9
+10 --- 9
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -197,7 +197,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [10 9 4 3 8 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
 ```
 
 Here we find a cycle:
@@ -206,7 +206,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([2 3 8 2])
+# find-cycle : ([2 6 7 2])
 ```
 
 Here we find all cycles in the graph:
@@ -302,8 +302,10 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 - [ ] TODO Matrix representation
   - Sparse matrices are needed before "seriously" considering this.
   - Sparse matrices should be easy to create using the (already implemented) edge dataset.
-  - [ ] Adjacency matrix
-  - [ ] Incidence matrix
+  - [X] DONE Adjacency matrix (dense)
+  - [ ] TODO Adjacency matrix (sparse)
+  - [X] Incidence matrix (dense)
+  - [ ] Incidence matrix (sparse)
 
 ### Graph programming
 
