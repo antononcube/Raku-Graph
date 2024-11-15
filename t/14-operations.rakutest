@@ -43,8 +43,7 @@ subtest {
             'expected vertices 2';
     is-deeply
             $u.edge-list.sort,
-            [1 => 2, 1 => 6, 2 => 3, 3 => 4, 4 => 5, 5 => 6, 1 => 3, 1 => 4, 1 => 5].map({ $_.key.Str => $_.value.Str })
-                    .sort,
+            [1 => 2, 1 => 6, 2 => 3, 3 => 4, 4 => 5, 5 => 6, 1 => 3, 1 => 4, 1 => 5].map({ $_.key.Str => $_.value.Str }).sort,
             "expected edges";
 }, "Union";
 
@@ -69,7 +68,6 @@ subtest {
 
 ## 3
 subtest {
-
 
     ok $g.difference($h);
     my $u = $g.difference($h);
@@ -101,6 +99,29 @@ subtest {
 }, "Difference";
 
 ## 4
+subtest {
+    is-deeply
+            $d1.disjoint-union($d2).vertex-list,
+            (^($d1.vertex-count + $d2.vertex-count))».Str.sort.List,
+            "Expected vertexes for two (directed)";
+
+    is-deeply
+            $g.disjoint-union($h).vertex-list,
+            (^($g.vertex-count + $h.vertex-count))».Str.sort.List,
+            "Expected vertexes for two (undericted)";
+
+    is-deeply
+            $d1.disjoint-union($h).vertex-list,
+            (^($d1.vertex-count + $h.vertex-count))».Str.sort.List,
+            "Expected vertexes for two (directed with undericted)";
+
+    is-deeply
+            $d1.disjoint-union([$h,]).vertex-list,
+            (^($d1.vertex-count + $h.vertex-count))».Str.sort.List,
+            "Expected vertexes for array.";
+}, "Disjoint union";
+
+## 5
 subtest {
     is-deeply
             $g.union($h).vertex-list,
