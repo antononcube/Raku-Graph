@@ -104,6 +104,22 @@ class Graph
         return %!adjacency-list.elems == 0 || %!adjacency-list.map(*.value.elems).sum == 0;
     }
 
+    #------------------------------------------------------
+    #| Yields True if the graph object is a complete graph, and False otherwise.
+    multi method is-complete(--> Bool:D) {
+        return False if %!adjacency-list.elems == 0 || %!adjacency-list.elems < self.vertex-count;
+        # No using junction.
+        # This algebraic check assumes that %!adjacency-list does not have "outsider" vertexes.
+        my @counts = %!adjacency-list.map( -> $r { $r.value.grep({ $_.key ne $r.key }).elems });
+        return @counts.min == self.vertex-count - 1 == @counts.max;
+    }
+
+    #| Yields True if the subgraph induced by $v is a complete graph, and False otherwise.
+    #| C<:$v> - Spec, vertex(es) or graph.
+    multi method is-complete($v --> Bool:D) {
+        return self.subgraph($v).is-complete;
+    }
+
     #======================================================
     # Construction
     #======================================================
@@ -281,8 +297,8 @@ class Graph
     #------------------------------------------------------
     #| Gives the list of vertices for the graph object.
     method vertex-list() {
-        my @res = %!adjacency-list.map({ $_.value.keys }).flat.unique;
-        @res.append(%!adjacency-list.keys);
+        my @res = |%!adjacency-list.map({ $_.value.keys }).map(*.Slip).unique;
+        @res .= append(%!adjacency-list.keys);
 
         return @res.unique.sort.List;
     }
@@ -842,17 +858,17 @@ class Graph
     }
 
     #| Gives the set of vertices with minimum eccentricity in the graph object.
-    method center(--> Numeric) {
+    method center(--> List) {
         my %eccentricities = %.adjacency-list.keys.map({ $_ => self.vertex-eccentricity($_) });
         my $me = %eccentricities.values.min;
-        return %eccentricities.grep({ $_.value == $me });
+        return %eccentricities.grep({ $_.value == $me })».key.sort.List;
     }
 
     #| Gives vertices that are maximally distant to at least one vertex in the graph object.
-    method periphery(--> Numeric) {
+    method periphery(--> List) {
         my %eccentricities = %.adjacency-list.keys.map({ $_ => self.vertex-eccentricity($_) });
         my $me = %eccentricities.values.max;
-        return %eccentricities.grep({ $_.value == $me });
+        return %eccentricities.grep({ $_.value == $me })».key.sort.List;
     }
 
     #======================================================
