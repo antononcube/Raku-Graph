@@ -411,7 +411,8 @@ class Graph
         my $vertex-coordinates = do if self.vertex-coordinates ~~ Map:D {
             self.vertex-coordinates.map({ %index{$_.key} => $_.value }).Hash
         } else { Whatever }
-        self.bless(:adjacency-list(%new-adjacency-list), :directed(self.directed), :$vertex-coordinates);
+
+        return Graph.bless(:adjacency-list(%new-adjacency-list), :directed(self.directed), :$vertex-coordinates);
     }
 
     #======================================================
