@@ -3,6 +3,7 @@ use Test;
 
 use lib <. lib>;
 use Graph;
+use Graph::Star;
 
 
 my $d1 = Graph.new: [
@@ -116,9 +117,13 @@ subtest {
             "Expected vertexes for two (directed with undericted)";
 
     is-deeply
-            $d1.disjoint-union([$h,]).vertex-list,
-            (^($d1.vertex-count + $h.vertex-count))».Str.sort.List,
+            $d1.disjoint-union([$d2, $g, $h]).vertex-list,
+            (^($d1.vertex-count + $d2.vertex-count + $g.vertex-count + $h.vertex-count))».Str.sort.List,
             "Expected vertexes for array.";
+
+    my @graphs = (^10).map({ Graph::Star.new(n => (8..16).pick, prefix => "$_-") });
+    ok reduce({ $^a.disjoint-union($^b) }, |@graphs);
+
 }, "Disjoint union";
 
 ## 5
