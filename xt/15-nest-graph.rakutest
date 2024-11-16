@@ -1,0 +1,48 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+use Graph;
+use Graph::Star;
+use Graph::Nested;
+
+my $g =
+        Graph.new: [
+            %('from' => '1', 'to' => '2', 'weight' => 1), %('from' => '1', 'to' => '6', 'weight' => 1),
+            %('from' => '2', 'to' => '3', 'weight' => 1), %('from' => '3', 'to' => '4', 'weight' => 1),
+            %('from' => '4', 'to' => '5', 'weight' => 1), %('from' => '5', 'to' => '6', 'weight' => 1)];
+say $g.wl(VertexLabels => "Name");
+
+## 1
+subtest {
+
+    #say Graph::Nested.new({ $_ ** 2 }, 2, 3, as => { .Numeric }, :directed).wl(VertexLabels => "Name");
+    ok Graph::Nested.new({ $_ ** 2 }, 2, 3, as => { .Numeric }, :directed);
+
+    my $g2 = Graph::Nested.new({ $_ ** 2 }, 2, 3, as => { .Numeric }, :directed);
+    is-deeply
+            $g2.edge-list,
+            produce({
+                $^b;
+                $^a ** 2
+            }, 2, |(^3))».Str.rotor(2 => -1).map({ $_.head => $_.tail }).sort.Array,
+            "Expected edges";
+}, "Simple geometric sequence nesting";
+
+## 2
+subtest {
+
+    say Graph::Nested.new({["f($_)", "g($_)"]}, 'x', 3, :directed).wl(VertexLabels => "Name");
+    ok Graph::Nested.new({[$_ ** 2, $_ * 4]}, 2, 3, as => { .Numeric }, :directed);
+
+}, "Two functions nesting";
+
+## 3
+subtest {
+
+    say Graph::Nested.new({$_ ** 2}, $g, 1, as => { .Numeric }).wl(VertexLabels => "Name");
+    ok Graph::Nested.new({$_ ** 2}, $g, 1, as => { .Numeric });
+
+}, "Graph functions nesting";
+
+done-testing;
