@@ -1,6 +1,7 @@
 use v6.d;
 
 use Graph;
+use Graph::Utilities;
 
 class Graph::KnightTour is Graph {
     has Int:D $.rows is required;
@@ -10,12 +11,15 @@ class Graph::KnightTour is Graph {
         if $directed {
             note 'Directed knight-tour graphs are not implemented.';
         }
-        # Currently this knight tour creation does not include "skipped" cells of
-        # the chessboard because the Graph class does not support "lone vertices."
-        # See for example 3x3 graph here: https://mathworld.wolfram.com/KnightGraph.html
+
         my @moves = (-2, -1, 1, 2).combinations(2).grep({ $_[0].abs != $_[1].abs });
         for ^$!rows -> $row {
             for ^$!columns -> $col {
+
+                # In order to prevent "skipped" cells we add empty vertex adjacency list.
+                # See for example 3x3 graph here: https://mathworld.wolfram.com/KnightGraph.html
+                self.adjacency-list{"{$prefix}{$col}{$sep}{$row}"} = {};
+
                 for @moves -> $move {
                     my ($dr, $dc) = $move;
                     my $new-row = $row + $dr;
@@ -31,15 +35,19 @@ class Graph::KnightTour is Graph {
         self.vertex-coordinates = self.vertex-list.map({ $_ => $_.subst($prefix).split($sep)».Int.List }).Hash;
     }
 
-    multi method new(Int:D $rows, Int:D $columns, Str:D $prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
+    multi method new($rows is copy = Whatever, $columns is copy = Whatever, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
+
+        ($rows, $columns) = Graph::Utilities::ProcessPairedUIntArgs($rows, $columns, 8);
+        die 'The first argument is expected to be a positive integer or Whatever.'
+        unless $rows ~~ Int:D && $rows > 0;
+
+        die 'The second argument is expected to be a positive integer or Whatever.'
+        unless $columns ~~ Int:D && $columns > 0;
+
         self.bless(:$rows, :$columns, :$prefix, :$sep, :$directed);
     }
 
-    multi method new(Int:D $rows, Int:D $columns, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
-        self.bless(:$rows, :$columns, :$prefix, :$sep, :$directed);
-    }
-
-    multi method new(Int:D :m(:$rows), Int:D :n(:$columns), Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
+    multi method new(UInt:D :m(:$rows), UInt:D :n(:$columns), Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
         self.bless(:$rows, :$columns, :$prefix, :$sep, :$directed);
     }
 }
