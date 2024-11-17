@@ -115,6 +115,7 @@ role Graph::Formatish
             Int:D :vertex-font-size(:$node-font-size) = 12,
             Str:D :vertex-lable-location(:$node-label-location) = 'c',
             Str:D :$edge-color = 'SteelBlue',
+            Numeric:D :arrowsize(:$arrow-size) = 1,
             Numeric:D :edge-thickness(:edge-width(:$edge-penwidth)) = 2,
             Str:D :$preamble is copy = '',
             Bool :$svg = False,
@@ -170,7 +171,7 @@ role Graph::Formatish
             my %processed = self.process-highlight-spec($highlight, :directed-edges);
             my $highlight-part = '';
             for %processed.kv -> $color, %h {
-                my $pre = "edge [color=\"$color\", penwidth=$edge-penwidth];";
+                my $pre = "edge [color=\"$color\", penwidth=$edge-penwidth, arrowsize=$arrow-size];";
                 # Make sure it is as in !dot-core
                 my @edge-specs = %h<edges>.map({ "\"{$_.head}\" $arrow \"{$_.tail}\"" });
                 my @edge-specs-rev = %h<edges>.map({ "\"{$_.tail}\" $arrow \"{$_.head}\"" });
