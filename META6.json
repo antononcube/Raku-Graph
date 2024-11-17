@@ -37,6 +37,7 @@
     "Graph::Star": "lib/Graph/Star.rakumod",
     "Graph::TriangularGrid": "lib/Graph/TriangularGrid.rakumod",
     "Graph::Tourish": "lib/Graph/Tourish.rakumod",
+    "Graph::Utilities": "lib/Graph/Utilities.rakumod",
     "Graph::Wheel": "lib/Graph/Wheel.rakumod"
   },
   "resources": [],
