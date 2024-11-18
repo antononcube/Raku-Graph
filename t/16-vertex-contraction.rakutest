@@ -55,7 +55,7 @@ subtest {
     is-deeply
             $g4.edges(:dataset).sort(*<from to>).List,
             @edges4.sort(*<from to>).List,
-            'Expected edges';
+            'Expected edges, one set';
 
     my $g5 = $g3.vertex-contract([<1 2>, <3 4>], :clone);
 
@@ -66,7 +66,7 @@ subtest {
     is-deeply
             $g5.edges(:dataset).sort(*<from to>).List,
             @edges5.sort(*<from to>).List,
-            'Expected edges';
+            'Expected edges, two sets';
 
 }, "Directed graph";
 
