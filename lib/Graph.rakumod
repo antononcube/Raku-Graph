@@ -258,12 +258,13 @@ class Graph
 
     multi method vertex-replace(%rules, Bool:D :$clone = True) {
         my @edges = self.edges(:dataset).map({ %(
-            from => %rules{$_<from>}:exists ?? %rules{$_<from>} !! $_<from>,
-            to => %rules{$_<to>}:exists ?? %rules{$_<to>} !! $_<to>,
+            from => %rules{$_<from>} // $_<from>,
+            to => %rules{$_<to>} // $_<to>,
             weight => $_<weight>,
         ) });
 
-        my $obj = Graph.new(@edges, :$!directed, :$!vertex-coordinates);
+        my @vertexes = self.vertex-list.map({ %rules{$_} // $_ }).unique;
+        my $obj = Graph.new(@vertexes, @edges, :$!directed, :$!vertex-coordinates);
         # If vertex-coordinates are present.
         if $obj.vertex-coordinates ~~ Map:D {
             $obj.vertex-coordinates .= map({ (%rules{$_.key} // $_.key) => $_.value });
