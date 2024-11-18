@@ -250,6 +250,47 @@ class Graph
     }
 
     #======================================================
+    # Vertex replacing
+    #======================================================
+    multi method vertex-replace(Pair:D $p, Bool:D :$clone = True) {
+        return self.vertex-replace(%($p,), :$clone);
+    }
+
+    multi method vertex-replace(%rules, Bool:D :$clone = True) {
+        my $obj = $clone ?? self.clone !! self;
+        for $obj.adjacency-list.kv -> $k, %w {
+            # Maybe it is faster to find the intersection with replacement vertices first and then iterate.
+            my %w2 = %w.map({ (%rules{$_.key} // $_.key) => $_.value });
+            $obj.adjacency-list{$k} = %w2;
+        }
+
+        $obj.adjacency-list .= map({ (%rules{$_.key} // $_.key) => $_.value });
+
+        # If vertex-coordinates are present.
+        if $obj.vertex-coordinates ~~ Map:D {
+            $obj.vertex-coordinates .= map({ (%rules{$_.key} // $_.key) => $_.value });
+        }
+
+        return $obj;
+    }
+
+    #======================================================
+    # Vertex contracting
+    #======================================================
+    multi method vertex-contract(@vs where @vs.all ~~ Str:D, Bool:D :$clone = True) {
+        my $obj = $clone ?? self.clone !! self;
+        if @vs.elems < 2 { return $obj }
+        my @edges = (@vs X=> @vs);
+        $obj.edge-delete(@edges);
+        my %rules = @vs.tail(*-1) X=> @vs.head;
+        return $obj.vertex-replace(%rules, :!clone);
+    }
+
+#    multi method vertex-contract(@vs where @vs.all ~~ (Array:D | List:D | Seq:D), Bool:D :$clone = True) {
+#
+#    }
+
+    #======================================================
     # Properties
     #======================================================
     #| Edges of the graph object.
