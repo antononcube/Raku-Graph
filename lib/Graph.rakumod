@@ -264,7 +264,9 @@ class Graph
         ) });
 
         my @vertexes = self.vertex-list.map({ %rules{$_} // $_ }).unique;
+
         my $obj = Graph.new(@vertexes, @edges, :$!directed, :$!vertex-coordinates);
+
         # If vertex-coordinates are present.
         if $obj.vertex-coordinates ~~ Map:D {
             $obj.vertex-coordinates .= map({ (%rules{$_.key} // $_.key) => $_.value });
@@ -284,8 +286,12 @@ class Graph
     multi method vertex-contract(@vs where @vs.all ~~ Str:D, Bool:D :$clone = True) {
         my $obj = $clone ?? self.clone !! self;
         if @vs.elems < 2 { return $obj }
+
+        # This is twice as long as needed for undirected graphs.
         my @edges = (@vs X=> @vs);
+
         $obj.edge-delete(@edges);
+
         my %rules = @vs.tail(*-1) X=> @vs.head;
         return $obj.vertex-replace(%rules, :!clone);
     }
