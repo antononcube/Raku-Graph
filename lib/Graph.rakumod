@@ -257,21 +257,24 @@ class Graph
     }
 
     multi method vertex-replace(%rules, Bool:D :$clone = True) {
-        my $obj = $clone ?? self.clone !! self;
-        for $obj.adjacency-list.kv -> $k, %w {
-            # Maybe it is faster to find the intersection with replacement vertices first and then iterate.
-            my %w2 = %w.map({ (%rules{$_.key} // $_.key) => $_.value });
-            $obj.adjacency-list{$k} = %w2;
-        }
+        my @edges = self.edges(:dataset).map({ %(
+            from => %rules{$_<from>}:exists ?? %rules{$_<from>} !! $_<from>,
+            to => %rules{$_<to>}:exists ?? %rules{$_<to>} !! $_<to>,
+            weight => $_<weight>,
+        ) });
 
-        $obj.adjacency-list .= map({ (%rules{$_.key} // $_.key) => $_.value });
-
+        my $obj = Graph.new(@edges, :$!directed, :$!vertex-coordinates);
         # If vertex-coordinates are present.
         if $obj.vertex-coordinates ~~ Map:D {
             $obj.vertex-coordinates .= map({ (%rules{$_.key} // $_.key) => $_.value });
         }
 
-        return $obj;
+        return $obj if $clone;
+
+        self.adjacency-list = $obj.adjacency-list;
+        self.vertex-coordinates = $obj.vertex-coordinates;
+
+        return self;
     }
 
     #======================================================
@@ -289,7 +292,7 @@ class Graph
     multi method vertex-contract(@vs where @vs.all ~~ (Array:D | List:D | Seq:D), Bool:D :$clone = True) {
         my $obj = $clone ?? self.clone !! self;
         for @vs -> @v {
-            $obj.vertex-contract(@v, :!clone)
+            $obj = $obj.vertex-contract(@v, :!clone)
         }
         return $obj;
     }
