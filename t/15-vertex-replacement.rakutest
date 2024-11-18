@@ -1,0 +1,46 @@
+use v6.d;
+
+use lib <. lib>;
+
+use Graph;
+
+use Test;
+
+## 1
+my $g1 = Graph.new:
+        [
+            %('from' => '1', 'to' => '2', 'weight' => 1),
+            %('from' => '1', 'to' => '4', 'weight' => 1),
+            %('from' => '2', 'to' => '3', 'weight' => 1),
+            %('from' => '3', 'to' => '4', 'weight' => 1)
+        ],
+        :!directed;
+
+ok $g1.vertex-replace('1' => 'hello', :clone);
+
+## 2
+my $g2 = $g1.vertex-replace('1' => 'hello', :clone);
+is-deeply
+        $g2.vertex-list.sort,
+        <2 3 4 hello>».Str.sort;
+
+
+## 3
+my $g3 = Graph.new:
+        [
+            %('from' => '1', 'to' => '2', 'weight' => 1), %('from' => '1', 'to' => '3', 'weight' => 1),
+            %('from' => '1', 'to' => '6', 'weight' => 1), %('from' => '1', 'to' => '5', 'weight' => 1),
+            %('from' => '3', 'to' => '6', 'weight' => 1), %('from' => '6', 'to' => '4', 'weight' => 1),
+            %('from' => '4', 'to' => '5', 'weight' => 1)
+        ],
+        :!directed;
+
+ok $g3.vertex-replace(%(1 => 'hi', 5 => 'hello'), :clone);
+
+## 4
+my $g4 = $g3.vertex-replace(%(1 => 'hi', 5 => 'hello'), :clone);
+is-deeply
+        $g4.vertex-list.sort,
+        <2 3 4 6 hi hello>».Str.sort;
+
+done-testing;

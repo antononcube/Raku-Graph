@@ -1,0 +1,62 @@
+use v6.d;
+
+use lib <. lib>;
+
+use Graph;
+
+use Test;
+
+## 1
+subtest {
+    my $g1 = Graph.new:
+            [
+                %('from' => '1', 'to' => '2', 'weight' => 1),
+                %('from' => '1', 'to' => '5', 'weight' => 1),
+                %('from' => '2', 'to' => '3', 'weight' => 1),
+                %('from' => '3', 'to' => '4', 'weight' => 1),
+                %('from' => '4', 'to' => '5', 'weight' => 1)
+            ],
+            :!directed;
+
+    ok $g1.vertex-contract(<1 2>, :clone);
+
+    my $g2 = $g1.vertex-contract(<1 2>, :clone);
+
+    is-deeply
+            $g2.vertex-list.List,
+            <1 3 4 5>».Str.List;
+
+}, "Undirected graph";
+
+## 2
+subtest {
+    my $g3 = Graph.new:
+            [
+                %('from' => '1', 'to' => '3', 'weight' => 1), %('from' => '1', 'to' => '5', 'weight' => 1),
+                %('from' => '3', 'to' => '6', 'weight' => 1), %('from' => '2', 'to' => '1', 'weight' => 1),
+                %('from' => '6', 'to' => '1', 'weight' => 1), %('from' => '4', 'to' => '6', 'weight' => 1),
+                %('from' => '5', 'to' => '4', 'weight' => 1)
+            ],
+            :directed;
+
+    ok $g3.vertex-contract(<1 2>, :clone);
+
+    my $g4 = $g3.vertex-contract(<1 2>, :clone);
+
+    is-deeply
+            $g4.vertex-list.List,
+            <1 3 4 5 6>».Str.List,
+            'Expected vertexes';
+
+    my @edges = %('from' => '1', 'to' => '3', 'weight' => 1), %('from' => '1', 'to' => '5', 'weight' => 1),
+                %('from' => '3', 'to' => '6', 'weight' => 1), %('from' => '6', 'to' => '1', 'weight' => 1),
+                %('from' => '4', 'to' => '6', 'weight' => 1), %('from' => '5', 'to' => '4', 'weight' => 1);
+
+    is-deeply
+            $g4.edges(:dataset).sort(*<from to>).List,
+            @edges.sort(*<from to>).List,
+            'Expected edges';
+
+}, "Directed graph";
+
+done-testing;
