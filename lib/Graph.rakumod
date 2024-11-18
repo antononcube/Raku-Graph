@@ -286,9 +286,13 @@ class Graph
         return $obj.vertex-replace(%rules, :!clone);
     }
 
-#    multi method vertex-contract(@vs where @vs.all ~~ (Array:D | List:D | Seq:D), Bool:D :$clone = True) {
-#
-#    }
+    multi method vertex-contract(@vs where @vs.all ~~ (Array:D | List:D | Seq:D), Bool:D :$clone = True) {
+        my $obj = $clone ?? self.clone !! self;
+        for @vs -> @v {
+            $obj.vertex-contract(@v, :!clone)
+        }
+        return $obj;
+    }
 
     #======================================================
     # Properties

@@ -48,13 +48,24 @@ subtest {
             <1 3 4 5 6>».Str.List,
             'Expected vertexes';
 
-    my @edges = %('from' => '1', 'to' => '3', 'weight' => 1), %('from' => '1', 'to' => '5', 'weight' => 1),
-                %('from' => '3', 'to' => '6', 'weight' => 1), %('from' => '6', 'to' => '1', 'weight' => 1),
-                %('from' => '4', 'to' => '6', 'weight' => 1), %('from' => '5', 'to' => '4', 'weight' => 1);
+    my @edges4 = %('from' => '1', 'to' => '3', 'weight' => 1), %('from' => '1', 'to' => '5', 'weight' => 1),
+                 %('from' => '3', 'to' => '6', 'weight' => 1), %('from' => '6', 'to' => '1', 'weight' => 1),
+                 %('from' => '4', 'to' => '6', 'weight' => 1), %('from' => '5', 'to' => '4', 'weight' => 1);
 
     is-deeply
             $g4.edges(:dataset).sort(*<from to>).List,
-            @edges.sort(*<from to>).List,
+            @edges4.sort(*<from to>).List,
+            'Expected edges';
+
+    my $g5 = $g3.vertex-contract([<1 2>, <3 4>], :clone);
+
+    my @edges5 = %('from' => '1', 'to' => '3', 'weight' => 1), %('from' => '1', 'to' => '5', 'weight' => 1),
+                 %('from' => '3', 'to' => '6', 'weight' => 1), %('from' => '6', 'to' => '1', 'weight' => 1),
+                 %('from' => '5', 'to' => '3', 'weight' => 1);
+
+    is-deeply
+            $g5.edges(:dataset).sort(*<from to>).List,
+            @edges5.sort(*<from to>).List,
             'Expected edges';
 
 }, "Directed graph";
