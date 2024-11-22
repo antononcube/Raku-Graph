@@ -366,46 +366,70 @@ class Graph
 
     #------------------------------------------------------
     #| Gives the list of vertex in-degrees for all vertices in the graph object.
-    multi method vertex-in-degree() {
-        return self.vertex-list.map({ self.vertex-in-degree($_) });
+    multi method vertex-in-degree(Bool:D :p(:$pairs) = False) {
+        return do if $pairs {
+            self.vertex-list.map({ $_ => self.vertex-in-degree($_) })
+        } else {
+            self.vertex-list.map({ self.vertex-in-degree($_) })
+        }
     }
 
     #| Gives the vertex in-degree for the vertex argument
-    multi method vertex-in-degree(Str:D $v--> Int) {
-        return do if $!directed {
-            self.adjacency-list{*;$v}.flat.grep(*.defined).elems;
+    multi method vertex-in-degree(Str:D $v, Bool:D :p(:$pairs) = False) {
+        return do if $pairs {
+            $v => self.vertex-degree($v, :!pairs)
         } else {
-            self.vertex-degree($v);
+            if $!directed {
+                self.adjacency-list{*;$v}.flat.grep(*.defined).elems
+            } else {
+                self.vertex-degree($v)
+            }
         }
     }
 
     #------------------------------------------------------
     #| Gives the list of vertex out-degrees for all vertices in the graph object.
-    multi method vertex-out-degree() {
-        return self.vertex-list.map({ self.vertex-out-degree($_) });
+    multi method vertex-out-degree(Bool:D :p(:$pairs) = False) {
+        return do if $pairs {
+            self.vertex-list.map({ $_ => self.vertex-out-degree($_) })
+        } else {
+            self.vertex-list.map({ self.vertex-out-degree($_) })
+        }
     }
 
     #| Gives the vertex out-degree for the vertex argument
-    multi method vertex-out-degree(Str:D $v--> Int) {
-        return do if $!directed {
-            self.adjacency-list{$v}.elems // 0;
+    multi method vertex-out-degree(Str:D $v, Bool:D :p(:$pairs) = False) {
+        return do if $pairs {
+            $v => self.vertex-degree($v, :!pairs)
         } else {
-            self.vertex-degree($v);
+            if $!directed {
+                self.adjacency-list{$v}.elems // 0
+            } else {
+                self.vertex-degree($v);
+            }
         }
     }
 
     #------------------------------------------------------
     #| Gives the list of vertex degrees for all vertices in the graph object.
-    multi method vertex-degree() {
-        return self.vertex-list.map({ self.vertex-degree($_) });
+    multi method vertex-degree(Bool:D :p(:$pairs) = False) {
+        return do if $pairs {
+            self.vertex-list.map({ $_ => self.vertex-degree($_) })
+        } else {
+            self.vertex-list.map({ self.vertex-degree($_) })
+        }
     }
 
     #| Gives the vertex degree for the vertex argument.
-    multi method vertex-degree(Str:D $v--> Int) {
-        return do if $!directed {
-            self.vertex-out-degree($v) - self.vertex-in-degree($v);
+    multi method vertex-degree(Str:D $v, Bool:D :p(:$pairs) = False) {
+        return do if $pairs {
+            $v => self.vertex-degree($v, :!pairs)
         } else {
-            self.adjacency-list{$v}.elems // 0;
+            if $!directed {
+                self.vertex-out-degree($v) - self.vertex-in-degree($v)
+            } else {
+                self.adjacency-list{$v}.elems // 0
+            }
         }
     }
 
@@ -703,8 +727,21 @@ class Graph
     #| Find Hamiltonian path.
     #| C<$s> -- Start vertex.
     #| C<$t> -- End vertex.
-    multi method find-hamiltonian-path(Str $s, Str $t) {
-        self!hamiltonian-path-helper($s, $t);
+    multi method find-hamiltonian-path(Str:D $s, Str:D $t, :$method = Whatever) {
+        return do given $method {
+            when Whatever {
+                self!hamiltonian-path-helper($s, $t)
+            }
+            when ($_ ~~ Str:D) && $_.lc ∈ <enumeration simple> {
+                self!hamiltonian-path-helper($s, $t)
+            }
+            when ($_ ~~ Str:D) && $_.lc ∈ <bellman-held-carp dynamic-programming dynamic dp> {
+                self!bellman-held-karp($s, $t)
+            }
+            default {
+                die 'Unknown method. The value of $method is expected to be one of "simple", "dynamic-programming", or Whatever.'
+            }
+        }
     }
 
     method !hamiltonian-path-helper(Str $s?, Str $t?) {
@@ -741,6 +778,11 @@ class Graph
         }
 
         return @best-path;
+    }
+
+    #------------------------------------------------------
+    method !bellman-held-karp(Str $s, Str $t) {
+        die "Not implemented."
     }
 
     #======================================================
