@@ -735,11 +735,8 @@ class Graph
             when ($_ ~~ Str:D) && $_.lc ∈ <backtracking> {
                 self!hamiltonian-path-helper($s, $t)
             }
-            when ($_ ~~ Str:D) && $_.lc ∈ <bellman-held-carp dynamic-programming dynamic dp> {
-                self!bellman-held-karp($s, $t)
-            }
             default {
-                die 'Unknown method. The value of $method is expected to be one of "simple", "dynamic-programming", or Whatever.'
+                die 'Unknown method. The value of $method is expected to be one of "backtracking" or Whatever.'
             }
         }
     }
@@ -778,11 +775,6 @@ class Graph
         }
 
         return @best-path;
-    }
-
-    #------------------------------------------------------
-    method !bellman-held-karp(Str $s, Str $t) {
-        die "Not implemented."
     }
 
     #======================================================
