@@ -732,7 +732,7 @@ class Graph
             when Whatever {
                 self!hamiltonian-path-helper($s, $t)
             }
-            when ($_ ~~ Str:D) && $_.lc ∈ <enumeration simple> {
+            when ($_ ~~ Str:D) && $_.lc ∈ <backtracking> {
                 self!hamiltonian-path-helper($s, $t)
             }
             when ($_ ~~ Str:D) && $_.lc ∈ <bellman-held-carp dynamic-programming dynamic dp> {
