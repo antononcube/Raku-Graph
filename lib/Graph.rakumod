@@ -721,27 +721,32 @@ class Graph
     #======================================================
     #| Find Hamiltonian path.
     multi method find-hamiltonian-path() {
-        self!hamiltonian-path-helper();
+        self!hamiltonian-path-backtracking();
     }
 
     #| Find Hamiltonian path.
     #| C<$s> -- Start vertex.
     #| C<$t> -- End vertex.
-    multi method find-hamiltonian-path(Str:D $s, Str:D $t, :$method = Whatever) {
-        return do given $method {
+    multi method find-hamiltonian-path(Str:D $s, Str:D $t, :$method = Whatever, *%args --> Array) {
+        my @res = do given $method {
             when Whatever {
-                self!hamiltonian-path-helper($s, $t)
+                self!hamiltonian-path-backtracking($s, $t)
             }
-            when ($_ ~~ Str:D) && $_.lc ∈ <backtracking> {
-                self!hamiltonian-path-helper($s, $t)
+            when ($_ ~~ Str:D) && $_.lc ∈ <backtracking backtrack bt> {
+                self!hamiltonian-path-backtracking($s, $t)
+            }
+            when ($_ ~~ Str:D) && $_.lc ∈ <angluin-valiant av random> {
+                self!hamiltonian-path-angluin-valiant($s, $t, |%args)
             }
             default {
                 die 'Unknown method. The value of $method is expected to be one of "backtracking" or Whatever.'
             }
         }
+        return @res;
     }
 
-    method !hamiltonian-path-helper(Str $s?, Str $t?) {
+    #------------------------------------------------------
+    method !hamiltonian-path-backtracking(Str $s?, Str $t?) {
         my @vertices = %.adjacency-list.keys;
         my @best-path;
         my $best-length = Inf;
@@ -775,6 +780,58 @@ class Graph
         }
 
         return @best-path;
+    }
+
+    #------------------------------------------------------
+    method !hamiltonian-path-angluin-valiant(Str $s, Str $t, :n(:$number-of-attempts) is copy = Whatever) {
+        if $number-of-attempts.isa(Whatever) {
+            $number-of-attempts = round(5 * log(self.vertex-count) * self.vertex-count)
+        }
+        die 'The value $number-of-attemps is expected to be a positve integer or Whatever.'
+        unless $number-of-attempts ~~ Int:D && $number-of-attempts > 0;
+
+        my @path = Empty;
+        for ^$number-of-attempts {
+            @path = |self!hamiltonian-path-angluin-valiant-single-run($s, $t);
+            last if @path.elems > 0;
+        }
+        return @path;
+    }
+
+    method !hamiltonian-path-angluin-valiant-single-run(Str:D $s, Str:D $t) {
+        my %G = self.clone.adjacency-list;
+        my $ndp = $s;
+        my @P;
+        my @res = Empty;
+
+        loop {
+            if %G{$ndp}:!exists || %G{$ndp}.elems == 0 {
+                last
+            } else {
+                my $v = %G{$ndp}.keys.pick;
+                if %G{$ndp}{$v} // False { %G{$ndp}{$v}:delete }
+                if %G{$v}{$ndp} // False { %G{$v}{$ndp}:delete }
+
+                if $v ne $t && (@P.Hash{$v}:!exists) {
+                    @P = @P.push($ndp.clone => $v);
+                    $ndp = $v;
+                } elsif $v ne $s && $v ne $t && (@P.Hash{$v}:exists) {
+                    my $e = @P.first({ $_.key eq $v }).head;
+                    my $u = $e.value;
+                    @P = @P.grep({ $_.key ne $v });
+                    # WHY is cloning needed here?
+                    @P = @P.push($v => $ndp.clone);
+                    $ndp = $u;
+                }
+            }
+
+            if @P.elems == self.vertex-count - 2 &&
+                    (self.adjacency-list{$ndp}{$t} // False) &&
+                    (%G{$ndp}{$t} // False) {
+                @res = Graph.new(@P.push($ndp => $t)).find-hamiltonian-path($s, $t, method => 'backtracking');
+            }
+        }
+        return @res;
     }
 
     #======================================================
