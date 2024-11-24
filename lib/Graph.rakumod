@@ -783,17 +783,51 @@ class Graph
     }
 
     #------------------------------------------------------
-    method !hamiltonian-path-angluin-valiant(Str $s, Str $t, :n(:$number-of-attempts) is copy = Whatever) {
+    method !hamiltonian-path-angluin-valiant(Str $s, Str $t,
+                                             :n(:$number-of-attempts) is copy = Whatever,
+                                             :d(:$degree) is copy = Whatever,
+                                             :b(:$batch) is copy = Whatever
+                                             ) {
+        # Directed graphs only
+        die 'The graph is expected to be undirected.' unless !self.directed;
+
+        # Process number of attempts
         if $number-of-attempts.isa(Whatever) {
-            $number-of-attempts = round(5 * log(self.vertex-count) * self.vertex-count)
+            $number-of-attempts = ceiling(5 * log(self.vertex-count) * self.vertex-count)
         }
-        die 'The value $number-of-attemps is expected to be a positve integer or Whatever.'
+        die 'The value of $number-of-attemps is expected to be a positve integer or Whatever.'
         unless $number-of-attempts ~~ Int:D && $number-of-attempts > 0;
 
+        # Process number of degree
+        if $degree.isa(Whatever) { $degree = 1 }
+        die 'The value of $degree is expected to be a positve integer or Whatever.'
+        unless $degree ~~ Int:D && $degree > 0;
+
+        # Process number of batch
+        if $batch.isa(Whatever) { $batch = ceiling($number-of-attempts / $degree) }
+        die 'The value of $batch is expected to be a positve integer or Whatever.'
+        unless $batch ~~ Int:D && $batch > 0;
+
+        # Loop
         my @path = Empty;
-        for ^$number-of-attempts {
-            @path = |self!hamiltonian-path-angluin-valiant-single-run($s, $t);
-            last if @path.elems > 0;
+        if $degree > 1 {
+            # Parallel execution
+            my @res = (^$degree).race(:$degree, batch => 1).map({
+                my @p;
+                for ^$batch {
+                    @p = |self!hamiltonian-path-angluin-valiant-single-run($s, $t);
+                    last if @p.elems > 0;
+                }
+                @p
+            });
+            @path = @res.grep(*.elems);
+            if @path { @path = |@path.head }
+        } else {
+            # Sequential execution
+            for ^$number-of-attempts {
+                @path = |self!hamiltonian-path-angluin-valiant-single-run($s, $t);
+                last if @path.elems > 0;
+            }
         }
         return @path;
     }
