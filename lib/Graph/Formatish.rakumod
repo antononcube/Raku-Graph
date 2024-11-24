@@ -27,7 +27,13 @@ role Graph::Formatish
 
         my $vertexes = '"' ~ self.vertex-list.join('", "') ~ '"';
 
-        return "Graph[\{$vertexes\}, \{$edges\}, EdgeWeight -> \{$weights\}, DirectedEdges -> { self.directed }{ $args }]";
+        my $coords = '';
+        if self.vertex-coordinates ~~ Map:D {
+            $coords = self.vertex-list.map({ "\"$_\" -> \{{self.vertex-coordinates{$_}.join(', ')}\}" }).join(',');
+            $coords = ", VertexCoordinates -> \{$coords\}";
+        }
+
+        return "Graph[\{$vertexes\}, \{$edges\}, EdgeWeight -> \{$weights\}, DirectedEdges -> { self.directed }{$coords}{ $args }]";
     }
 
     #------------------------------------------------------
