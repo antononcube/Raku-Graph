@@ -27,7 +27,7 @@ class Graph::Hypercube is Graph {
 
                 # Add
                 if ($f.comb Z[ne] $t.comb).sum == 1 {
-                    self.add-edge($f, $t, :!directed);
+                    self.edge-add($f, $t, :!directed);
                 }
             }
         }

@@ -137,7 +137,7 @@ class Graph
     }
 
     #------------------------------------------------------
-    method add-edge(Str $from, Str $to, Numeric $weight = 1, Bool:D :d(:$directed) = False) {
+    method edge-add(Str $from, Str $to, Numeric $weight = 1, Bool:D :d(:$directed) = False) {
         %!adjacency-list{$from}{$to} = $weight;
 
         if !$directed {
@@ -151,7 +151,7 @@ class Graph
     method add-edges(@edges, Bool:D :d(:$directed) = False) {
         if is-reshapable(@edges, iterable-type => Positional, record-type => Map) {
             for @edges -> %edge {
-                self.add-edge(%edge<from>, %edge<to>, %edge<weight> // 1, :$directed);
+                self.edge-add(%edge<from>, %edge<to>, %edge<weight> // 1, :$directed);
             }
         } elsif is-reshapable(@edges, iterable-type => Positional, record-type => Positional) {
             for @edges -> @edge {
@@ -160,7 +160,7 @@ class Graph
                             "then edge record is expected to have two or three elements. " ~
                             "The first two record elements are expected to be strings; the third, if present, a number.";
                 }
-                self.add-edge(@edge[0], @edge[1], @edge[3] // 1, :$directed);
+                self.edge-add(@edge[0], @edge[1], @edge[3] // 1, :$directed);
             }
         } elsif @edges.all ~~ Pair:D {
             return self.add-edges(@edges».kv».List.List, :$directed);
@@ -847,12 +847,12 @@ class Graph
                 if %G{$v}{$ndp} // False { %G{$v}{$ndp}:delete }
 
                 if $v ne $t && !$P.has-vertex($v) {
-                    $P.add-edge($v, $ndp);
+                    $P.edge-add($v, $ndp);
                     $ndp = $v;
                 } elsif $v ne $s && $v ne $t && $P.has-vertex($v) {
                     my $u = $P.adjacency-list{$v}.keys.grep({ $_ ne $s && $_ ne $t }).pick;
                     $P.edge-delete($v, $u);
-                    $P.add-edge($v, $ndp);
+                    $P.edge-add($v, $ndp);
                     $ndp = $u;
                 }
             }
@@ -860,7 +860,7 @@ class Graph
             if $P.adjacency-list.elems ≥ self.vertex-count - 1 &&
                     (self.adjacency-list{$ndp}{$t} // False) &&
                     (%G{$ndp}{$t} // False) {
-                $P.add-edge($ndp, $t);
+                $P.edge-add($ndp, $t);
                 @res = $P.find-hamiltonian-path($s, $t, method => 'backtracking');
             }
         }

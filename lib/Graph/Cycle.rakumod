@@ -8,7 +8,7 @@ class Graph::Cycle is Graph {
     submethod BUILD(:$!n!, :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         for ^$!n -> $i {
             my $next = $i == $!n - 1 ?? 0 !! $i + 1;
-            self.add-edge("{$prefix}{$i}", "{$prefix}{$next}", :$directed);
+            self.edge-add("{$prefix}{$i}", "{$prefix}{$next}", :$directed);
         }
         self.vertex-coordinates =
                 self.vertex-list.map({ my $i = $_.subst($prefix).Int - 1; $_ => [cos(2 * pi / $!n * $i), sin(2 * pi / $!n * $i)]}).Hash;

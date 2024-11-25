@@ -13,7 +13,7 @@ class Graph::CompleteKaryTree is Graph {
             for 1..$!k -> $i {
                 my $child = $parent * $!k + $i;
                 last if $child > @nodes.elems - 1;
-                self.add-edge($prefix ~ $parent.Str, $prefix ~ $child.Str, :$directed);
+                self.edge-add($prefix ~ $parent.Str, $prefix ~ $child.Str, :$directed);
             }
         }
     }

@@ -27,7 +27,7 @@ class Graph::Nested is Graph {
         for $graph.vertex-list -> $v {
             my @new-vertices = f(&as($v));
             for @new-vertices -> $nv {
-                $new-graph.add-edge($v, $nv.Str, :$directed);
+                $new-graph.edge-add($v, $nv.Str, :$directed);
             }
         }
         return $new-graph;

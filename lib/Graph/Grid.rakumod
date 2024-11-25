@@ -11,10 +11,10 @@ class Graph::Grid is Graph {
             for ^$!columns -> $c {
                 my $current = "{$prefix}{$r}_{$c}";
                 if $r < $!rows - 1 {
-                    self.add-edge($current, "{$prefix}{$r+1}{$sep}{$c}", :$directed);
+                    self.edge-add($current, "{$prefix}{$r+1}{$sep}{$c}", :$directed);
                 }
                 if $c < $!columns - 1 {
-                    self.add-edge($current, "{$prefix}{$r}{$sep}{$c+1}", :$directed);
+                    self.edge-add($current, "{$prefix}{$r}{$sep}{$c+1}", :$directed);
                 }
             }
         }

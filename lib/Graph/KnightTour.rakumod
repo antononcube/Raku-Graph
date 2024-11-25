@@ -26,7 +26,7 @@ class Graph::KnightTour is Graph {
                     my $new-col = $col + $dc;
                     if $new-row >= 0 && $new-row < $!rows && $new-col >= 0 && $new-col < $!columns {
                         # Note the columns are the X-coordinates and the rows are the Y-coordinates.
-                        self.add-edge("{$prefix}{$col}{$sep}{$row}", "{$prefix}{$new-col}{$sep}{$new-row}", :!directed);
+                        self.edge-add("{$prefix}{$col}{$sep}{$row}", "{$prefix}{$new-col}{$sep}{$new-row}", :!directed);
                     }
                 }
             }

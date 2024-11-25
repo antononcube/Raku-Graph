@@ -8,8 +8,8 @@ class Graph::Circulant is Graph {
 
     submethod BUILD(:$!n!, :$!jump!, Str:D :$prefix = '') {
         for ^$!n -> $i {
-            self.add-edge($prefix ~ $i.Str, $prefix ~ (($i + $!jump) % $!n).Str, :!directed);
-            self.add-edge($prefix ~ $i.Str, $prefix ~ (($i - $!jump) % $!n).Str, :!directed);
+            self.edge-add($prefix ~ $i.Str, $prefix ~ (($i + $!jump) % $!n).Str, :!directed);
+            self.edge-add($prefix ~ $i.Str, $prefix ~ (($i - $!jump) % $!n).Str, :!directed);
         }
     }
 

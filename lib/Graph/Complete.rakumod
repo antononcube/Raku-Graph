@@ -9,9 +9,9 @@ class Graph::Complete is Graph {
         for 1..$!n -> $i {
             for 1..$!n -> $j {
                 next if $i == $j;
-                self.add-edge("$prefix$i", "$prefix$j", :$directed);
+                self.edge-add("$prefix$i", "$prefix$j", :$directed);
                 if $directed {
-                    self.add-edge("$prefix$j", "$prefix$i", :$directed);
+                    self.edge-add("$prefix$j", "$prefix$i", :$directed);
                 }
             }
         }

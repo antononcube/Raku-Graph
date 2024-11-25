@@ -13,7 +13,7 @@ class Graph::Star is Graph {
 
         $!center = $center;
         for 1..$!n -> $i {
-            self.add-edge($!center, "$prefix$i", :$directed);
+            self.edge-add($!center, "$prefix$i", :$directed);
         }
 
         self.vertex-coordinates =

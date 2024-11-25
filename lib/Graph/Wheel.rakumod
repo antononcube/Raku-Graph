@@ -11,9 +11,9 @@ class Graph::Wheel is Graph {
 
         $!center = $center;
         for 1..$!n -> $i {
-            self.add-edge($!center, "{$prefix}{$i}", :$directed);
+            self.edge-add($!center, "{$prefix}{$i}", :$directed);
             my $next = $i == $!n ?? 1 !! $i + 1;
-            self.add-edge("{$prefix}{$i}", "{$prefix}{$next}", :$directed);
+            self.edge-add("{$prefix}{$i}", "{$prefix}{$next}", :$directed);
         }
 
         self.vertex-coordinates =

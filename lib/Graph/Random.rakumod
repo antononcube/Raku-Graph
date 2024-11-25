@@ -26,7 +26,7 @@ class Graph::Random is Graph {
                         }
 
                 for @all-edges -> ($from, $to) {
-                    self.add-edge($from, $to, :$directed);
+                    self.edge-add($from, $to, :$directed);
                 }
 
                 # Find the vertices without edges
@@ -69,7 +69,7 @@ class Graph::Random is Graph {
         for 1 ..^ $n -> $i {
             my @degrees = @vertexes.elems == 1 ?? [1,] !! @vertexes.map: { self.vertex-in-degree($_) };
             my $vertexBag = (@vertexes Z=> @degrees).BagHash;
-            $vertexBag.pick($k).map({ self.add-edge($prefix ~ $i, $_, 1, :!directed) });
+            $vertexBag.pick($k).map({ self.edge-add($prefix ~ $i, $_, 1, :!directed) });
 
             @vertexes.push($prefix ~ $i);
         }
@@ -85,7 +85,7 @@ class Graph::Random is Graph {
         for @vertices.kv -> $i, $vi {
             for @vertices[$i+1 .. *].kv -> $j, $vj {
                 if dist($vi, $vj) ≤ $r {
-                    self.add-edge($prefix ~ $i.Str, $prefix ~ ($i + $j + 1).Str, 1);
+                    self.edge-add($prefix ~ $i.Str, $prefix ~ ($i + $j + 1).Str, 1);
                 }
             }
         }
@@ -113,8 +113,8 @@ class Graph::Random is Graph {
             #my $vertexMix = (@vertexes Z=> @probabilities).MixHash;3
             my $vertexBag = (@vertexes Z=> @freqs).BagHash;
 
-            #$vertexMix.roll($k).map({ self.add-edge($new-vertex, $_, 1, :directed) });
-            $vertexBag.pick($k).map({ self.add-edge($new-vertex, $_, 1, :directed) });
+            #$vertexMix.roll($k).map({ self.edge-add($new-vertex, $_, 1, :directed) });
+            $vertexBag.pick($k).map({ self.edge-add($new-vertex, $_, 1, :directed) });
 
             @vertexes.push: $new-vertex;
         }
@@ -127,8 +127,8 @@ class Graph::Random is Graph {
 
         for ^$n -> $i {
             for 1 ..^ ($k div 2 + 1) -> $j {
-                self.add-edge($prefix ~ $i.Str, $prefix ~ (($i + $j) % $n).Str);
-                self.add-edge($prefix ~ $i.Str, $prefix ~ (($i - $j + $n) % $n).Str);
+                self.edge-add($prefix ~ $i.Str, $prefix ~ (($i + $j) % $n).Str);
+                self.edge-add($prefix ~ $i.Str, $prefix ~ (($i - $j + $n) % $n).Str);
             }
         }
 
@@ -139,8 +139,8 @@ class Graph::Random is Graph {
                     repeat {
                         $new-to = (^$n).grep({ $_ != $i && self.adjacency-list{$prefix ~ $i.Str}.elems }).pick;
                     } until $new-to.defined;
-                    self.add-edge($prefix ~ $i.Str, $prefix ~ $new-to.Str);
-                    self.add-edge($prefix ~ $i.Str, $prefix ~ (($i + $j) % $n).Str);
+                    self.edge-add($prefix ~ $i.Str, $prefix ~ $new-to.Str);
+                    self.edge-add($prefix ~ $i.Str, $prefix ~ (($i + $j) % $n).Str);
                 }
             }
         }

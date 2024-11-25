@@ -7,7 +7,7 @@ class Graph::Path is Graph {
 
     submethod BUILD(:@!path!, :$prefix = '', Bool:D :d(:directed-edges(:$directed)) = False) {
         for ^(@!path.elems - 1) -> $i {
-            self.add-edge("{ $prefix }{ @!path[$i] }", "{ $prefix }{ @!path[$i + 1] }", :$directed);
+            self.edge-add("{ $prefix }{ @!path[$i] }", "{ $prefix }{ @!path[$i + 1] }", :$directed);
         }
     }
 
