@@ -16,4 +16,23 @@ my $g2 = $g1.subgraph(@vs1);
 
 isa-ok $g1.subgraph($g2.edges), Graph;
 
+subtest {
+    my $g = Graph::Grid.new(20, 30);
+
+    my $vset = $g.vertex-list (-) $g.neighborhood-graph($g.vertex-list.pick(40), d => 1).vertex-list;
+
+    my $g2 = $g.subgraph($vset.keys);
+
+    is
+            $g2.vertex-count < $g.vertex-count,
+            True,
+            'Less vertexes';
+
+    is
+            $g2.vertex-coordinates.keys.elems,
+            $g2.vertex-count,
+            'Same number of vertexes';
+
+}, 'Expected vertex coordinates';
+
 done-testing;
