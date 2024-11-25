@@ -1209,9 +1209,10 @@ class Graph
         my @edges = self.edges(:dataset);
         @edges .= grep({ $_<from> ∈ @subvertexes || $_<to> ∈ @subvertexes });
 
+        my @subvertexesNew = [|@edges.map(*<from>), |@edges.map(*<to>)].unique;
         my $vertex-coordinates =
                 do if $!vertex-coordinates ~~ Map:D {
-                    (@subvertexes Z=> $!vertex-coordinates{@subvertexes}).Hash
+                    (@subvertexesNew Z=> $!vertex-coordinates{@subvertexesNew}).Hash
                 } else { Whatever }
 
         return Graph.new(@edges, :$!directed, :$vertex-coordinates);
@@ -1228,9 +1229,10 @@ class Graph
         my @subvertexes = [|@edges».key, |@edges».value].unique;
         my @edgesNew = self.edges(:!dataset).grep({ $_.key ∈ @subvertexes && $_.value ∈ @subvertexes });
 
+        my @subvertexesNew = [|@edgesNew».key, |@edgesNew».value].unique;
         my $vertex-coordinates =
                 do if $!vertex-coordinates ~~ Map:D {
-                    (@subvertexes Z=> $!vertex-coordinates{@subvertexes}).Hash
+                    (@subvertexesNew Z=> $!vertex-coordinates{@subvertexesNew}).Hash
                 } else { Whatever }
 
         return Graph.new(@edgesNew, :$!directed, :$vertex-coordinates);
