@@ -175,7 +175,7 @@ class Graph
     #======================================================
     multi method vertex-delete(Str:D $v) {
         %!adjacency-list{$v}:delete;
-       for %!adjacency-list.kv -> $k, %vertexes {
+        for %!adjacency-list.kv -> $k, %vertexes {
             if %vertexes{$v}:exists {
                 %vertexes{$v}:delete
             }
@@ -835,7 +835,7 @@ class Graph
     method !hamiltonian-path-angluin-valiant-single-run(Str:D $s, Str:D $t) {
         my %G = self.clone.adjacency-list;
         my $ndp = $s;
-        my @P;
+        my $P = Graph.new(:!directed);
         my @res = Empty;
 
         loop {
@@ -846,23 +846,22 @@ class Graph
                 if %G{$ndp}{$v} // False { %G{$ndp}{$v}:delete }
                 if %G{$v}{$ndp} // False { %G{$v}{$ndp}:delete }
 
-                if $v ne $t && (@P.Hash{$v}:!exists) {
-                    @P = @P.push($ndp.clone => $v);
+                if $v ne $t && !$P.has-vertex($v) {
+                    $P.add-edge($v, $ndp);
                     $ndp = $v;
-                } elsif $v ne $s && $v ne $t && (@P.Hash{$v}:exists) {
-                    my $e = @P.first({ $_.key eq $v }).head;
-                    my $u = $e.value;
-                    @P = @P.grep({ $_.key ne $v });
-                    # WHY is cloning needed here?
-                    @P = @P.push($v => $ndp.clone);
+                } elsif $v ne $s && $v ne $t && $P.has-vertex($v) {
+                    my $u = $P.adjacency-list{$v}.keys.grep({ $_ ne $s && $_ ne $t }).pick;
+                    $P.edge-delete($v, $u);
+                    $P.add-edge($v, $ndp);
                     $ndp = $u;
                 }
             }
 
-            if @P.elems == self.vertex-count - 2 &&
+            if $P.adjacency-list.elems ≥ self.vertex-count - 1 &&
                     (self.adjacency-list{$ndp}{$t} // False) &&
                     (%G{$ndp}{$t} // False) {
-                @res = Graph.new(@P.push($ndp => $t)).find-hamiltonian-path($s, $t, method => 'backtracking');
+                $P.add-edge($ndp, $t);
+                @res = $P.find-hamiltonian-path($s, $t, method => 'backtracking');
             }
         }
         return @res;
