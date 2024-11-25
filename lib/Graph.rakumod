@@ -137,7 +137,12 @@ class Graph
     }
 
     #------------------------------------------------------
-    method edge-add(Str $from, Str $to, Numeric $weight = 1, Bool:D :d(:$directed) = False) {
+    #| Add a single edge.
+    #| C<$from> -- From vertex.
+    #| C<$from> -- To vertex.
+    #| C<$weight> -- Edge weight.
+    #| C<:d(:$directed)> -- Is the edge directed or not.
+    multi method edge-add(Str:D $from, Str:D $to, Numeric:D $weight = 1, Bool:D :d(:$directed) = False) {
         %!adjacency-list{$from}{$to} = $weight;
 
         if !$directed {
@@ -147,8 +152,10 @@ class Graph
         return self;
     }
 
-    #------------------------------------------------------
-    method add-edges(@edges, Bool:D :d(:$directed) = False) {
+    #| Add a list of edges.
+    #| C<@edges> -- List of edges. Both Map and Pair objects can be used.
+    #| C<:d(:$directed)> -- Are the edge directed or not.
+    multi method edge-add(@edges, Bool:D :d(:$directed) = False) {
         if is-reshapable(@edges, iterable-type => Positional, record-type => Map) {
             for @edges -> %edge {
                 self.edge-add(%edge<from>, %edge<to>, %edge<weight> // 1, :$directed);
@@ -168,6 +175,11 @@ class Graph
             die "The first argument is expected to be a Positional of Maps or a Positional of Positionals.";
         }
         return self;
+    }
+
+    #| Partial synonym of edge-add, adding a list of edges.
+    method add-edges(@edges, Bool:D :d(:$directed) = False) {
+        return self.edge-add(@edges, :$directed);
     }
 
     #======================================================
