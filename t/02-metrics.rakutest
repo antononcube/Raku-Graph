@@ -48,4 +48,14 @@ is $graph5.vertex-eccentricity('8'), Inf;
 ## 7
 is $graph5.radius, Inf;
 
+## 8
+subtest {
+        isa-ok $graph1.vertex-degree('1'), Int:D;
+        isa-ok $graph5.vertex-degree('1'), Int:D;
+        is $graph1.vertex-degree.all ~~ Int:D, True;
+        is $graph5.vertex-degree ~~ Array:D | List:D | Seq:D, True;
+        is $graph5.vertex-degree(:pairs).all ~~ Pair:D, True;
+        is $graph5.vertex-degree('1', :pairs) ~~ Pair:D, True;
+}, "Vertex degrees";
+
 done-testing;
