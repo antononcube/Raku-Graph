@@ -45,6 +45,10 @@ class Graph::HexagonalGrid is Graph {
         self.adjacency-list = $g.adjacency-list;
     }
 
+    multi method new(Int:D $rows, *%args) {
+        self.new(:$rows, columns => $rows, |%args);
+    }
+
     multi method new(Int:D $rows, Int:D $columns,
                      Str:D :$prefix = '',
                      Numeric:D :$scale = 1,
