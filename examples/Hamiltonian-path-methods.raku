@@ -1,14 +1,14 @@
 #!/usr/bin/env raku
 use v6.d;
 
-use lib <. lib>;
 use Graph;
 use Graph::Grid;
 use Graph::KnightTour;
 use Data::Reshapers;
 use Data::Summarizers;
 
-my $method = 'random'; # 'backtracking'
+my $method = 'backtracking';
+my $warnsdorf-rule = True;
 my $max-number-of-attempts = 2000;
 my $n-trials = 100;
 my $pick = 'max-degree';
@@ -21,18 +21,22 @@ say $graph.wl(VertexLabels => 'Name');
 my $tend = now;
 say "Time to generate: {$tend - $tstart}";
 
+#note $graph.find-hamiltonian-path(:$warnsdorf-rule);
+
 my $tstart2 = now;
 my $start = '0';
 my $end = $graph.vertex-list».Int.max.Str; # '19'
 say "Path from '$start' to '$end'.";
-my @res = |$graph.find-hamiltonian-path($start, $end, :$method, :$max-number-of-attempts, degree => 1, :$pick);
+my @res = |$graph.find-hamiltonian-path($start, $end, :$method, :$warnsdorf-rule, :$max-number-of-attempts, degree => 1, :$pick);
 my $tend2 = now;
 
-say "Time to find: {$tend2 - $tstart2}";
+say "Time to find Hamiltonian path: {$tend2 - $tstart2}";
 say "Length: {@res.elems}";
 say @res;
 
-
+#==========================================================
+# Testing the Angluin-Valiant random algorithm
+#==========================================================
 if $method eq 'random' {
     my @attempts = do for ^$n-trials {
         say "attempt: $_ ";
