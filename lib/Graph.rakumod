@@ -798,8 +798,7 @@ class Graph
     method !hamiltonian-path-angluin-valiant(Str $s, Str $t,
                                              :n(:$max-number-of-attempts) is copy = Whatever,
                                              :d(:$degree) is copy = Whatever,
-                                             :b(:$batch) is copy = Whatever,
-                                             :choice(:$choice-method) = Whatever
+                                             :by(:pick-by(:$pick)) is copy = Whatever
                                              ) {
         # Directed graphs only
         die 'The graph is expected to be undirected.' unless !self.directed;
@@ -816,19 +815,20 @@ class Graph
         die 'The value of $degree is expected to be a positve integer or Whatever.'
         unless $degree ~~ Int:D && $degree > 0;
 
-        # Process number of batch
-        if $batch.isa(Whatever) { $batch = ceiling($max-number-of-attempts / $degree) }
-        die 'The value of $batch is expected to be a positve integer or Whatever.'
-        unless $batch ~~ Int:D && $batch > 0;
+        # Process next vertex pick method
+        if $pick.isa(Whatever) { $pick = 'random' }
+        die 'The value of $batch is expected to be one of "random", "weighted-random", "max-degree" or Whatever.'
+        unless $pick ~~ Str:D && $pick ∈ <random weighted-random max-degree>;
 
         # Loop
         my @path = Empty;
+        my $batch = ceiling($max-number-of-attempts / $degree);
         if $degree > 1 {
             # Parallel execution
             my @res = (^$degree).race(:$degree, batch => 1).map({
                 my @p;
                 for ^$batch {
-                    @p = |self!hamiltonian-path-angluin-valiant-single-run($s, $t, :$choice-method);
+                    @p = |self!hamiltonian-path-angluin-valiant-single-run($s, $t, :$pick);
                     last if @p.elems > 0;
                 }
                 @p
@@ -838,14 +838,14 @@ class Graph
         } else {
             # Sequential execution
             for ^$max-number-of-attempts {
-                @path = |self!hamiltonian-path-angluin-valiant-single-run($s, $t, :$choice-method);
+                @path = |self!hamiltonian-path-angluin-valiant-single-run($s, $t, :$pick);
                 last if @path.elems > 0;
             }
         }
         return @path;
     }
 
-    method !hamiltonian-path-angluin-valiant-single-run(Str:D $s, Str:D $t, :choice(:$choice-method) = Whatever) {
+    method !hamiltonian-path-angluin-valiant-single-run(Str:D $s, Str:D $t, Str:D :$pick = 'max-degree') {
         my %G = self.clone.adjacency-list;
         my $ndp = $s;
         my $P = Graph.new(:!directed);
@@ -855,15 +855,15 @@ class Graph
             if %G{$ndp}:!exists || %G{$ndp}.elems == 0 {
                 last
             } else {
-                my $v = do given $choice-method {
-                    when $_ ~~ Str:D && $_.lc ∈ <weighted weighted-pick> {
+                my $v = do given $pick.lc {
+                    when $_ ∈ <weighted weighted-random random-weighted> {
                         # Pick with probabilities proportional of the vertex degrees.
                         # See Warnsdorf's rule -- here it is done the opposite of that rule.
                         my @vs = %G{$ndp}.keys;
                         my @probs = %G{@vs}».elems;
                         (@vs Z=> @probs).Bag.pick
                     }
-                    when $_ ~~ Str:D && $_.lc ∈ <max max-degree> {
+                    when $_ ∈ <max max-degree> {
                         # See Warnsdorf's rule -- here it is done the opposite of that rule.
                         my @vs = %G{$ndp}.keys;
                         my @probs = %G{@vs}».elems;
