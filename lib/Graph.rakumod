@@ -803,7 +803,7 @@ class Graph
     method !hamiltonian-path-angluin-valiant(Str $s, Str $t,
                                              :n(:$max-number-of-attempts) is copy = Whatever,
                                              :d(:$degree) is copy = Whatever,
-                                             :by(:pick-by(:$pick)) is copy = Whatever
+                                             :by(:pick-by(:$pick)) is copy = 'max-degree'
                                              ) {
         # Directed graphs only
         die 'The graph is expected to be undirected.' unless !self.directed;
