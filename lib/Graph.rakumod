@@ -798,7 +798,8 @@ class Graph
     method !hamiltonian-path-angluin-valiant(Str $s, Str $t,
                                              :n(:$max-number-of-attempts) is copy = Whatever,
                                              :d(:$degree) is copy = Whatever,
-                                             :b(:$batch) is copy = Whatever
+                                             :b(:$batch) is copy = Whatever,
+                                             :choice(:$choice-method) = Whatever
                                              ) {
         # Directed graphs only
         die 'The graph is expected to be undirected.' unless !self.directed;
@@ -827,7 +828,7 @@ class Graph
             my @res = (^$degree).race(:$degree, batch => 1).map({
                 my @p;
                 for ^$batch {
-                    @p = |self!hamiltonian-path-angluin-valiant-single-run($s, $t);
+                    @p = |self!hamiltonian-path-angluin-valiant-single-run($s, $t, :$choice-method);
                     last if @p.elems > 0;
                 }
                 @p
@@ -837,14 +838,14 @@ class Graph
         } else {
             # Sequential execution
             for ^$max-number-of-attempts {
-                @path = |self!hamiltonian-path-angluin-valiant-single-run($s, $t);
+                @path = |self!hamiltonian-path-angluin-valiant-single-run($s, $t, :$choice-method);
                 last if @path.elems > 0;
             }
         }
         return @path;
     }
 
-    method !hamiltonian-path-angluin-valiant-single-run(Str:D $s, Str:D $t) {
+    method !hamiltonian-path-angluin-valiant-single-run(Str:D $s, Str:D $t, :choice(:$choice-method) = Whatever) {
         my %G = self.clone.adjacency-list;
         my $ndp = $s;
         my $P = Graph.new(:!directed);
@@ -854,7 +855,26 @@ class Graph
             if %G{$ndp}:!exists || %G{$ndp}.elems == 0 {
                 last
             } else {
-                my $v = %G{$ndp}.keys.pick;
+                my $v = do given $choice-method {
+                    when $_ ~~ Str:D && $_.lc ∈ <weighted weighted-pick> {
+                        # Pick with probabilities proportional of the vertex degrees.
+                        # See Warnsdorf's rule -- here it is done the opposite of that rule.
+                        my @vs = %G{$ndp}.keys;
+                        my @probs = %G{@vs}».elems;
+                        (@vs Z=> @probs).Bag.pick
+                    }
+                    when $_ ~~ Str:D && $_.lc ∈ <max max-degree> {
+                        # See Warnsdorf's rule -- here it is done the opposite of that rule.
+                        my @vs = %G{$ndp}.keys;
+                        my @probs = %G{@vs}».elems;
+                        my $m = @probs.max;
+                        (@vs Z=> @probs).grep({ $_.value == $m })».key.pick
+                    }
+                    default {
+                        %G{$ndp}.keys.pick
+                    }
+                }
+
                 if %G{$ndp}{$v} // False { %G{$ndp}{$v}:delete }
                 if %G{$v}{$ndp} // False { %G{$v}{$ndp}:delete }
 
