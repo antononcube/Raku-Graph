@@ -155,22 +155,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-3 --- 8
+10 --- 2
+10 --- 9
 2 --- 3
 3 --- 4
-2 --- 8
-6 --- 7
-2 --- 7
-1 --- 7
-1 --- 5
-2 --- 6
-12 --- 2
+3 --- 8
 2 --- 4
-10 --- 2
+2 --- 7
+12 --- 2
+2 --- 8
+2 --- 6
+1 --- 5
+1 --- 7
+6 --- 7
 12 --- 5
 11 --- 12
 4 --- 9
-10 --- 9
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -197,7 +197,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [10 9 4 3 8 2 6 7 1 5 12 11]
 ```
 
 Here we find a cycle:
@@ -206,7 +206,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([2 6 7 2])
+# find-cycle : ([2 3 4 2])
 ```
 
 Here we find all cycles in the graph:
@@ -262,7 +262,7 @@ The visualizations with "JavaScript::D3" are very capricious. Currently they:
 - Do not work with [JupyterLab](https://jupyter.org), but only with the "classical" Jupyter notebook.
 - Work nicely with the Jupyter notebook plugin(s) of Visual Studio Code, but often require re-loading of the notebooks.
 
-The points above were to main reason to develop the DOT format visualizations. 
+The points above were the main reasons to develop the DOT format visualization. 
 Most of the documentation notebooks show the graphs using both "JavaScript::D3" and DOT-SVG. 
 
 -------
@@ -322,6 +322,10 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
   - [X] DONE Find shortest path
   - [X] DONE Find Hamiltonian paths
     - For both the whole graph or for a given pair of vertexes.
+    - Algorithms:
+      - [X] Backtracking, `method => 'backtracking'`)
+      - [X] Application Warnsdorf's rule for backtracking, `:warnsdorf-rule`
+      - [X] Angluin-Valiant (probabilistic), `method => 'random'`
 - [ ] TODO Flows
   - [ ] TODO Find maximum flow
   - [ ] TODO Find minimum cost flow
@@ -361,6 +365,8 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 ### Matching, coloring
 
 - [X] DONE Check is a graph bipartite
+- [X] DONE [Hungarian algorithm for bipartite graphs](https://en.wikipedia.org/wiki/Hungarian_algorithm)
+  - At [tum.de](https://algorithms.discrete.ma.tum.de/graph-algorithms/matchings-hungarian-method/index_en.html)
 - [ ] TODO Perfect match for bipartite graphs
 - [ ] TODO Matching edges
 
@@ -387,7 +393,7 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
   - [X] DONE Union of graphs
   - [X] DONE Intersection of graphs
   - [X] DONE Difference of graphs
-  - [ ] TODO Disjoint union of graphs
+  - [X] DONE Disjoint union of graphs
   - [ ] TODO Product of graphs (AKA "box product")
     - [ ] TODO Cartesian
     - [ ] TODO Co-normal
