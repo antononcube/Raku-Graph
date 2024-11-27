@@ -733,7 +733,7 @@ class Graph
     #======================================================
     #| Find Hamiltonian path.
     multi method find-hamiltonian-path() {
-        self!hamiltonian-path-backtracking();
+        self!hamiltonian-path-backtracking(:warnsdorf-rule);
     }
 
     #| Find Hamiltonian path.
@@ -742,10 +742,10 @@ class Graph
     multi method find-hamiltonian-path(Str:D $s, Str:D $t, :$method = Whatever, *%args --> Array) {
         my @res = do given $method {
             when Whatever {
-                self!hamiltonian-path-backtracking($s, $t)
+                self!hamiltonian-path-backtracking-from-to($s, $t, |%args)
             }
             when ($_ ~~ Str:D) && $_.lc ∈ <backtracking backtrack bt> {
-                self!hamiltonian-path-backtracking($s, $t)
+                self!hamiltonian-path-backtracking-from-to($s, $t, |%args)
             }
             when ($_ ~~ Str:D) && $_.lc ∈ <angluin-valiant av random> {
                 self!hamiltonian-path-angluin-valiant($s, $t, |%args)
@@ -758,40 +758,45 @@ class Graph
     }
 
     #------------------------------------------------------
-    method !hamiltonian-path-backtracking(Str $s?, Str $t?) {
-        my @vertices = %.adjacency-list.keys;
-        my @best-path;
-        my $best-length = Inf;
+    method !hamiltonian-path-backtracking(Bool:D :warnsdorf(:$warnsdorf-rule) = True) {
+        my @vertices = %!adjacency-list.keys;
 
-        sub hamiltonian-path(@path, %visited, $length) {
-            if @path.elems == @vertices.elems {
-                if !$s.defined || @path.head eq $s && (!$t.defined || @path.tail eq $t) {
-                    if $length < $best-length {
-                        @best-path = @path;
-                        $best-length = $length;
-                    }
-                }
-                return;
-            }
-
-            for %.adjacency-list{@path.tail}.keys -> $neighbor {
-                unless %visited{$neighbor} {
-                    %visited{$neighbor} = True;
-                    hamiltonian-path(
-                            [|@path, $neighbor],
-                            %visited,
-                            $length + %.adjacency-list{@path.tail}{$neighbor});
-                    %visited{$neighbor} = False;
-                }
-            }
-        }
-
+        my @path;
         for @vertices -> $start {
-            my %visited = $start => True;
-            hamiltonian-path([$start], %visited, 0);
+            @path = self!hamiltonian-path-backtracking-from-to($start, Whatever, :$warnsdorf-rule);
+            last if @path;
         }
 
-        return @best-path;
+        return @path;
+    }
+
+    #------------------------------------------------------
+    method !hamiltonian-path-backtracking-from-to(Str:D $s, $t = Whatever, Bool:D :warnsdorf(:$warnsdorf-rule) = True) {
+        my %visited;
+        my @path;
+
+        sub hamiltonian-path(Str $current) {
+            return True if @path.elems == %!adjacency-list.keys.elems && ($t.isa(Whatever) || $current eq $t);
+
+            my @nns = do if $warnsdorf-rule {
+                %!adjacency-list{@path.tail}.keys.grep({ !%visited{$_} }).sort({ %!adjacency-list{$_}.keys.grep({ !%visited{$_} }).elems })
+            } else {
+                %!adjacency-list{@path.tail}.keys.grep({ !%visited{$_} })
+            }
+
+            for @nns -> $neighbor {
+                %visited{$neighbor} = True;
+                @path.push($neighbor);
+                return True if hamiltonian-path($neighbor);
+                @path.pop;
+                %visited{$neighbor} = False;
+            }
+            return False;
+        }
+
+        %visited{$s} = True;
+        @path.push($s);
+        return hamiltonian-path($s) ?? @path !! [];
     }
 
     #------------------------------------------------------
