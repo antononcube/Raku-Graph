@@ -11,11 +11,11 @@ use Data::Summarizers;
 my $method = 'random'; # 'backtracking'
 my $max-number-of-attempts = 2000;
 my $n-trials = 100;
-my $choice-method = 'min-degree';
+my $pick = 'max-degree';
 
 my $tstart = now;
 #my $graph = Graph::KnightTour.new(4, 6).index-graph;
-my $graph = Graph::Grid.new(4, 5).index-graph;
+my $graph = Graph::Grid.new(5, 6).index-graph;
 say $graph.wl(VertexLabels => 'Name');
 #$graph = $graph.directed-graph(method => 'random');
 my $tend = now;
@@ -25,7 +25,7 @@ my $tstart2 = now;
 my $start = '0';
 my $end = $graph.vertex-list».Int.max.Str; # '19'
 say "Path from '$start' to '$end'.";
-my @res = |$graph.find-hamiltonian-path($start, $end, :$method, :$max-number-of-attempts, degree => 1, :$choice-method);
+my @res = |$graph.find-hamiltonian-path($start, $end, :$method, :$max-number-of-attempts, degree => 1, :$pick);
 my $tend2 = now;
 
 say "Time to find: {$tend2 - $tstart2}";
@@ -39,7 +39,7 @@ if $method eq 'random' {
         my $n = [Whatever, $max-number-of-attempts].pick;
         my $tstart = now;
         # :$n is a synonym of :$max-number-of-attempts
-        my @path = $graph.find-hamiltonian-path($start, $end, :$method, :$n, :$choice-method);
+        my @path = $graph.find-hamiltonian-path($start, $end, :$method, :$n, :$pick);
         my $tend = now;
 
         %(max-number-of-attempts => $n, success => @path.elems > 0, elems => @path.elems, time => $tend - $tstart)
