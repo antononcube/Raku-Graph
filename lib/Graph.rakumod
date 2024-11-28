@@ -739,6 +739,8 @@ class Graph
     #| Find Hamiltonian path.
     #| C<$s> -- Start vertex.
     #| C<$t> -- End vertex.
+    #| C<:$method> -- Method, one of "backtracking", "random", or Whatever.
+    #| C<*%args> -- Options for the different algorithm implementations.
     multi method find-hamiltonian-path(Str:D $s, $t, :$method = Whatever, *%args --> Array) {
         my @res = do given $method {
             when Whatever {
