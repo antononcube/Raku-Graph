@@ -739,7 +739,7 @@ class Graph
     #| Find Hamiltonian path.
     #| C<$s> -- Start vertex.
     #| C<$t> -- End vertex.
-    multi method find-hamiltonian-path(Str:D $s, Str:D $t, :$method = Whatever, *%args --> Array) {
+    multi method find-hamiltonian-path(Str:D $s, $t, :$method = Whatever, *%args --> Array) {
         my @res = do given $method {
             when Whatever {
                 self!hamiltonian-path-backtracking-from-to($s, $t, |%args)
@@ -748,7 +748,15 @@ class Graph
                 self!hamiltonian-path-backtracking-from-to($s, $t, |%args)
             }
             when ($_ ~~ Str:D) && $_.lc ∈ <angluin-valiant av random> {
-                self!hamiltonian-path-angluin-valiant($s, $t, |%args)
+                if $t.isa(Whatever) {
+                    my $t2 = 'Whatever' ~ 1e20.rand;
+                    my $g2 = self.clone;
+                    $g2.edge-add($t2 X=> self.vertex-list);
+                    my @path = $g2!hamiltonian-path-angluin-valiant($s, $t2, |%args);
+                    @path ?? @path.head(*-1) !! []
+                } else {
+                    self!hamiltonian-path-angluin-valiant($s, $t, |%args)
+                }
             }
             default {
                 die 'Unknown method. The value of $method is expected to be one of "backtracking" or Whatever.'
