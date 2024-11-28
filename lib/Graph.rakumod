@@ -317,6 +317,19 @@ class Graph
     }
 
     #======================================================
+    # Equivalence
+    #======================================================
+    method eqv(Graph:D $g) {
+        my $same-lvl1 = %!adjacency-list.keys.sort eqv $g.adjacency-list.keys.sort;
+        return False unless $same-lvl1;
+
+        for %!adjacency-list.keys -> $v {
+            return False unless %!adjacency-list{$v} eqv $g.adjacency-list{$v}
+        }
+        return True;
+    }
+
+    #======================================================
     # Properties
     #======================================================
     #| Edges of the graph object.

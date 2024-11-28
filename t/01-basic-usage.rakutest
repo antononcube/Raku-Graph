@@ -1,6 +1,6 @@
 use v6.d;
 
-#use lib <. lib>;
+use lib <. lib>;
 
 use Graph;
 use Graph::Complete;
@@ -134,7 +134,7 @@ subtest {
         ok $g25.vertex-add('a');
         ok $g25.vertex-add(<a b c>);
         is $g25.vertex-list.sort, <1 2 3 4 a b c>;
-}
+}, 'Adding vertexes';
 
 ## 26
 is
@@ -160,5 +160,18 @@ isa-ok
 isa-ok
         Graph::TriangularGrid.new(3, 4),
         Graph;
+
+## 31
+subtest {
+        is
+                Graph::Complete.new(4).eqv(Graph::Complete.new(4)),
+                True,
+                'Equivalence of Complete(4) graphs';
+
+        is
+                Graph::Complete.new(4).eqv(Graph::Star.new(4)),
+                False,
+                'Non-equivalence of Complete(4) and Star(4) graphs';
+}, 'Equivalence tests';
 
 done-testing;
