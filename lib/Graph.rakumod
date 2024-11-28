@@ -749,7 +749,7 @@ class Graph
             }
             when ($_ ~~ Str:D) && $_.lc ∈ <angluin-valiant av random> {
                 if $t.isa(Whatever) {
-                    my $t2 = 'Whatever' ~ 1e20.rand;
+                    my $t2 = '⎡⎡⎡⎡Whatever-' ~ 1e20.rand ~ '⎦⎦⎦⎦';
                     my $g2 = self.clone;
                     $g2.edge-add($t2 X=> self.vertex-list);
                     my @path = $g2!hamiltonian-path-angluin-valiant($s, $t2, |%args);
@@ -830,8 +830,8 @@ class Graph
 
         # Process next vertex pick method
         if $pick.isa(Whatever) { $pick = 'random' }
-        die 'The value of $batch is expected to be one of "random", "weighted-random", "max-degree" or Whatever.'
-        unless $pick ~~ Str:D && $pick ∈ <random weighted-random max-degree>;
+        die 'The value of $pick is expected to be one of "random", "weighted-random", "max-degree" or Whatever.'
+        unless $pick ~~ Str:D && $pick ∈ <random any max max-degree weighted weighted-random random-weighted>;
 
         # Loop
         my @path = Empty;
@@ -884,6 +884,7 @@ class Graph
                         (@vs Z=> @probs).grep({ $_.value == $m })».key.pick
                     }
                     default {
+                        # Whatever, "random", "any"
                         %G{$ndp}.keys.pick
                     }
                 }
