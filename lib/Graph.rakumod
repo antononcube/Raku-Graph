@@ -1234,9 +1234,9 @@ class Graph
         my @edges = self.edges(:dataset);
         @edges .= grep({ $_<from> ∈ @subvertexes || $_<to> ∈ @subvertexes });
 
-        my @subvertexesNew = [|@edges.map(*<from>), |@edges.map(*<to>)].unique;
         my $vertex-coordinates =
                 do if $!vertex-coordinates ~~ Map:D {
+                    my @subvertexesNew = [|@edges.map(*<from>), |@edges.map(*<to>)].unique;
                     (@subvertexesNew Z=> $!vertex-coordinates{@subvertexesNew}).Hash
                 } else { Whatever }
 
@@ -1254,9 +1254,9 @@ class Graph
         my @subvertexes = [|@edges».key, |@edges».value].unique;
         my @edgesNew = self.edges(:!dataset).grep({ $_.key ∈ @subvertexes && $_.value ∈ @subvertexes });
 
-        my @subvertexesNew = [|@edgesNew».key, |@edgesNew».value].unique;
         my $vertex-coordinates =
                 do if $!vertex-coordinates ~~ Map:D {
+                    my @subvertexesNew = [|@edgesNew».key, |@edgesNew».value].unique;
                     (@subvertexesNew Z=> $!vertex-coordinates{@subvertexesNew}).Hash
                 } else { Whatever }
 
@@ -1291,14 +1291,12 @@ class Graph
     #| C<$spec> -- Vertices
     #| C<:$max-path-length> -- Maximum distance.
     multi method neighborhood-graph(@spec, UInt:D :d(:distance(:$max-path-length)) = 1) {
-        if !$!directed {
-            return Graph.new(self!neighborhood-graph-edges(@spec, :$max-path-length));
-        } else {
+        my @edges = do if $!directed {
             # This might not be very efficient for large graphs,
             # but it is obviously correct and descriptive.
             my $g = Graph.new(self, :!directed);
             my $g2 = $g.neighborhood-graph(@spec, :$max-path-length);
-            my @edges = $g2.edges(:dataset).map({
+            $g2.edges(:dataset).map({
                 if %!adjacency-list{$_<from>}{$_<to>}:exists {
                     $_
                 } elsif %!adjacency-list{$_<to>}{$_<from>}:exists {
@@ -1306,10 +1304,20 @@ class Graph
                 } else {
                     Empty
                 }
-            });
-            # The vertex-coordinates have to be transferred.
-            return Graph.new(@edges, :directed);
+            })
+        } else {
+            self!neighborhood-graph-edges(@spec, :$max-path-length)
         }
+
+        # Get the NNs vertex coordinates if applicable
+        my $vertex-coordinates =
+                do if $!vertex-coordinates ~~ Map:D {
+                    my @vs = [|@edges.map(*<from>), |@edges.map(*<to>)].unique;
+                    (@vs Z=> $!vertex-coordinates{@vs}).Hash
+                } else { Whatever }
+
+        # Result
+        return Graph.new(@edges, :$!directed, :$vertex-coordinates);
     }
 
     #======================================================
