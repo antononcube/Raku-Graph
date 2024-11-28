@@ -7,15 +7,15 @@ use Graph::KnightTour;
 use Data::Reshapers;
 use Data::Summarizers;
 
-my $method = 'backtracking';
+my $method = 'random';
 my $warnsdorf-rule = True;
 my $max-number-of-attempts = 2000;
 my $n-trials = 100;
 my $pick = 'max-degree';
 
 my $tstart = now;
-#my $graph = Graph::KnightTour.new(4, 6).index-graph;
-my $graph = Graph::Grid.new(5, 6).index-graph;
+#my $graph = Graph::KnightTour.new(8, 8).index-graph;
+my $graph = Graph::Grid.new(6, 6).index-graph;
 say $graph.wl(VertexLabels => 'Name');
 #$graph = $graph.directed-graph(method => 'random');
 my $tend = now;
@@ -25,8 +25,8 @@ say "Time to generate: {$tend - $tstart}";
 
 my $tstart2 = now;
 my $start = '0';
-my $end = $graph.vertex-list».Int.max.Str; # '19'
-say "Path from '$start' to '$end'.";
+my $end = Whatever; #$graph.vertex-list».Int.max.Str; # '19'
+say "Path from '$start' to '{$end.raku}'.";
 my @res = |$graph.find-hamiltonian-path($start, $end, :$method, :$warnsdorf-rule, :$max-number-of-attempts, degree => 1, :$pick);
 my $tend2 = now;
 
