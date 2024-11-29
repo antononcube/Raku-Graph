@@ -93,7 +93,7 @@ role Graph::Formatish
     method dot(*%args) {
         if %args.elems == 0 || %args.elems == 1 && %args.keys.head eq 'weights' {
             my $weights = %args<weights> // Whatever;
-            my %core = self!dot-core(:$weights);
+            my %core = self!dot-core(:$weights, node-labels => %args<note-labels> // %args<vertex-labels> // True);
             return "{ self.directed ?? 'digraph' !! 'graph' } \{\n{ %core<vertexes> }\n{ %core<edges> }\n\}";
         } else {
             return self!dot-full(|%args);
@@ -128,15 +128,17 @@ role Graph::Formatish
             :format(:$output-format) is copy = Whatever,
             Str:D :$engine = 'dot') {
 
-        my %core = self!dot-core(:$weights);
+        my %core = self!dot-core(:$weights, :$node-labels);
         my $format = "bgcolor=\"$background\";";
         if $node-fixed-size ~~ Bool:D { $node-fixed-size = $node-fixed-size ?? 'true' !! 'false' }
         $format ~= "\nnode [style=filled, fixedsize=$node-fixed-size, shape=$node-shape, color=\"$node-color\", fillcolor=\"$node-fill-color\", penwidth=$node-penwidth, fontsize=$node-font-size, fontcolor=\"$node-font-color\", labelloc=$node-label-location, width=$node-width, height=$node-height];";
         $format ~= "\nedge [color=\"$edge-color\", penwidth=$edge-penwidth];";
 
-        if !$node-labels {
-            $format .= subst('node [', 'node [ label="", ')
-        }
+        # This global setting is convenient, but when combining DOT specs
+        # it is better to have it per note/vertex.
+        #if !$node-labels {
+        #    $format .= subst('node [', 'node [ label="", ')
+        #}
 
         # Graph label
         $graph-label = do given $graph-label {
@@ -199,7 +201,7 @@ role Graph::Formatish
         return $output-format eq 'dot' ?? $res !! self!dot-svg($res, :$engine, format => $output-format);
     }
 
-    method !dot-core(:$weights is copy = Whatever) {
+    method !dot-core(:$weights is copy = Whatever, Bool:D :$node-labels = True) {
         my @dsEdges = self.edges(:dataset);
 
         my $arrow = self.directed ?? '->' !! '--';
@@ -213,8 +215,9 @@ role Graph::Formatish
                     @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\" [weight={$_<weight>.Str }, label={$_<weight>.Str }]" }).join("\n");
                 }
 
+        my $lbl = $node-labels ?? '' !! ', label=""';
         my $vertexes = do if self.vertex-coordinates {
-            self.vertex-coordinates.map({"\"{$_.key}\" [pos=\"{$_.value.join(',')}!\"]" }).join(";\n");
+            self.vertex-coordinates.map({"\"{$_.key}\" [pos=\"{$_.value.join(',')}!\"$lbl]" }).join(";\n");
         } else {
             '"' ~ self.vertex-list.join('"; "') ~ '";';
         }
