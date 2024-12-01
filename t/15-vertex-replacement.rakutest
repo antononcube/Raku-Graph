@@ -1,8 +1,9 @@
 use v6.d;
 
-use lib <. lib>;
+#use lib <. lib>;
 
 use Graph;
+use Graph::Grid;
 
 use Test;
 
@@ -42,5 +43,18 @@ my $g4 = $g3.vertex-replace(%(1 => 'hi', 5 => 'hello'), :clone);
 is-deeply
         $g4.vertex-list.sort,
         <2 3 4 6 hi hello>».Str.sort;
+
+## 5
+subtest {
+
+    my $g = Graph::Grid.new(4, 4);
+    $g .= vertex-replace(($g.vertex-list Z=> (^$g.vertex-count)».Str).Hash);
+
+    isa-ok
+            $g.vertex-coordinates,
+            Map:D,
+            'Properly Map';
+
+}, 'Expected vertex coordinates after vertex-replace';
 
 done-testing;

@@ -281,7 +281,7 @@ class Graph
 
         # If vertex-coordinates are present.
         if $obj.vertex-coordinates ~~ Map:D {
-            $obj.vertex-coordinates .= map({ (%rules{$_.key} // $_.key) => $_.value });
+            $obj.vertex-coordinates = $obj.vertex-coordinates.map({ (%rules{$_.key} // $_.key) => $_.value }).Hash;
         }
 
         return $obj if $clone;
@@ -1257,7 +1257,6 @@ class Graph
     multi method subgraph(@subvertexes where @subvertexes.all ~~ Str:D) {
         my @edges = self.edges(:dataset);
         @edges .= grep({ $_<from> ∈ @subvertexes || $_<to> ∈ @subvertexes });
-
         my $vertex-coordinates =
                 do if $!vertex-coordinates ~~ Map:D {
                     my @subvertexesNew = [|@edges.map(*<from>), |@edges.map(*<to>)].unique;
