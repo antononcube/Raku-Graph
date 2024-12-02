@@ -109,7 +109,7 @@ role Graph::Formatish
             Str:D :fontcolor(:$font-color) = 'White',
             Int:D :fontsize(:$font-size) = 16,
             Str:D :$background = '#1F1F1F',
-            Bool:D :vertex-labels(:$node-labels) is copy = True,
+            :vertex-labels(:$node-labels) is copy = True,
             Str:D :vertex-shape(:$node-shape) = 'circle',
             Str:D :vertex-color(:$node-color) = 'Black',
             Int:D :vertex-stroke-width(:node-stroke-width(:$node-penwidth)) = 1,
@@ -119,7 +119,7 @@ role Graph::Formatish
             Str:D :vertex-fill-color(:$node-fill-color) = 'SteelBlue',
             Str:D :vertex-font-color(:$node-font-color) = 'White',
             Int:D :vertex-font-size(:$node-font-size) = 12,
-            Str:D :vertex-lable-location(:$node-label-location) = 'c',
+            Str:D :vertex-label-location(:$node-label-location) = 'c',
             Str:D :$edge-color = 'SteelBlue',
             Numeric:D :arrowsize(:$arrow-size) = 1,
             Numeric:D :edge-thickness(:edge-width(:$edge-penwidth)) = 2,
@@ -128,14 +128,22 @@ role Graph::Formatish
             :format(:$output-format) is copy = Whatever,
             Str:D :$engine = 'dot') {
 
+        # Process node labels
+        if $node-labels.isa(Whatever) { $node-labels = True }
+        die 'The value of $node-labels is expected to be a booolean, a string, a map, or Whatever.'
+        unless $node-labels ~~ (Bool:D | Str:D | Map:D);
+
+        # Get the vertex- and edge parts
         my %core = self!dot-core(:$weights, :$node-labels);
+
+        # Global format
         my $format = "bgcolor=\"$background\";";
         if $node-fixed-size ~~ Bool:D { $node-fixed-size = $node-fixed-size ?? 'true' !! 'false' }
         $format ~= "\nnode [style=filled, fixedsize=$node-fixed-size, shape=$node-shape, color=\"$node-color\", fillcolor=\"$node-fill-color\", penwidth=$node-penwidth, fontsize=$node-font-size, fontcolor=\"$node-font-color\", labelloc=$node-label-location, width=$node-width, height=$node-height];";
         $format ~= "\nedge [color=\"$edge-color\", penwidth=$edge-penwidth];";
 
         # This global setting is convenient, but when combining DOT specs
-        # it is better to have it per note/vertex.
+        # it is better to have it per node/vertex.
         #if !$node-labels {
         #    $format .= subst('node [', 'node [ label="", ')
         #}
@@ -201,7 +209,7 @@ role Graph::Formatish
         return $output-format eq 'dot' ?? $res !! self!dot-svg($res, :$engine, format => $output-format);
     }
 
-    method !dot-core(:$weights is copy = Whatever, Bool:D :$node-labels = True) {
+    method !dot-core(:$weights is copy = Whatever, :$node-labels = True) {
         my @dsEdges = self.edges(:dataset);
 
         my $arrow = self.directed ?? '->' !! '--';
@@ -215,9 +223,26 @@ role Graph::Formatish
                     @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\" [weight={$_<weight>.Str }, label={$_<weight>.Str }]" }).join("\n");
                 }
 
-        my $lbl = $node-labels ?? '' !! ', label=""';
+        # Process node labels
+        my %nodeLabels;
+        my $lbl = '';
+        given $node-labels {
+            when Bool:D {
+                $lbl = $node-labels ?? '' !! ', label=""'
+            }
+            when Map:D {
+                %nodeLabels = $node-labels;
+            }
+            when $_ ~~ Str:D && $_.lc ∈ <name vertex-name> {
+                %nodeLabels = self.vertex-list Z=> self.vertex-list
+            }
+        }
+
+        # Make the vertexes part
         my $vertexes = do if self.vertex-coordinates {
-            self.vertex-coordinates.map({"\"{$_.key}\" [pos=\"{$_.value.join(',')}!\"$lbl]" }).join(";\n");
+            self.vertex-coordinates.map({ "\"{ $_.key }\" [pos=\"{ $_.value.join(',') }!\"{ %nodeLabels{$_.key}:exists ?? ', label="' ~ %nodeLabels{$_.key} ~ '"' !! $lbl }]" }).join(";\n");
+        } elsif %nodeLabels {
+            self.vertex-list.map({ "\"{ $_.key }\" [{ %nodeLabels{$_.key}:exists ?? 'label="' ~ %nodeLabels{$_.key} ~ '"' !! $lbl  }]" }).join(";\n");
         } else {
             '"' ~ self.vertex-list.join('"; "') ~ '";';
         }
