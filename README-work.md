@@ -360,7 +360,7 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 
 ### Construction
 
-- [X] DONE Construction of (regular) graphs
+- [X] DONE Construction of parameterized graphs
   - [X] DONE [Complete graphs](https://en.wikipedia.org/wiki/Complete_graph)
   - [X] DONE [Cycle graphs](https://en.wikipedia.org/wiki/Cycle_graph)
   - [X] DONE [Hypercube graphs](https://en.wikipedia.org/wiki/Hypercube_graph)
