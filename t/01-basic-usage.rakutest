@@ -1,9 +1,11 @@
 use v6.d;
 
-use lib <. lib>;
+#use lib <. lib>;
 
 use Graph;
+use Graph::Circulant;
 use Graph::Complete;
+use Graph::Cycle;
 use Graph::HexagonalGrid;
 use Graph::Indexed;
 use Graph::Path;
@@ -98,12 +100,12 @@ is-deeply
         Graph.new($gr17).edge-list.sort;
 
 ## 19
-ok Graph.new('a'..'h', [ a => 'b', c => 'd'] );
+ok Graph.new('a' .. 'h', [a => 'b', c => 'd']);
 
 ## 20
 is
-        Graph.new('a'..'h', [ a => 'b', c => 'd'] ).vertex-list,
-        'a'..'h';
+        Graph.new('a' .. 'h', [a => 'b', c => 'd']).vertex-list,
+        'a' .. 'h';
 
 ## 21
 is
@@ -131,9 +133,9 @@ is
 ## 25
 my $g25 = $g24.clone;
 subtest {
-        ok $g25.vertex-add('a');
-        ok $g25.vertex-add(<a b c>);
-        is $g25.vertex-list.sort, <1 2 3 4 a b c>;
+    ok $g25.vertex-add('a');
+    ok $g25.vertex-add(<a b c>);
+    is $g25.vertex-list.sort, <1 2 3 4 a b c>;
 }, 'Adding vertexes';
 
 ## 26
@@ -163,15 +165,39 @@ isa-ok
 
 ## 31
 subtest {
-        is
-                Graph::Complete.new(4).eqv(Graph::Complete.new(4)),
-                True,
-                'Equivalence of Complete(4) graphs';
+    isa-ok Graph::Circulant.new(7, 2), Graph;
+    isa-ok Graph::Circulant.new(7, [2, 4]), Graph;
+    isa-ok Graph::Circulant.new(n => 10, jump => 4), Graph;
+    isa-ok Graph::Circulant.new(n => 10, jumps => [2, 4]), Graph;
+    is Graph::Circulant.new(10, 3).vertex-count, 10, 'number of vertexes';
 
-        is
-                Graph::Complete.new(4).eqv(Graph::Star.new(4)),
-                False,
-                'Non-equivalence of Complete(4) and Star(4) graphs';
+    my @d = Graph::Circulant.new(10, 3).vertex-degree;
+    is @d.min == @d.max, True, 'circulant graph is regular graph';
+}, 'Circulant graph';
+
+## 32
+subtest {
+    is
+            Graph::Complete.new(4).eqv(Graph::Complete.new(4)),
+            True,
+            'Equivalence of Complete(4) graphs';
+
+    is
+            Graph::Complete.new(4).eqv(Graph::Star.new(4)),
+            False,
+            'Non-equivalence of Complete(4) and Star(4) graphs';
+
+    is
+            Graph::Circulant.new(6, 1).eqv(Graph::Cycle.new(6)),
+            True,
+            'Cicrculant graph Ci_n(1) gives Cycle(n)';
+
+    # This would be nice to check, but it is not that simple (i.e. via simple equivalence.)
+    # Can be verified by plotting the graphs together, of course.
+    # is
+    #        Graph::Circulant.new(6, [1, 2, 3]).eqv(Graph::Complete.new(6)),
+    #        True,
+    #        'Cicrculant graph Ci_n(1, 2, ... ⎣n/2⎦) gives Complete(n)';
 }, 'Equivalence tests';
 
 done-testing;
