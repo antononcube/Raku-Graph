@@ -4,6 +4,7 @@ use Test;
 #use lib <. lib>;
 
 use Graph;
+use Graph::Complete;
 use Graph::Grid;
 
 ## 1
@@ -34,5 +35,17 @@ subtest {
             'Same number of vertexes';
 
 }, 'Expected vertex coordinates';
+
+subtest {
+
+    my $g = Graph::Complete(8);
+    #say $g.wl(VertexLabels => "Name");
+
+    my $g2 = $g.subgraph((1..5)».Str);
+    #say $g2.wl(VertexLabels => "Name");
+
+    is $g2.is-complete, True;
+
+}, 'The subgraph of a complete graph is a complete graph';
 
 done-testing;

@@ -1256,7 +1256,9 @@ class Graph
 
     multi method subgraph(@subvertexes where @subvertexes.all ~~ Str:D) {
         my @edges = self.edges(:dataset);
-        @edges .= grep({ $_<from> ∈ @subvertexes || $_<to> ∈ @subvertexes });
+
+        @edges .= grep({ $_<from> ∈ @subvertexes && $_<to> ∈ @subvertexes });
+
         my $vertex-coordinates =
                 do if $!vertex-coordinates ~~ Map:D {
                     my @subvertexesNew = [|@edges.map(*<from>), |@edges.map(*<to>)].unique;
