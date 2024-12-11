@@ -105,6 +105,7 @@ role Graph::Formatish
             :$highlight = Whatever,
             :label(:$graph-label) is copy = Whatever,
             :size(:$graph-size) is copy = Whatever,
+            :$pad is copy = Whatever,
             Str:D :labelloc(:$label-location) = 't',
             Str:D :fontcolor(:$font-color) = 'White',
             Int:D :fontsize(:$font-size) = 16,
@@ -162,6 +163,17 @@ role Graph::Formatish
             when Numeric:D { "graph [size=\"{$_},{$_}!\"];" }
             when $_ ~~ (Array:D | List:D | Seq:D) && $_.elems ≥ 2 { "graph [size=\"{$_.join(',')}!\"];" }
             default { "" }
+        }
+
+        # Padding
+        $pad = do given $pad {
+            when Numeric:D { $pad }
+            when $_ ~~ (Array:D | List:D | Seq:D) && $_.elems ≥ 2 { $pad.List.raku }
+            default { Whatever }
+        }
+
+        with $pad {
+            $graph-size = $graph-size ?? $graph-size.subst('];', ", pad=$pad];") !! "graph [pad=$pad];";
         }
 
         # Preliminary part
