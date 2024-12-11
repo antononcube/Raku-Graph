@@ -108,7 +108,7 @@ role Graph::Formatish
             Str:D :labelloc(:$label-location) = 't',
             Str:D :fontcolor(:$font-color) = 'White',
             Int:D :fontsize(:$font-size) = 16,
-            Str:D :$background = '#1F1F1F',
+            Str:D :$background = 'none',
             :vertex-labels(:$node-labels) is copy = True,
             Str:D :vertex-shape(:$node-shape) = 'circle',
             Str:D :vertex-color(:$node-color) = 'Black',
