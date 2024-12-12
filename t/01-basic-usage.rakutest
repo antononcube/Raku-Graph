@@ -192,12 +192,12 @@ subtest {
             True,
             'Cicrculant graph Ci_n(1) gives Cycle(n)';
 
-    # This would be nice to check, but it is not that simple (i.e. via simple equivalence.)
-    # Can be verified by plotting the graphs together, of course.
-    # is
-    #        Graph::Circulant.new(6, [1, 2, 3]).eqv(Graph::Complete.new(6)),
-    #        True,
-    #        'Cicrculant graph Ci_n(1, 2, ... ⎣n/2⎦) gives Complete(n)';
+    # Cicrculant graph Ci_n(1, 2, ... ⎣n/2⎦) is a complete graph.
+    is
+            Graph::Circulant.new(6, [1, 2, 3]).is-complete,
+            True,
+            'Expected complete graph';
+
 }, 'Equivalence tests';
 
 done-testing;
