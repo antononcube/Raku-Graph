@@ -3,7 +3,7 @@ use v6.d;
 #use lib <. lib>;
 
 use Graph;
-use Graph::Makers;
+use Graph::Classes;
 # No need to import these classes since Graph/Makers.rakumod has EXPORT sub.
 #`[
 use Graph::Circulant;
