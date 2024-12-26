@@ -1,6 +1,6 @@
 {
   "name": "Graph",
-  "description": "Common graph functionalities.",
+  "description": "Graph theory algorithms, parameterized- and random graphs.",
   "version": "0.0.27",
   "perl": "6.d",
   "authors": [
@@ -17,6 +17,7 @@
     "Graph": "lib/Graph.rakumod",
     "Graph::Bipartitish": "lib/Graph/Bipartitish.rakumod",
     "Graph::Circulant": "lib/Graph/Circulant.rakumod",
+    "Graph::Classes": "lib/Graph/Classes.rakumod",
     "Graph::Complete": "lib/Graph/Complete.rakumod",
     "Graph::Componentish": "lib/Graph/Componentish.rakumod",
     "Graph::CompleteKaryTree": "lib/Graph/CompleteKaryTree.rakumod",
@@ -30,7 +31,6 @@
     "Graph::Indexed": "lib/Graph/Indexed.rakumod",
     "Graph::KnightTour": "lib/Graph/KnightTour.rakumod",
     "Graph::Neighborhoodish": "lib/Graph/Neighborhoodish.rakumod",
-    "Graph::Makers": "lib/Graph/Makers.rakumod",
     "Graph::Nested": "lib/Graph/Nested.rakumod",
     "Graph::Path": "lib/Graph/Path.rakumod",
     "Graph::Petersen": "lib/Graph/Petersen.rakumod",
