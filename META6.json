@@ -1,7 +1,7 @@
 {
   "name": "Graph",
   "description": "Common graph functionalities.",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
@@ -30,6 +30,7 @@
     "Graph::Indexed": "lib/Graph/Indexed.rakumod",
     "Graph::KnightTour": "lib/Graph/KnightTour.rakumod",
     "Graph::Neighborhoodish": "lib/Graph/Neighborhoodish.rakumod",
+    "Graph::Makers": "lib/Graph/Makers.rakumod",
     "Graph::Nested": "lib/Graph/Nested.rakumod",
     "Graph::Path": "lib/Graph/Path.rakumod",
     "Graph::Petersen": "lib/Graph/Petersen.rakumod",
