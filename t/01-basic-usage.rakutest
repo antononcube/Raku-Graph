@@ -3,6 +3,9 @@ use v6.d;
 #use lib <. lib>;
 
 use Graph;
+use Graph::Makers;
+# No need to import these classes since Graph/Makers.rakumod has EXPORT sub.
+#`[
 use Graph::Circulant;
 use Graph::Complete;
 use Graph::Cycle;
@@ -12,6 +15,7 @@ use Graph::Path;
 use Graph::Petersen;
 use Graph::Star;
 use Graph::TriangularGrid;
+]
 
 use Test;
 
