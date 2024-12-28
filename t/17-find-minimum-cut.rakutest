@@ -1,0 +1,35 @@
+use v6.d;
+
+use lib <. lib>;
+
+use Graph;
+
+use Test;
+
+my @edges =
+        %('from'=>'0','to'=>'1','weight'=>1),%('from'=>'0','to'=>'2','weight'=>1),
+        %('from'=>'0','to'=>'3','weight'=>1),%('from'=>'0','to'=>'4','weight'=>1),
+        %('from'=>'1','to'=>'2','weight'=>1),%('from'=>'1','to'=>'3','weight'=>1),
+        %('from'=>'1','to'=>'4','weight'=>1),%('from'=>'2','to'=>'3','weight'=>1),
+        %('from'=>'2','to'=>'4','weight'=>1),%('from'=>'2','to'=>'7','weight'=>1),
+        %('from'=>'3','to'=>'4','weight'=>1),%('from'=>'3','to'=>'8','weight'=>1),
+        %('from'=>'4','to'=>'9','weight'=>1),%('from'=>'5','to'=>'6','weight'=>1),
+        %('from'=>'5','to'=>'7','weight'=>1),%('from'=>'5','to'=>'8','weight'=>1),
+        %('from'=>'5','to'=>'9','weight'=>1),%('from'=>'6','to'=>'7','weight'=>1),
+        %('from'=>'6','to'=>'8','weight'=>1),%('from'=>'6','to'=>'9','weight'=>1),
+        %('from'=>'7','to'=>'8','weight'=>1),%('from'=>'7','to'=>'9','weight'=>1),
+        %('from'=>'8','to'=>'9','weight'=>1);
+
+my $g = Graph.new(@edges);
+say (:$g);
+
+## 1
+isa-ok $g, Graph:D;
+
+## 2
+isa-ok $g.find-minimum-cut(method => 'karger', sep => '~'), List:D;
+
+## 3
+isa-ok $g.find-minimum-cut(method => 'karger-stein', sep => Whatever), List:D;
+
+done-testing;

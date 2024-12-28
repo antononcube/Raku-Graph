@@ -5,13 +5,15 @@ use Data::TypeSystem;
 use Graph::Bipartitish;
 use Graph::Componentish;
 use Graph::Formatish;
-use Graph::Tourish;
+use Graph::MinCuttish;
 use Graph::Neighborhoodish;
+use Graph::Tourish;
 
 class Graph
         does Graph::Bipartitish
         does Graph::Componentish
         does Graph::Formatish
+        does Graph::MinCuttish
         does Graph::Neighborhoodish
         does Graph::Tourish {
     has %.adjacency-list;
