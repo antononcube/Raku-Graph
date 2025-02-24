@@ -121,6 +121,7 @@ role Graph::Formatish
             Str:D :vertex-font-color(:$node-font-color) = 'White',
             Int:D :vertex-font-size(:$node-font-size) = 12,
             Str:D :vertex-label-location(:$node-label-location) = 'c',
+            :$edge-labels is copy = False,
             Str:D :$edge-color = 'SteelBlue',
             Str:D :$edge-font-color = 'Ivory',
             Int:D :$edge-font-size = 10,
@@ -137,7 +138,7 @@ role Graph::Formatish
         unless $node-labels ~~ (Bool:D | Str:D | Map:D);
 
         # Get the vertex- and edge parts
-        my %core = self!dot-core(:$weights, :$node-labels);
+        my %core = self!dot-core(:$weights, :$node-labels, :$edge-labels);
 
         # Global format
         my $format = "bgcolor=\"$background\";";
@@ -223,7 +224,31 @@ role Graph::Formatish
         return $output-format eq 'dot' ?? $res !! self!dot-svg($res, :$engine, format => $output-format);
     }
 
-    method !dot-core(:$weights is copy = Whatever, :$node-labels = True) {
+    method !dot-core(:$weights is copy = Whatever, :$node-labels = True, :$edge-labels = False) {
+
+        # Process edge labels
+        my %edgeLabels;
+        my $edge-lbl = '';
+        given $edge-labels {
+            when Bool:D {
+                $edge-lbl = $edge-labels ?? '' !! ', label=""'
+            }
+            when $_ ~~ Map:D && $_.values.all ~~ Map:D {
+                %edgeLabels = $edge-labels;
+            }
+            when $_ ~~ Str:D && $_.lc ∈ <weight edge-weight> {
+                $weights = True;
+            }
+            # This will be used when the Graph class would have %edge-tag-list or similar
+            #when $_ ~~ Str:D && $_.lc ∈ <tag label edge-tag edge-label edge-name> {
+            #    %edgeLabels = self.vertex-list Z=> self.vertex-list
+            #}
+            default {
+                warn 'Do not know how to process edge-labels spec.'
+            }
+        }
+
+        # Make the edges part
         my @dsEdges = self.edges(:dataset);
 
         my $arrow = self.directed ?? '->' !! '--';
@@ -231,9 +256,11 @@ role Graph::Formatish
         my $allOne = [&&] @dsEdges.map({ $_<weight> == 1 });
 
         my $edges =
-                do if $weights.isa(Whatever) && $allOne || ($weights ~~ Bool:D) && !$weights {
+                do if %edgeLabels {
+                    @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\" [label={ %edgeLabels{$_<from>}{$_<to>} // '""' }]" }).join("\n");
+                } elsif $weights.isa(Whatever) && $allOne || ($weights ~~ Bool:D) && !$weights {
                     @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\"" }).join("\n");
-                } else {
+                } elsif ($weights ~~ Bool:D) && $weights {
                     @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\" [weight={$_<weight>.Str }, label={$_<weight>.Str }]" }).join("\n");
                 }
 
