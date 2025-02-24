@@ -113,7 +113,7 @@ role Graph::Formatish
             :vertex-labels(:$node-labels) is copy = True,
             Str:D :vertex-shape(:$node-shape) = 'circle',
             Str:D :vertex-color(:$node-color) = 'Black',
-            Int:D :vertex-stroke-width(:node-stroke-width(:$node-penwidth)) = 1,
+            Numeric:D :vertex-stroke-width(:node-stroke-width(:$node-penwidth)) = 1,
             Numeric:D :vertex-width(:$node-width) = 0.3,
             Numeric:D :vertex-height(:$node-height) = 0.3,
             :vertex-fixed-size(:$node-fixed-size) is copy = True,
@@ -143,7 +143,7 @@ role Graph::Formatish
         my $format = "bgcolor=\"$background\";";
         if $node-fixed-size ~~ Bool:D { $node-fixed-size = $node-fixed-size ?? 'true' !! 'false' }
         $format ~= "\nnode [style=filled, fixedsize=$node-fixed-size, shape=$node-shape, color=\"$node-color\", fillcolor=\"$node-fill-color\", penwidth=$node-penwidth, fontsize=$node-font-size, fontcolor=\"$node-font-color\", labelloc=$node-label-location, width=$node-width, height=$node-height];";
-        $format ~= "\nedge [color=\"$edge-color\", penwidth=$edge-penwidth, fontsize=$edge-font-size, fontcolor=\"$edge-font-color\"];";
+        $format ~= "\nedge [color=\"$edge-color\", penwidth=$edge-penwidth, fontsize=$edge-font-size, fontcolor=\"$edge-font-color\", arrowsize=$arrow-size];";
 
         # This global setting is convenient, but when combining DOT specs
         # it is better to have it per node/vertex.
