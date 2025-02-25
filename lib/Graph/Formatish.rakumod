@@ -93,7 +93,7 @@ role Graph::Formatish
     method dot(*%args) {
         if %args.elems == 0 || %args.elems == 1 && %args.keys.head eq 'weights' {
             my $weights = %args<weights> // Whatever;
-            my %core = self!dot-core(:$weights, node-labels => %args<note-labels> // %args<vertex-labels> // True);
+            my %core = self!dot-core(:$weights, node-labels => %args<node-labels> // %args<vertex-labels> // True);
             return "{ self.directed ?? 'digraph' !! 'graph' } \{\n{ %core<vertexes> }\n{ %core<edges> }\n\}";
         } else {
             return self!dot-full(|%args);
@@ -127,6 +127,7 @@ role Graph::Formatish
             Int:D :$edge-font-size = 10,
             Numeric:D :arrowsize(:$arrow-size) = 1,
             Numeric:D :edge-thickness(:edge-width(:$edge-penwidth)) = 2,
+            :$splines is copy = Whatever,
             Str:D :$preamble is copy = '',
             Bool :$svg = False,
             :format(:$output-format) is copy = Whatever,
@@ -140,8 +141,17 @@ role Graph::Formatish
         # Get the vertex- and edge parts
         my %core = self!dot-core(:$weights, :$node-labels, :$edge-labels);
 
+        # Splines
+        if $splines.isa(Whatever) { $splines = 'line' }
+        if $splines ~~ Bool:D { $splines = $splines ?? 'true' !! 'false' }
+        if $splines ~~ Str:D && !$splines.trim.chars { $splines = '""' }
+        my @spline-specs = <none line false polyline curved ortho spline true>;
+        die 'The argument $splines is expected to be Whatever, a Boolean, an empty string, or one of "' ~ @spline-specs.join('", "') ~ '".'
+        unless $splines ~~ Str:D && ($splines.lc ∈ @spline-specs || $splines eq '""');
+
         # Global format
         my $format = "bgcolor=\"$background\";";
+        $format ~= "\nsplines=$splines;";
         if $node-fixed-size ~~ Bool:D { $node-fixed-size = $node-fixed-size ?? 'true' !! 'false' }
         $format ~= "\nnode [style=filled, fixedsize=$node-fixed-size, shape=$node-shape, color=\"$node-color\", fillcolor=\"$node-fill-color\", penwidth=$node-penwidth, fontsize=$node-font-size, fontcolor=\"$node-font-color\", labelloc=$node-label-location, width=$node-width, height=$node-height];";
         $format ~= "\nedge [color=\"$edge-color\", penwidth=$edge-penwidth, fontsize=$edge-font-size, fontcolor=\"$edge-font-color\", arrowsize=$arrow-size];";
