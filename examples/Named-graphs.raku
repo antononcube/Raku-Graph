@@ -1,8 +1,6 @@
 #!/usr/bin/env raku
 use v6.d;
 
-use lib <. lib>;
-
 use Graph::Circulant;
 use Graph::Complete;
 use Graph::CompleteKaryTree;
