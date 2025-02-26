@@ -142,16 +142,17 @@ role Graph::Formatish
         my %core = self!dot-core(:$weights, :$node-labels, :$edge-labels);
 
         # Splines
-        if $splines.isa(Whatever) { $splines = 'line' }
         if $splines ~~ Bool:D { $splines = $splines ?? 'true' !! 'false' }
         if $splines ~~ Str:D && !$splines.trim.chars { $splines = '""' }
         my @spline-specs = <none line false polyline curved ortho spline true>;
         die 'The argument $splines is expected to be Whatever, a Boolean, an empty string, or one of "' ~ @spline-specs.join('", "') ~ '".'
-        unless $splines ~~ Str:D && ($splines.lc ∈ @spline-specs || $splines eq '""');
+        unless $splines.isa(Whatever) || $splines ~~ Str:D && ($splines.lc ∈ @spline-specs || $splines eq '""');
 
         # Global format
         my $format = "bgcolor=\"$background\";";
-        $format ~= "\nsplines=$splines;";
+        if $splines ~~ Str:D {
+            $format ~= "\nsplines=$splines;";
+        }
         if $node-fixed-size ~~ Bool:D { $node-fixed-size = $node-fixed-size ?? 'true' !! 'false' }
         $format ~= "\nnode [style=filled, fixedsize=$node-fixed-size, shape=$node-shape, color=\"$node-color\", fillcolor=\"$node-fill-color\", penwidth=$node-penwidth, fontsize=$node-font-size, fontcolor=\"$node-font-color\", labelloc=$node-label-location, width=$node-width, height=$node-height];";
         $format ~= "\nedge [color=\"$edge-color\", penwidth=$edge-penwidth, fontsize=$edge-font-size, fontcolor=\"$edge-font-color\", arrowsize=$arrow-size];";
