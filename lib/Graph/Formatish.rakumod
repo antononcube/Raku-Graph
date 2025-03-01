@@ -216,7 +216,8 @@ role Graph::Formatish
                 my $pre = "edge [color=\"$color\", penwidth=$edge-penwidth, arrowsize=$arrow-size];";
                 # Make sure it is as in !dot-core
                 my @edge-specs = %h<edges>.map({ "\"{$_.head}\" $arrow \"{$_.tail}\"" });
-                my @edge-specs-rev = %h<edges>.map({ "\"{$_.tail}\" $arrow \"{$_.head}\"" });
+                my @edge-specs-rev;
+                @edge-specs-rev = %h<edges>.map({ "\"{$_.tail}\" $arrow \"{$_.head}\"" }) if !self.directed;
                 @core-edges = (@core-edges (-) [|@edge-specs, |@edge-specs-rev]).keys;
                 $highlight-part = $highlight-part ~ "\n\n" ~ [
                     $pre,
