@@ -128,6 +128,7 @@ role Graph::Formatish
             Numeric:D :arrowsize(:$arrow-size) = 1,
             Numeric:D :edge-thickness(:edge-width(:$edge-penwidth)) = 2,
             :$splines is copy = Whatever,
+            Bool:D :$mixed = False,
             Str:D :$preamble is copy = '',
             Bool :$svg = False,
             :format(:$output-format) is copy = Whatever,
@@ -139,7 +140,7 @@ role Graph::Formatish
         unless $node-labels ~~ (Bool:D | Str:D | Map:D);
 
         # Get the vertex- and edge parts
-        my %core = self!dot-core(:$weights, :$node-labels, :$edge-labels);
+        my %core = self!dot-core(:$weights, :$node-labels, :$edge-labels, :$mixed);
 
         # Splines
         if $splines ~~ Bool:D { $splines = $splines ?? 'true' !! 'false' }
@@ -236,8 +237,9 @@ role Graph::Formatish
         return $output-format eq 'dot' ?? $res !! self!dot-svg($res, :$engine, format => $output-format);
     }
 
-    method !dot-core(:$weights is copy = Whatever, :$node-labels = True, :$edge-labels = False) {
+    method !dot-core(:$weights is copy = Whatever, :$node-labels = True, :$edge-labels = False, Bool:D :$mixed = False) {
 
+        #----------------------------------------------------------------------
         # Process edge labels
         my %edgeLabels;
         my $edge-lbl = '';
@@ -260,22 +262,52 @@ role Graph::Formatish
             }
         }
 
+        #----------------------------------------------------------------------
         # Make the edges part
         my @dsEdges = self.edges(:dataset);
 
+        # DOT edge spec
         my $arrow = self.directed ?? '->' !! '--';
 
+        # Uniform weight
         my $allOne = [&&] @dsEdges.map({ $_<weight> == 1 });
 
-        my $edges =
-                do if %edgeLabels {
-                    @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\" [label=\"{ %edgeLabels{$_<from>}{$_<to>} // '' }\"]" }).join("\n");
-                } elsif $weights.isa(Whatever) && $allOne || ($weights ~~ Bool:D) && !$weights {
-                    @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\"" }).join("\n");
-                } elsif ($weights ~~ Bool:D) && $weights {
-                    @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\" [weight={$_<weight>.Str }, label={$_<weight>.Str }]" }).join("\n");
+        # Edge directions (for :mixed)
+        my %directions;
+        if $mixed {
+            for @dsEdges {
+                %directions{$_<from>}{$_<to>} = self.directed ?? 'forward' !! 'none';
+                if self.has-edge($_<from>, $_<to>) && self.has-edge($_<to>, $_<from>) {
+                    %directions{$_<from>}{$_<to>} = 'none'
                 }
+            }
+        }
 
+        # The edges
+        my %marked;
+        my $edges = do for @dsEdges -> $edge {
+            if !(%marked{$edge<from>}{$edge<to>} // False) {
+                my @spec;
+                if %edgeLabels {
+                    my $lbl = %edgeLabels{$edge<from>}{$edge<to>} // '';
+                    if (%directions{$edge<from>}{$edge<to>} // '') eq 'none' || (%directions{$edge<to>}{$edge<from>} // '') eq 'none' {
+                        $lbl = $lbl ?? $lbl !! (%edgeLabels{$edge<to>}{$edge<from>} // '');
+                    }
+                    @spec.push("label=\"$lbl\"");
+                }
+                if %directions {
+                    @spec.push("dir={ (%directions{$edge<from>}{$edge<to>} // 'none') }");
+                    %marked{$edge<from>}{$edge<to>} = True;
+                    %marked{$edge<to>}{$edge<from>} = True;
+                }
+                if ($weights ~~ Bool:D) && $weights && !%edgeLabels {
+                    @spec.push("weight={ $edge<weight>.Str }", "label={ $edge<weight>.Str }");
+                }
+                "\"{ $edge<from> }\" $arrow \"{ $edge<to> }\" " ~ (@spec ?? "[{ @spec.join(', ') }]" !! '')
+            } else { '' }
+        }.grep(*.chars).join("\n");
+
+        #----------------------------------------------------------------------
         # Process node labels
         my %nodeLabels;
         my $lbl = '';
@@ -300,6 +332,7 @@ role Graph::Formatish
             '"' ~ self.vertex-list.join('"; "') ~ '";';
         }
 
+        # Result
         return %(:$vertexes, :$edges);
     }
 
