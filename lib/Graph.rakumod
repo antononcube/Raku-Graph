@@ -1278,9 +1278,11 @@ class Graph
         } else {
             @edges .= grep({ ($_.Str ∈ $set) || (Pair.new($_.value, $_.key).Str ∈ $set)});
         }
-        my @subvertexes = [|@edges».key, |@edges».value].unique;
+
         # This might be too permissive -- additional _directed_ edges will be picked-up.
-        my @edgesNew = self.edges(:dataset).grep({ $_<from> ∈ @subvertexes && $_<to> ∈ @subvertexes });
+        #my @subvertexes = [|@edges».key, |@edges».value].unique;
+        #my @edgesNew = self.edges(:dataset).grep({ $_<from> ∈ @subvertexes && $_<to> ∈ @subvertexes });
+        my @edgesNew = self.edges(:dataset).grep({ Pair.new($_<from>, $_<to>).Str ∈ $set });
 
         my $vertex-coordinates =
                 do if $!vertex-coordinates ~~ Map:D {
