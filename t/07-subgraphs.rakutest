@@ -67,7 +67,7 @@ subtest {
 
     my $g = Graph.new(@edges, :directed);
 
-    my $g1 = $g.subgraph( ['Rock' => 'Spock', 'Scissors' => 'Paper', 'Paper' => 'Rock']);
+    my $g1 = $g.subgraph( ['Rock' => 'Scissors', 'Scissors' => 'Paper', 'Paper' => 'Rock']);
 
     my @edges1 = $g1.edges(:dataset);
     is @edges1.map(*<weight>).sort, [1, 2, 3], 'expected weights';
