@@ -1279,11 +1279,12 @@ class Graph
             @edges .= grep({ ($_.Str ∈ $set) || (Pair.new($_.value, $_.key).Str ∈ $set)});
         }
         my @subvertexes = [|@edges».key, |@edges».value].unique;
-        my @edgesNew = self.edges(:!dataset).grep({ $_.key ∈ @subvertexes && $_.value ∈ @subvertexes });
+        # This might be too permissive -- additional _directed_ edges will be picked-up.
+        my @edgesNew = self.edges(:dataset).grep({ $_<from> ∈ @subvertexes && $_<to> ∈ @subvertexes });
 
         my $vertex-coordinates =
                 do if $!vertex-coordinates ~~ Map:D {
-                    my @subvertexesNew = [|@edgesNew».key, |@edgesNew».value].unique;
+                    my @subvertexesNew = [|@edgesNew.map(*<from>), |@edgesNew.map(*<to>)].unique;
                     (@subvertexesNew Z=> $!vertex-coordinates{@subvertexesNew}).Hash
                 } else { Whatever }
 
