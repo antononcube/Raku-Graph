@@ -32,7 +32,7 @@ END
 ## 2
 subtest {
     my @edges = '1' => '2', '2' => '1', '1' => '3', '3' => '2';
-    my %edge-labels = '1' => { '2' => 'here'};
+    my %edge-labels = '1' => { '2' => 'here' };
     my $res = Graph.new(@edges, :directed).dot(:%edge-labels, :mixed);
 
     my $dot = q:to/END/;
@@ -55,11 +55,37 @@ END
     is $res.indices('label="here"').elems, 1, 'Expected number of "here" edge labels';
 }, 'Labeled directed graph as mixed';
 
+
 ## 3
 subtest {
+    my @edges =
+            { :from("Anti-tank weapons"), :label("defend"), :to("Armor") },
+            { :from("Armor"), :label("attack"), :to("Infantry and Artillery") },
+            { :from("Air force"), :label("attack"), :to("Armor") },
+            { :from("Air force"), :label("attack"), :to("Infantry and Artillery") },
+            { :from("Missiles"), :label("defend"), :to("Air force") },
+            { :from("Infantry and Artillery"), :label("attack"), :to("Missiles") },
+            { :from("Infantry and Artillery"), :label("attack"), :to("Anti-tank weapons") };
+
+    my $g = Graph.new(@edges):d;
+    my %highlight = 'Red' => Graph.new( @edges.grep(*<label> eq 'defend'), :directed).edges;
+
+    my $processed = $g.process-highlight-spec(%highlight, :directed);
+
+    isa-ok $processed, Map:D, 'expected return type';
+    is $processed.keys, <Red>, 'expected keys of the result';
+    is $processed<Red>.keys.sort, <edges vertexes>, 'expected keys of the result';
+    is $processed<Red><edges> ~~ List:D | Array:D | Seq:D, True, 'expected edges value';
+    is ($processed<Red><edges>.all ~~ List:D | Array:D | Seq:D), True, 'expected edges shape 1';
+    is $processed<Red><edges>».elems.min == 2 && $processed<Red><edges>».elems.max == 2, True, 'expected edges shape 1';
+
+}, 'Highlight spec processings';
+
+## 4
+subtest {
     my @edges = '1' => '2', '2' => '1', '1' => '3', '3' => '2';
-    my %edge-labels = '1' => { '2' => 'here'};
-    my %highlight = Red => ( '1' => '2', );
+    my %edge-labels = '1' => { '2' => 'here' };
+    my %highlight = Red => ('1' => '2',);
     my $res = Graph.new(@edges, :directed).dot(:%highlight);
 
     my $dot = q:to/END/;
