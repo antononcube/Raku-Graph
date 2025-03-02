@@ -215,11 +215,23 @@ role Graph::Formatish
             my $highlight-part = '';
             for %processed.kv -> $color, %h {
                 my $pre = "edge [color=\"$color\", penwidth=$edge-penwidth, arrowsize=$arrow-size];";
-                # Make sure it is as in !dot-core
+
+                # This is too cumbersome and it is best done in !dot-core using a :$highlight-edges argument
                 my @edge-specs = %h<edges>.map({ "\"{$_.head}\" $arrow \"{$_.tail}\"" });
                 my @edge-specs-rev;
                 @edge-specs-rev = %h<edges>.map({ "\"{$_.tail}\" $arrow \"{$_.head}\"" }) if !self.directed;
-                @core-edges = (@core-edges (-) [|@edge-specs, |@edge-specs-rev]).keys;
+
+                # Remove
+                @core-edges = do for @core-edges -> $edge-spec {
+                    my $present = False;
+                    for [|@edge-specs, |@edge-specs-rev] -> $start {
+                        $present = $edge-spec.starts-with($start);
+                        last if $present;
+                    }
+                    $present ?? Empty !! $edge-spec
+                }
+                @core-edges .= flat;
+
                 $highlight-part = $highlight-part ~ "\n\n" ~ [
                     $pre,
                     %h<vertexes>.map({ "\"{$_}\" [fillcolor=\"$color\", color=\"$color\"];",}).join("\n"),
