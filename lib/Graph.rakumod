@@ -46,6 +46,10 @@ class Graph
         self.bless(:%adjacency-list, :$directed, :$vertex-coordinates);
     }
 
+    multi method new(%edges, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
+        self.bless(adjacency-list => %(), :$directed, edges => %edges.pairs, :$vertex-coordinates);
+    }
+
     multi method new(@edges, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
         self.bless(adjacency-list => %(), :$directed, :@edges, :$vertex-coordinates);
     }
