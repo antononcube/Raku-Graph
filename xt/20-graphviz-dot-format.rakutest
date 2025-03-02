@@ -1,0 +1,59 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+use Graph;
+
+
+## 1
+subtest {
+    my @edges = '1' => '2', '2' => '1', '1' => '3', '3' => '2';
+    my $res = Graph.new(@edges, :directed).dot(:mixed);
+
+    my $dot = q:to/END/;
+digraph {
+
+bgcolor="none";
+node [style=filled, fixedsize=true, shape=circle, color="Black", fillcolor="SteelBlue", penwidth=1, fontsize=12, fontcolor="White", labelloc=c, width=0.3, height=0.3];
+edge [color="SteelBlue", penwidth=2, fontsize=10, fontcolor="Ivory", arrowsize=1];
+"1"; "2"; "3";
+"1" -> "3" [dir=forward]
+"1" -> "2" [dir=none]
+"3" -> "2" [dir=forward]
+}
+END
+
+    is $res.indices('->').elems, 3, 'Expected number of edge specs';
+    is $res.indices('[dir=forward]').elems, 2, 'Expected number of directed edge specs';
+    is $res.indices('[dir=none]').elems, 1, 'Expected number of un-directed edge specs';
+
+}, 'Directed graph as mixed';
+
+## 2
+subtest {
+    my @edges = '1' => '2', '2' => '1', '1' => '3', '3' => '2';
+    my %edge-labels = '1' => { '2' => 'here'};
+    my $res = Graph.new(@edges, :directed).dot(:%edge-labels, :mixed);
+
+    my $dot = q:to/END/;
+digraph {
+
+bgcolor="none";
+node [style=filled, fixedsize=true, shape=circle, color="Black", fillcolor="SteelBlue", penwidth=1, fontsize=12, fontcolor="White", labelloc=c, width=0.3, height=0.3];
+edge [color="SteelBlue", penwidth=2, fontsize=10, fontcolor="Ivory", arrowsize=1];
+"1"; "2"; "3";
+"2" -> "1" [label="here", dir=none]
+"1" -> "3" [label="", dir=forward]
+"3" -> "2" [label="", dir=forward]
+}
+END
+
+    is $res.indices('->').elems, 3, 'Expected number of edge specs';
+    is $res.indices('dir=forward]').elems, 2, 'Expected number of directed edge specs';
+    is $res.indices('dir=none]').elems, 1, 'Expected number of un-directed edge specs';
+    is $res.indices('label=').elems, 3, 'Expected number of edge labels';
+    is $res.indices('label="here"').elems, 1, 'Expected number of "here" edge labels';
+}, 'Labeled directed graph as mixed';
+
+
+done-testing;
