@@ -269,7 +269,7 @@ role Graph::Formatish
 
         my $edges =
                 do if %edgeLabels {
-                    @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\" [label={ %edgeLabels{$_<from>}{$_<to>} // '""' }]" }).join("\n");
+                    @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\" [label=\"{ %edgeLabels{$_<from>}{$_<to>} // '' }\"]" }).join("\n");
                 } elsif $weights.isa(Whatever) && $allOne || ($weights ~~ Bool:D) && !$weights {
                     @dsEdges.map({ "\"{ $_<from> }\" $arrow \"{ $_<to> }\"" }).join("\n");
                 } elsif ($weights ~~ Bool:D) && $weights {
