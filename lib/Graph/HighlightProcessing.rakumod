@@ -56,15 +56,15 @@ role Graph::HighlightProcessing {
 
         %spec = do if $directed-edges {
             %spec.map({
-                $_.key => %( vertexes => $_.value.grep({ $_ ~~ Str:D }),
-                             edges => $_.value.grep({ $_ ~~ Pair:D }).map({ $_.kv })».cache
+                $_.key => %( vertexes => $_.value.grep({ $_ ~~ Str:D }).List,
+                             edges => $_.value.grep({ $_ ~~ Pair:D }).map({ [$_.key, $_.value] }).List
                 ) });
         } else {
             %spec.map({
                 $_.key => %(
-                    vertexes => $_.value.grep({ $_ ~~ Str:D }),
-                    edges => [|$_.value.grep({ $_ ~~ Pair:D }).map({ $_.kv }),
-                              |$_.value.grep({ $_ ~~ Pair:D }).map({ $_.kv.reverse })]».cache
+                    vertexes => $_.value.grep({ $_ ~~ Str:D }).List,
+                    edges => [|$_.value.grep({ $_ ~~ Pair:D }).map({ [$_.key, $_.value] }),
+                              |$_.value.grep({ $_ ~~ Pair:D }).map({ [$_.value, $_.key] })].List
                 ) });
         }
 
