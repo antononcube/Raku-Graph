@@ -36,6 +36,7 @@ subtest {
 
 }, 'Expected vertex coordinates';
 
+## 3
 subtest {
 
     my $g = Graph::Complete(8);
@@ -47,5 +48,30 @@ subtest {
     is $g2.is-complete, True;
 
 }, 'The subgraph of a complete graph is a complete graph';
+
+## 4
+subtest {
+
+    my @edges =
+            { from => 'Rock',     to => 'Scissors',  weight => 1},
+            { from => 'Scissors', to => 'Paper',     weight => 2},
+            { from => 'Paper',    to => 'Rock',      weight => 3},
+            { from => 'Rock',     to => 'Lizard',    weight => 4},
+            { from => 'Lizard',   to => 'Spock',     weight => 5},
+            { from => 'Spock',    to => 'Scissors',  weight => 6},
+            { from => 'Scissors', to => 'Lizard',    weight => 7},
+            { from => 'Lizard',   to => 'Paper',     weight => 8},
+            { from => 'Paper',    to => 'Spock',     weight => 9},
+            { from => 'Spock',    to => 'Rock',      weight => 10}
+            ;
+
+    my $g = Graph.new(@edges, :directed);
+
+    my $g1 = $g.subgraph( ['Rock' => 'Spock', 'Scissors' => 'Paper', 'Paper' => 'Rock']);
+
+    my @edges1 = $g1.edges(:dataset);
+    is @edges1.map(*<weight>).sort, [1, 2, 3], 'expected weights';
+
+}, 'Subgraph of weighted graph';
 
 done-testing;
