@@ -216,7 +216,11 @@ role Graph::Formatish
             for %processed.kv -> $color, %h {
                 my $pre = "edge [color=\"$color\", penwidth=$edge-penwidth, arrowsize=$arrow-size];";
 
-                # This is too cumbersome and it is best done in !dot-core using a :$highlight-edges argument
+                # Get subgraph of edges to be highlighted
+                my $gh = self.subgraph(%h<edges>.map({ $_.head => $_.tail }));
+
+                # This is too cumbersome. It is better done to make the "main" !dot-core call
+                # after this loop, or to use the complement subgraph in !dot-core above.
                 my @edge-specs = %h<edges>.map({ "\"{$_.head}\" $arrow \"{$_.tail}\"" });
                 my @edge-specs-rev;
                 @edge-specs-rev = %h<edges>.map({ "\"{$_.tail}\" $arrow \"{$_.head}\"" }) if !self.directed;
@@ -235,7 +239,8 @@ role Graph::Formatish
                 $highlight-part = $highlight-part ~ "\n\n" ~ [
                     $pre,
                     %h<vertexes>.map({ "\"{$_}\" [fillcolor=\"$color\", color=\"$color\"];",}).join("\n"),
-                    @edge-specs.join("\n")
+                    #@edge-specs.join("\n")
+                    $gh!dot-core(:$weights, :$node-labels, :$edge-labels, :$mixed)<edges>
                 ].join("\n");
             }
             $res = $res ~ "\n" ~ @core-edges.join("\n") ~ $highlight-part ~ "\n\}";
