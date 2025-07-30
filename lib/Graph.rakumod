@@ -1214,7 +1214,7 @@ class Graph
 
     #------------------------------------------------------
     #| Intersection with another graph.
-    method intersection(Graph:D $g --> Graph) {
+    multi method intersection(Graph:D $g --> Graph) {
         my @vertices = (self.vertex-list (|) $g.vertex-list).keys;
         my @edges;
 
