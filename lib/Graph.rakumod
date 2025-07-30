@@ -1232,6 +1232,11 @@ class Graph
         return Graph.new(@vertices, @edges, :$directed, :$vertex-coordinates);
     }
 
+    #| Intersection with a list of other graphs.
+    multi method intersection(*@gs where @gs.all ~~ Graph:D --> Graph) {
+        return reduce({$^a.intersection($^b)}, self, |@gs);
+    }
+
     #------------------------------------------------------
     #| Difference with another graph.
     method difference(Graph:D $g --> Graph) {
