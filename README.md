@@ -155,22 +155,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-10 --- 2
-10 --- 9
-2 --- 3
+12 --- 5
+1 --- 5
+4 --- 9
+2 --- 4
 3 --- 4
 3 --- 8
-2 --- 4
-2 --- 7
-12 --- 2
 2 --- 8
-2 --- 6
-1 --- 5
-1 --- 7
+2 --- 3
 6 --- 7
-12 --- 5
+1 --- 7
+2 --- 7
 11 --- 12
-4 --- 9
+12 --- 2
+10 --- 2
+2 --- 6
+10 --- 9
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -197,7 +197,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [10 9 4 3 8 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
 ```
 
 Here we find a cycle:
@@ -206,7 +206,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([2 3 4 2])
+# find-cycle : ([10 2 4 9 10])
 ```
 
 Here we find all cycles in the graph:
@@ -304,16 +304,16 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
   - Sparse matrices should be easy to create using the (already implemented) edge dataset.
   - [X] DONE Adjacency matrix (dense)
   - [ ] TODO Adjacency matrix (sparse)
-  - [X] Incidence matrix (dense)
-  - [ ] Incidence matrix (sparse)
+  - [X] DONE Incidence matrix (dense)
+  - [ ] TODO Incidence matrix (sparse)
 
 ### Graph programming
 
-- [ ] Depth first scan / traversal
+- [ ] TODO Depth first scan / traversal
   - Scan a graph in a depth-first order.
   - This is already implemented, it has to be properly refactored.
     - See Depth-First Search (DFS) named (private) methods.
-- [ ] Breadth first scan / traversal  
+- [ ] TODO Breadth first scan / traversal  
   - Scan a graph in a breadth-first order.
 
 ### Paths, cycles, flows
@@ -481,6 +481,27 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 
 [Wk5] Wikipedia entry, ["Hamiltonian path"](https://en.wikipedia.org/wiki/Hamiltonian_path).
 
+[AA1] Anton Antonov,
+["Graph Neat Examples in Raku – Set 1"](https://rakuforprediction.wordpress.com/2024/12/01/graph-neat-examples-in-raku-set-1/),
+(2024),
+[RakuForPrediction at WordPress](https://rakuforprediction.wordpress.com).
+
+[AA2] Anton Antonov,
+["Graph Neat Examples in Raku – Set 2"](https://rakuforprediction.wordpress.com/2024/12/06/graph-neat-examples-in-raku-set-2/),
+(2024),
+[RakuForPrediction at WordPress](https://rakuforprediction.wordpress.com).
+
+[AA3] Anton Antonov,
+["Graph Neat Examples in Raku – Set 3"](https://rakuforprediction.wordpress.com/2024/12/10/graph-neat-examples-in-raku-set-3/),
+(2024),
+[RakuForPrediction at WordPress](https://rakuforprediction.wordpress.com).
+
+[AA4] Anton Antonov,
+["Day 12 – Graphs in Raku"](https://raku-advent.blog/2024/12/12/day-12-graphs-in-raku/),
+(2024),
+[Raku Advent Calendar 2024](https://raku-advent.blog/2024/12/26/the-2024-raku-advent-posts/).
+
+
 ### Packages
 
 [AAp1] Anton Antonov,
@@ -516,6 +537,31 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 [YouTube/@AAA4Prediction](https://www.youtube.com/@AAA4Prediction).
 
 [AAv3] Anton Antonov,
+["Raku RAG demo"](https://www.youtube.com/watch?v=JHO2Wk1b-Og),
+(2024),
+[YouTube/@AAA4Prediction](https://www.youtube.com/@AAA4Prediction).
+
+[AAv4] Anton Antonov,
 ["Sparse matrix neat examples in Raku"](https://www.youtube.com/watch?v=kQo3wpiUu6w),
 (2024),
+[YouTube/@AAA4Prediction](https://www.youtube.com/@AAA4Prediction).
+
+[AAv5] Anton Antonov,
+["Graph neat examples in Raku (Set 2)"](https://www.youtube.com/watch?v=E7qhutQcWCY),
+(2024),
+[YouTube/@AAA4Prediction](https://www.youtube.com/@AAA4Prediction).
+
+[AAv6] Anton Antonov,
+["Graph neat examples in Raku (Set 3)"](https://www.youtube.com/watch?v=S_3e7liz4KM),
+(2024),
+[YouTube/@AAA4Prediction](https://www.youtube.com/@AAA4Prediction).
+
+[AAv7] Anton Antonov,
+["Chess positions and knight's tours via graphs (in Raku)"](https://www.youtube.com/watch?v=fwQrQyWC7R0),
+(2024),
+[YouTube/@AAA4Prediction](https://www.youtube.com/@AAA4Prediction).
+
+[AAv8] Anton Antonov,
+["Graph neat examples in Raku (Set 4)"](https://youtu.be/dabUhXW1pkw),
+(2025),
 [YouTube/@AAA4Prediction](https://www.youtube.com/@AAA4Prediction).
