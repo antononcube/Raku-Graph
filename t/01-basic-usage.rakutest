@@ -143,31 +143,34 @@ subtest {
 }, 'Adding vertexes';
 
 ## 26
+is $graph11.vertex-out-degree('12'), 0;
+
+## 27
 is
         Graph::Star.new(5, prefix => 'st_', :!directed).edge-count,
         5;
 
-## 27
+## 28
 isa-ok
         Graph::Petersen.new.vertex-coordinates,
         Map:D;
 
-## 28
+## 29
 isa-ok
         Graph::Indexed.new($g24, 10),
         Graph;
 
-## 29
+## 30
 isa-ok
         Graph::HexagonalGrid.new(3, 4),
         Graph;
 
-## 30
+## 31
 isa-ok
         Graph::TriangularGrid.new(3, 4),
         Graph;
 
-## 31
+## 32
 subtest {
     isa-ok Graph::Circulant.new(7, 2), Graph;
     isa-ok Graph::Circulant.new(7, [2, 4]), Graph;
@@ -179,7 +182,7 @@ subtest {
     is @d.min == @d.max, True, 'circulant graph is regular graph';
 }, 'Circulant graph';
 
-## 32
+## 33
 subtest {
     is
             Graph::Complete.new(4).eqv(Graph::Complete.new(4)),

@@ -434,7 +434,7 @@ class Graph
             $v => self.vertex-degree($v, :!pairs)
         } else {
             if $!directed {
-                self.adjacency-list{$v}.elems // 0
+                self.adjacency-list{$v} ?? self.adjacency-list{$v}.elems !! 0
             } else {
                 self.vertex-degree($v);
             }
