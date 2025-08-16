@@ -1006,6 +1006,12 @@ class Graph
         return @cycles;
     }
 
+    #------------------------------------------------------
+    #| Checks if the graph object is acyclic.
+    method is-acyclic() {
+        return self.find-cycle(:3min-length, max-length => Inf, :1count).elems == 0;
+    }
+
     #======================================================
     # Spanning tree
     #======================================================
