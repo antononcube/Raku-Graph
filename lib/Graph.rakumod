@@ -511,13 +511,22 @@ class Graph
             %index{$vertex} = $prefix ~ $index++;
         }
 
+        my %seen;
         my %new-adjacency-list;
         for self.edges(:dataset) -> %e {
             %new-adjacency-list{%index{%e<from>}}{%index{%e<to>}} = %e<weight>;
             if !self.directed {
                 %new-adjacency-list{%index{%e<to>}}{%index{%e<from>}} = %e<weight>;
             }
+            %seen{%e<from>}++;
+            %seen{%e<to>}++
         }
+
+        # In case there are vertices with no edges
+        for @vs.grep({ %seen{$_}:!exists }) -> $v {
+            %new-adjacency-list.push( %index{$v} => {} )
+        }
+
         my $vertex-coordinates = do if self.vertex-coordinates ~~ Map:D {
             self.vertex-coordinates.map({ %index{$_.key} => $_.value }).Hash
         } else { Whatever }
