@@ -4,6 +4,9 @@ use Test;
 use Graph;
 
 subtest {
+    ok Graph.new();
+    is Graph.new().vertex-list, Empty;
+
     ok Graph.new(<1 2>, []);
     is Graph.new(<1 2>, []).vertex-list, <1 2>;
 
