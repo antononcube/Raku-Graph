@@ -42,8 +42,8 @@ class Graph
     }
 
     #------------------------------------------------------
-    multi method new(:%adjacency-list = %(), Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
-        self.bless(:%adjacency-list, :$directed, :$vertex-coordinates);
+    multi method new(:%adjacency-list = %(), :@vertexes = Empty, :@edges = Empty, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
+        self.bless(:%adjacency-list, :$directed, :@vertexes, :@edges, :$vertex-coordinates);
     }
 
     multi method new(%edges, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
@@ -55,10 +55,6 @@ class Graph
     }
 
     multi method new(@vertexes, @edges, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
-        self.bless(adjacency-list => %(), :$directed, :@vertexes, :@edges, :$vertex-coordinates);
-    }
-
-    multi method new(:@vertexes!, :@edges!, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
         self.bless(adjacency-list => %(), :$directed, :@vertexes, :@edges, :$vertex-coordinates);
     }
 
