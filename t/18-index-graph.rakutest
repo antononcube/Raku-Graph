@@ -1,0 +1,22 @@
+use v6.d;
+
+#use lib <. lib>;
+
+use Graph;
+use Graph::Circulant;
+
+use Test;
+
+## 1
+subtest {
+        my $g = Graph::Circulant.new(12, [1, 4]);
+        is-deeply $g.index-graph(10).vertex-list, (10...21)».Str;
+}, "connected indexed graph";
+
+## 2
+subtest {
+        is-deeply Graph.new(^5, []).adjacency-list, {0 => {}, 1 => {}, 2 => {}, 3 => {}, 4 => {}};
+        is-deeply Graph.new((^5), []).index-graph(10).vertex-list, <10 11 12 13 14>».Str;
+}, "indexed graph over no edges";
+
+done-testing;
