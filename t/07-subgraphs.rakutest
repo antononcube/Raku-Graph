@@ -25,9 +25,14 @@ subtest {
     my $g2 = $g.subgraph($vset.keys);
 
     is
+            $g2.vertex-count ≥ $vset.elems,
+            True,
+            'Expected lower limit for the number of vertexes';
+
+    is
             $g2.vertex-count < $g.vertex-count,
             True,
-            'Less vertexes';
+            'Less vertexes than the original graph';
 
     is
             $g2.vertex-coordinates.keys.elems,
