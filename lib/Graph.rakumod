@@ -1281,13 +1281,14 @@ class Graph
 
         @edges .= grep({ $_<from> ∈ @subvertexes && $_<to> ∈ @subvertexes });
 
+        my @vertexes = (@subvertexes (&) self.vertex-list).keys;
+
         my $vertex-coordinates =
                 do if $!vertex-coordinates ~~ Map:D {
-                    my @subvertexesNew = [|@edges.map(*<from>), |@edges.map(*<to>)].unique;
-                    (@subvertexesNew Z=> $!vertex-coordinates{@subvertexesNew}).Hash
+                    (@vertexes Z=> $!vertex-coordinates{@vertexes}).Hash
                 } else { Whatever }
 
-        return Graph.new(@edges, :$!directed, :$vertex-coordinates);
+        return Graph.new(@vertexes, @edges, :$!directed, :$vertex-coordinates);
     }
 
     multi method subgraph(@subedges where @subedges.all ~~ Pair:D) {
