@@ -1,5 +1,8 @@
 Changes of the Raku package "Graph".
 
+2025-12-23 0.0.32
+    - Bug fix -- proper subgraph making with vertices that do not have edges.
+
 2025-12-19 0.0.31
     - Bug fixes:
         - Proper handling of vertexes with no edges by .index-graph()
