@@ -1,7 +1,7 @@
 {
   "name": "Graph",
   "description": "Graph theory algorithms, parameterized- and random graphs.",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
@@ -36,6 +36,7 @@
     "Graph::Path": "lib/Graph/Path.rakumod",
     "Graph::Petersen": "lib/Graph/Petersen.rakumod",
     "Graph::Random": "lib/Graph/Random.rakumod",
+    "Graph::Relation": "lib/Graph/Relation.rakumod",
     "Graph::Star": "lib/Graph/Star.rakumod",
     "Graph::Tourish": "lib/Graph/Tourish.rakumod",
     "Graph::TriangularGrid": "lib/Graph/TriangularGrid.rakumod",
