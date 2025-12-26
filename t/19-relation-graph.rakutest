@@ -13,7 +13,7 @@ my $g1 =
             %('from'=>'4','to'=>'6','weight'=>1), %('from'=>'4','to'=>'7','weight'=>1), %('from'=>'4','to'=>'8','weight'=>1),
             %('from'=>'5','to'=>'6','weight'=>1), %('from'=>'5','to'=>'7','weight'=>1), %('from'=>'5','to'=>'8','weight'=>1)
         ]):directed;
-say $g1.wl(VertexLabels => "Name");
+#say $g1.wl(VertexLabels => "Name");
 
 my $g2 =
         Graph.new([
@@ -45,28 +45,28 @@ my $g4 =
 subtest {
     ok Graph::Relation.new( {$^a < 6 && $^b > 6}, (1...8));
     my $g = Graph::Relation.new({$^a < 6 && $^b ≥ 6}, (1...8));
-    say $g.wl(VertexLabels => "Name");
+    #say $g.wl(VertexLabels => "Name");
     is $g.eqv($g1), True;
 }, "Simple bipartite graph";
 
 ## 2
 subtest {
     my $g =Graph::Relation.new( {$^a gcd $^b == 1}, (1...7));
-    say $g.wl(VertexLabels => "Name");
+    #say $g.wl(VertexLabels => "Name");
     is $g.eqv($g2), True;
 }, "Coprime";
 
 ## 3
 subtest {
     my $g =Graph::Relation.new( {!$^a.contains($^b)}, <a ab abc abcd>);
-    say $g.wl(VertexLabels => "Name");
+    #say $g.wl(VertexLabels => "Name");
     is $g.eqv($g3), True;
 }, "String free";
 
 ## 4
 subtest {
     my $g = Graph::Relation.new({$^a < 6 && $^b ≥ 6}, (1...5), (6...8));
-    say $g.wl(VertexLabels => "Name");
+    #say $g.wl(VertexLabels => "Name");
     is $g.eqv($g4), True, 'expected graph';
     is $g.is-bipartite, True, 'is bipartite';
 }, "Bipartite for two arrays";
