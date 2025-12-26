@@ -1,5 +1,8 @@
 Changes of the Raku package "Graph".
 
+2025-12-26 0.0.33
+    - Implemented relation graph, "Graph::Relation".
+
 2025-12-23 0.0.32
     - Bug fix -- proper subgraph making with vertices that do not have edges.
 
