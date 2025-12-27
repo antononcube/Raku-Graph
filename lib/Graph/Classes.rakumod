@@ -35,6 +35,7 @@ sub EXPORT {
             'Graph::Nested' => Graph::Nested,
             'Graph::Path' => Graph::Path,
             'Graph::Petersen' => Graph::Petersen,
+            'Graph::Relation' => Graph::Relation,
             'Graph::Star' => Graph::Star,
             'Graph::TriangularGrid' => Graph::TriangularGrid,
             'Graph::Wheel' => Graph::Wheel,
