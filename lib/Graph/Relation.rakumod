@@ -16,7 +16,7 @@ class Graph::Relation is Graph {
                 die 'The third argument is expected to be a list or Whatever.'
             }
         }
-        my @edges = (@v X $w.Array).map({ &f(&as($_.head), &as($_.tail)) ?? Pair.new($_.head.Str, $_.tail.Str) !! Empty });
+        my @edges = (@v X $w.Array).map({ &f($_.head, $_.tail) ?? Pair.new($_.head.&as.Str, $_.tail.&as.Str) !! Empty });
         my Graph $graph = Graph.new(@edges, :$directed);
         return $graph;
     }
