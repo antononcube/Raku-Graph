@@ -47,13 +47,17 @@ subtest {
     my $g = Graph::Relation.new({$^a < 6 && $^b ≥ 6}, (1...8));
     #say $g.wl(VertexLabels => "Name");
     is $g.eqv($g1), True;
+
+    # The argument :$directed is Whatever by default
+    is $g.directed, True, 'is directed';
 }, "Simple bipartite graph";
 
 ## 2
 subtest {
-    my $g =Graph::Relation.new( {$^a gcd $^b == 1}, (1...7));
+    my $g =Graph::Relation.new( {$^a gcd $^b == 1}, (1...7), directed => Whatever);
     #say $g.wl(VertexLabels => "Name");
     is $g.eqv($g2), True;
+    is $g.directed, False, 'is not directed';
 }, "Coprime";
 
 ## 3
@@ -69,6 +73,9 @@ subtest {
     #say $g.wl(VertexLabels => "Name");
     is $g.eqv($g4), True, 'expected graph';
     is $g.is-bipartite, True, 'is bipartite';
+
+    # The argument :$directed is Whatever by default
+    is $g.directed, True, 'is directed';
 }, "Bipartite for two arrays";
 
 ## 5
