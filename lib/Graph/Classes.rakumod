@@ -14,6 +14,7 @@ sub EXPORT {
     use Graph::Nested;
     use Graph::Path;
     use Graph::Petersen;
+    use Graph::Relation;
     use Graph::Star;
     use Graph::TriangularGrid;
     use Graph::Wheel;
