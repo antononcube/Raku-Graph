@@ -73,6 +73,14 @@ subtest {
 
 ## 5
 subtest {
+
+    # This Wolfram Language code was used to make the test:
+    # n = 3;
+    # gps = ReIm @ Select[Flatten[Table[a + I b, {a, -n, n, 1}, {b, -n, n, 1}]],PrimeQ[#, GaussianIntegers -> True] &];
+    # g = RelationGraph[EuclideanDistance[#1, #2] <= 2 && #1 != #2 &, gps, VertexLabels -> "Name"];
+    # g = Graph[g, VertexCoordinates -> VertexList[g], VertexLabels -> "Name"];
+    # Information[g]
+
     my @gps = (-3, -2), (-3, 0), (-3, 2), (-2, -3), (-2, -1), (-2, 1), (-2, 3), (-1, -2), (-1, -1), (-1, 1), (-1, 2), (0, -3), (0, 3), (1, -2), (1, -1), (1, 1), (1, 2), (2, -3), (2, -1), (2, 1), (2, 3), (3, -2), (3, 0), (3, 2);
     my $g = Graph::Relation.new({ $^a ne $^b && ($^a >>-<< $^b).map(* ** 2).sum.sqrt ≤ 2}, @gps, as => {.raku.substr(1)}):!directed;
     is $g.vertex-count, 24;
