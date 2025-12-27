@@ -71,4 +71,12 @@ subtest {
     is $g.is-bipartite, True, 'is bipartite';
 }, "Bipartite for two arrays";
 
+## 5
+subtest {
+    my @gps = (-3, -2), (-3, 0), (-3, 2), (-2, -3), (-2, -1), (-2, 1), (-2, 3), (-1, -2), (-1, -1), (-1, 1), (-1, 2), (0, -3), (0, 3), (1, -2), (1, -1), (1, 1), (1, 2), (2, -3), (2, -1), (2, 1), (2, 3), (3, -2), (3, 0), (3, 2);
+    my $g = Graph::Relation.new({ $^a ne $^b && ($^a >>-<< $^b).map(* ** 2).sum.sqrt ≤ 2}, @gps, as => {.raku.substr(1)}):!directed;
+    is $g.vertex-count, 24;
+    is $g.edge-count, 56;
+}, 'array of arrays';
+
 done-testing;
