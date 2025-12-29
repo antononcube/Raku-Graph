@@ -7,7 +7,7 @@ class Graph::HexagonalGrid is Graph {
     has Int:D $.rows is required;
     has Int:D $.columns is required;
 
-    constant $tol = 1e-12;
+    constant $tol = 1e-10;
 
     submethod BUILD(:$!rows!,
                     :$!columns!,
