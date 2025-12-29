@@ -83,7 +83,7 @@ class Graph
             # when (False, False) { done by default with creation }
             # when (False, True) { done by default with creation }
         }
-        return Graph.new(self.vertex-list, @edges, :$directed, :$!vertex-coordinates);
+        return Graph.new(self.vertex-list, @edges, :$directed, vertex-coordinates => $!vertex-coordinates.clone);
     }
 
     #======================================================
