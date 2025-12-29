@@ -1,5 +1,10 @@
 Changes of the Raku package "Graph".
 
+2025-12-29 0.0.34
+    - Fix: the tolerance for rounding in Graph::HexagonalGrid was too small.
+        - It is used to turn the cell points into (unique) graph vertexes.
+    - Fix/refactor: graph cloning also clones the vertex coordinates.
+
 2025-12-27 0.0.33
     - Implemented relation graph, "Graph::Relation".
 
