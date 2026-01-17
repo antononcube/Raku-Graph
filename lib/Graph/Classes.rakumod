@@ -7,6 +7,7 @@ sub EXPORT {
     use Graph::CompleteKaryTree;
     use Graph::Cycle;
     use Graph::Grid;
+    use Graph::Harary;
     use Graph::HexagonalGrid;
     use Graph::Hypercube;
     use Graph::Indexed;
@@ -29,6 +30,7 @@ sub EXPORT {
             'Graph::CompleteKaryTree' => Graph::CompleteKaryTree,
             'Graph::Cycle' => Graph::Cycle,
             'Graph::Grid' => Graph::Grid,
+            'Graph::Harary' => Graph::Harary,
             'Graph::HexagonalGrid' => Graph::HexagonalGrid,
             'Graph::Hypercube' => Graph::Hypercube,
             'Graph::Indexed' => Graph::Indexed,
