@@ -1,7 +1,7 @@
 {
   "name": "Graph",
   "description": "Graph theory algorithms, parameterized- and random graphs.",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
@@ -25,6 +25,7 @@
     "Graph::Distribution": "lib/Graph/Distribution.rakumod",
     "Graph::Formatish": "lib/Graph/Formatish.rakumod",
     "Graph::Grid": "lib/Graph/Grid.rakumod",
+    "Graph::Harary": "lib/Graph/Harary.rakumod",
     "Graph::HexagonalGrid": "lib/Graph/HexagonalGrid.rakumod",
     "Graph::HighlightProcessing": "lib/Graph/HighlightProcessing.rakumod",
     "Graph::Hypercube": "lib/Graph/Hypercube.rakumod",
