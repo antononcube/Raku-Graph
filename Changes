@@ -1,5 +1,9 @@
 Changes of the Raku package "Graph".
 
+2026-01-17 0.0.35
+    - Implemented Harary graph construction.
+        - Related documentation examples in "Named-graphs-gallery.ipynb".
+
 2025-12-29 0.0.34
     - Fix: the tolerance for rounding in Graph::HexagonalGrid was too small.
         - It is used to turn the cell points into (unique) graph vertexes.
