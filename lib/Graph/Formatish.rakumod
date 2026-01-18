@@ -103,7 +103,7 @@ role Graph::Formatish
     method !dot-full(
             :$weights is copy = Whatever,
             :$highlight = Whatever,
-            :label(:$graph-label) is copy = Whatever,
+            :plot-label(:title(:label(:$graph-label))) is copy = Whatever,
             :size(:$graph-size) is copy = Whatever,
             :$pad is copy = Whatever,
             Str:D :labelloc(:$label-location) = 't',
