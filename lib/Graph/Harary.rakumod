@@ -8,6 +8,9 @@ class Graph::Harary is Graph {
 
     submethod BUILD(:$!k!, :$!n!, Str:D :$prefix = '') {
 
+        die "The argument \$n is expected to be an integer greater than $!k." unless $!k < $!n;
+        die "The argument \$k is expected to be an integer greater than 1." unless $!k > 1;
+
         for ^$!n -> $i {
             for (1 ... $!k div 2) -> $j {
                 self.edge-add($prefix ~ $i.Str, $prefix ~ (($i + $j) % $!n).Str, :!directed);
@@ -35,6 +38,8 @@ class Graph::Harary is Graph {
     }
 
     multi method new(Int:D $k, Int:D $n, Str:D :$prefix = '') {
+        die "Integer greater than $k expected at position 2." unless $k < $n;
+        die "Positive machine-sized integer greater than 1 is expected at position 1." unless $k > 1;
         self.bless(:$k, :$n, :$prefix);
     }
 
