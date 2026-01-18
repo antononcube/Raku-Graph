@@ -1,0 +1,23 @@
+use v6.d;
+use Test;
+
+#use lib <. lib>;
+use Graph;
+use Graph::Butterfly;
+
+## 1
+#subtest {
+
+    isa-ok Graph::Butterfly.new(2), Graph:D;
+
+    isa-ok Graph::Butterfly.new(2, 2), Graph:D;
+
+    for [(2, 2), (2, 3)] -> ($n, $b) {
+        my $g = Graph::Butterfly.new($n, $b);
+
+        is $g.vertex-count, $b ** $n * (1 + $n), 'expected number of vertexes';
+        is $g.edge-count, $b ** (1 + $n) * $n, 'expected number of edges';
+    }
+#}, "Butterfly graph";
+
+done-testing;

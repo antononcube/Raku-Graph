@@ -2,6 +2,7 @@ use v6.d;
 
 sub EXPORT {
     use Graph;
+    use Graph::Butterfly;
     use Graph::Circulant;
     use Graph::Complete;
     use Graph::CompleteKaryTree;
@@ -25,6 +26,7 @@ sub EXPORT {
 
     Map.new:
             'Graph' => Graph,
+            'Graph::Butterfly' => Graph::Butterfly,
             'Graph::Circulant' => Graph::Circulant,
             'Graph::Complete' => Graph::Complete,
             'Graph::CompleteKaryTree' => Graph::CompleteKaryTree,

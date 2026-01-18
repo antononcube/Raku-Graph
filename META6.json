@@ -16,6 +16,7 @@
   "provides": {
     "Graph": "lib/Graph.rakumod",
     "Graph::Bipartitish": "lib/Graph/Bipartitish.rakumod",
+    "Graph::Butterfly": "lib/Graph/Butterfly.rakumod",
     "Graph::Circulant": "lib/Graph/Circulant.rakumod",
     "Graph::Classes": "lib/Graph/Classes.rakumod",
     "Graph::Complete": "lib/Graph/Complete.rakumod",
