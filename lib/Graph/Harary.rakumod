@@ -21,7 +21,7 @@ class Graph::Harary is Graph {
                     self.edge-add($prefix ~ $i.Str, $prefix ~ ($i + $!n div 2).Str, :!directed);
                 }
             } else {
-                for ^(($!n - 1) div 2 + 1) -> $i {
+                for ^(($!n - 1) div 2) -> $i {
                     self.edge-add($prefix ~ $i.Str, $prefix ~ ($i + ($!n + 1) div 2).Str, :!directed);
                 }
                 self.edge-add($prefix ~ '0', $prefix ~ (($!n - 1) div 2).Str, :!directed);
