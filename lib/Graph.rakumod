@@ -441,9 +441,9 @@ class Graph
     #| Gives the list of vertex degrees for all vertices in the graph object.
     multi method vertex-degree(Bool:D :p(:$pairs) = False) {
         return do if $pairs {
-            self.vertex-list.map({ $_ => self.vertex-degree($_) })
+            self.vertex-list.map({ $_ => self.vertex-degree($_) }).List
         } else {
-            self.vertex-list.map({ self.vertex-degree($_) })
+            self.vertex-list.map({ self.vertex-degree($_) }).List
         }
     }
 
