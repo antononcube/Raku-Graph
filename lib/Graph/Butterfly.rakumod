@@ -3,11 +3,11 @@ use v6.d;
 use Graph;
 class Graph::Butterfly is Graph {
     has UInt:D $.n is required;
-    has UInt:D $.b = 2;
+    has UInt:D $.base = 2;
 
-    submethod BUILD(:$!n, :$!b = 2, Bool:D :$directed = False) {
+    submethod BUILD(:$!n, :$!base = 2, Bool:D :d(:directed-edges(:$directed)) = False) {
         my $n = $!n;
-        my $b = $!b;
+        my $b = $!base;
 
         my $bn = $b ** $n;
         my @w = (^$bn).map({
@@ -22,15 +22,21 @@ class Graph::Butterfly is Graph {
                     @d1[$i] = $d.Str;
                     my $w1 = @d1.join;
 
-                    my $from = "($w0,$i)";
-                    my $to   = "($w1," ~ ($i + 1) ~ ")";
+                    my $from = "{$w0}_{$i}";
+                    my $to   = "{$w1}_{$i + 1}";
                     self.edge-add($from, $to, 1, :$directed);
                 }
             }
         }
+
+        self.vertex-coordinates =
+                self.vertex-list.map({ $_ => $_.split('_', :skip-empty).cache.&{ [$_.head.parse-base($b), $_.tail.Int] } }).Hash;
     }
 
-    multi method new(UInt:D $n, UInt:D $b = 2, Bool:D :d(:$directed) = False) {
-        self.bless(:$n, :$b, :$directed);
+    multi method new(UInt:D $n, UInt:D :b(:$base) = 2, Bool:D :d(:directed-edges(:$directed)) = False) {
+        self.bless(:$n, :$base, :$directed);
+    }
+    multi method new(UInt:D $n, UInt:D $base = 2, Bool:D :d(:directed-edges(:$directed)) = False) {
+        self.bless(:$n, :$base, :$directed);
     }
 }
