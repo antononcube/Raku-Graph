@@ -1,0 +1,48 @@
+use v6.d;
+use Test;
+
+#use lib <. lib>;
+use Graph;
+use Graph::Harary;
+
+## 1
+subtest {
+
+    dies-ok { Graph::Harary.new(8, 8) }, 'The first argument has to be less than the second one';
+
+    isa-ok Graph::Harary.new(4, 8), Graph:D;
+
+    my $g = Graph::Harary.new(4, 8);
+
+    is $g.vertex-count, 8, 'expected number of vertexes';
+    is ($g.vertex-degree andthen ($_.min, $_.max)), (4, 4), 'expected min-max vertex degrees';
+
+}, "Harary graph: even k";
+
+## 2
+subtest {
+
+    isa-ok Graph::Harary.new(3, 6), Graph:D;
+
+    my $g = Graph::Harary.new(3, 6);
+
+    is $g.vertex-count, 6, 'expected number of vertexes';
+    is ($g.vertex-degree andthen ($_.min, $_.max)), (3, 3), 'expected min-max vertex degrees';
+
+}, "Harary graph: odd k, even n";
+
+## 3
+subtest {
+
+    isa-ok Graph::Harary.new(3, 7), Graph:D;
+
+    my $g = Graph::Harary.new(3, 7);
+
+    is $g.vertex-count, 7, 'expected number of vertexes';
+    is ($g.vertex-degree andthen ($_.min, $_.max)), (3, 4), 'expected min-max vertex degrees';
+
+    is $g.vertex-degree.sum, 7 * 3 + 1, 'only one vertex k+1 degree';
+
+}, "Harary graph: odd k, odd n";
+
+done-testing;
