@@ -1,7 +1,7 @@
 {
   "name": "Graph",
   "description": "Graph theory algorithms, parameterized- and random graphs.",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
