@@ -1,7 +1,7 @@
 {
   "name": "Graph",
   "description": "Graph theory algorithms, parameterized- and random graphs.",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
@@ -32,6 +32,7 @@
     "Graph::Hypercube": "lib/Graph/Hypercube.rakumod",
     "Graph::Indexed": "lib/Graph/Indexed.rakumod",
     "Graph::KnightTour": "lib/Graph/KnightTour.rakumod",
+    "Graph::Leaper": "lib/Graph/Leaper.rakumod",
     "Graph::MinCuttish": "lib/Graph/MinCuttish.rakumod",
     "Graph::Neighborhoodish": "lib/Graph/Neighborhoodish.rakumod",
     "Graph::Nested": "lib/Graph/Nested.rakumod",
