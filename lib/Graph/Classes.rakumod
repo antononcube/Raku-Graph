@@ -37,6 +37,7 @@ sub EXPORT {
             'Graph::Hypercube' => Graph::Hypercube,
             'Graph::Indexed' => Graph::Indexed,
             'Graph::KnightTour' => Graph::KnightTour,
+            'Graph::Leaper' => Graph::Leaper,
             'Graph::Nested' => Graph::Nested,
             'Graph::Path' => Graph::Path,
             'Graph::Petersen' => Graph::Petersen,
