@@ -1,0 +1,30 @@
+use v6.d;
+use Test;
+
+#use lib <. lib>;
+use Graph;
+use Graph::Leaper;
+use Graph::KnightTour;
+
+## 1
+subtest {
+    my @moves = (-2, -1), (-2, 1), (-1, 2), (1, 2);
+    isa-ok Graph::Leaper.new(Whatever, 5, 6), Graph:D;
+    isa-ok Graph::Leaper.new(@moves, 5, 6), Graph:D;
+
+}, "Leaper graph";
+
+
+## 2
+subtest {
+
+    isa-ok Graph::KnightTour.new(5, 6), Graph::Leaper:D;
+
+    my $g1 = Graph::Leaper.new(Whatever, 5, 6);
+    my $g2 = Graph::KnightTour.new(5, 6);
+
+    is $g1.eqv($g2), True, 'Leaper default moves are Knight-tour';
+
+}, "Knight tour graph";
+
+done-testing;
