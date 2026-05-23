@@ -1,5 +1,9 @@
 Changes of the Raku package "Graph".
 
+2026-05-23 0.0.37
+    - Implemented Graph::Leaper.
+        - Graph::Leaper is generalization of Graph::KnightTour.
+
 2026-01-18 0.0.36
     - Implemented Butterfly graph construction.
             - Related documentation examples in "Named-graphs-gallery.ipynb".
