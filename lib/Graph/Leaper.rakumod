@@ -15,6 +15,16 @@ class Graph::Leaper is Graph {
                 $moves.flat(:hammer).all ~~ Int:D
     }
 
+    sub process-moves($moves) {
+        if $moves.isa(Whatever) {
+            [(-2, -1), (-2, 1), (-1, 2), (1, 2)]
+        } elsif $moves ~~ (Array:D | List:D | Seq:D) && $moves.elems == 2 && $moves.all ~~ Int:D && $moves.all ≥ 0 {
+            (-$moves.head, -$moves.tail, $moves.tail, $moves.head).sort.combinations(2).grep({ $_».abs.sum == $moves.sum }).unique.Array
+        } else {
+            $moves
+        }
+    }
+
     submethod BUILD(:@!moves, :$!rows!, :$!columns!, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
         if $directed {
             note 'Directed knight-tour graphs are not implemented.';
@@ -51,11 +61,7 @@ class Graph::Leaper is Graph {
             Bool:D :d(:directed-edges(:$directed)) = False
                      ) {
 
-        if $moves.isa(Whatever) {
-            $moves = [(-2, -1), (-2, 1), (-1, 2), (1, 2)]
-        } elsif $moves ~~ (Array:D | List:D | Seq:D) && $moves.elems == 2 && $moves.all ~~ Int:D && $moves.all ≥ 0 {
-            $moves = (-$moves.head, -$moves.tail, $moves.tail, $moves.head).sort.combinations(2).grep({ $_».abs.sum == $moves.sum }).unique.Array
-        }
+        $moves = process-moves($moves);
 
         die 'The first argument is expected to be a list of two non-negative integers, a list of length-two lists of non-negative integers, or Whatever'
         unless check-moves($moves);
@@ -70,9 +76,11 @@ class Graph::Leaper is Graph {
         self.bless(:$moves, :$rows, :$columns, :$prefix, :$sep, :$directed);
     }
 
-    multi method new(:$moves!, UInt:D :m(:$rows), UInt:D :n(:$columns), Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
+    multi method new(:$moves! is copy, UInt:D :m(:$rows), UInt:D :n(:$columns), Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
 
-        die 'The argument $moves is expected to be a list of length-two lists of integers.'
+        $moves = process-moves($moves);
+
+        die 'The argument $moves is expected to be a list of two non-negative integers, a list of length-two lists of non-negative integers, or Whatever'
         unless check-moves($moves);
 
         self.bless(:$moves, :$rows, :$columns, :$prefix, :$sep, :$directed);
