@@ -5,11 +5,11 @@ use Graph::Utilities;
 use Graph::Leaper;
 
 
-class Graph::KnightTour is Graph::Leaper {
+class Graph::KnightTour is Graph {
 
     my @figure-moves = (-2, -1), (-2, 1), (-1, 2), (1, 2);
 
-    multi method new($rows is copy = Whatever, $columns is copy = Whatever, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
+    multi method new($rows! is copy, $columns is copy = Whatever, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
 
         ($rows, $columns) = Graph::Utilities::ProcessPairedUIntArgs($rows, $columns, 8);
         die 'The first argument is expected to be a positive integer or Whatever.'
@@ -21,8 +21,8 @@ class Graph::KnightTour is Graph::Leaper {
         return Graph::Leaper.new(moves => @figure-moves, :$rows, :$columns, :$prefix, :$sep, :$directed);
     }
 
-    multi method new(UInt:D :m(:$rows), UInt:D :n(:$columns), Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
-        return Graph::Leaper.new(moves => @figure-moves, :$rows, :$columns, :$prefix, :$sep, :$directed);
+    multi method new(:m(:$rows) = Whatever, :n(:$columns) = Whatever, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
+        self.new($rows, $columns, :$prefix, :$sep, :$directed);
     }
 }
 
