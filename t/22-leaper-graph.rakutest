@@ -13,7 +13,7 @@ subtest {
     isa-ok Graph::Leaper.new(@moves, 5, 6), Graph:D;
     isa-ok Graph::Leaper.new([1, 2], 5, 6), Graph:D;
 
-    is-deeply Graph::Leaper.new([1, 2], 5, 6).moves.sort, @moves.sort;
+    is-deeply Graph::Leaper.new([1, 2], 5, 6).moves».sort.sort, @moves».sort.sort;
     is Graph::Leaper.new([1, 2], 5, 6).eqv(Graph::Leaper.new(@moves, 5, 6)), True;
 
     my @zebra-moves = (-3, -2), (-3, 2), (-2, 3), (2, 3);
