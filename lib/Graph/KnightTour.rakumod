@@ -6,7 +6,8 @@ use Graph::Leaper;
 
 
 class Graph::KnightTour is Graph::Leaper {
-    my @sp-moves = (-2, -1), (-2, 1), (-1, 2), (1, 2);
+
+    my @figure-moves = (-2, -1), (-2, 1), (-1, 2), (1, 2);
 
     multi method new($rows is copy = Whatever, $columns is copy = Whatever, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
 
@@ -17,11 +18,11 @@ class Graph::KnightTour is Graph::Leaper {
         die 'The second argument is expected to be a positive integer or Whatever.'
         unless $columns ~~ Int:D && $columns > 0;
 
-        self.bless(moves => @sp-moves, :$rows, :$columns, :$prefix, :$sep, :$directed);
+        return Graph::Leaper.new(moves => @figure-moves, :$rows, :$columns, :$prefix, :$sep, :$directed);
     }
 
     multi method new(UInt:D :m(:$rows), UInt:D :n(:$columns), Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
-        self.bless(moves => @sp-moves, :$rows, :$columns, :$prefix, :$sep, :$directed);
+        return Graph::Leaper.new(moves => @figure-moves, :$rows, :$columns, :$prefix, :$sep, :$directed);
     }
 }
 
