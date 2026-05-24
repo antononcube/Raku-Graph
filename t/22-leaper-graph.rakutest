@@ -12,6 +12,16 @@ subtest {
     isa-ok Graph::Leaper.new(Whatever, 5, 6), Graph:D;
     isa-ok Graph::Leaper.new(@moves, 5, 6), Graph:D;
 
+    my @zebra-moves = (-3, -2), (-3, 2), (-2, 3), (2, 3);
+
+    my $g = Graph::Leaper.new(@zebra-moves, 4, 4);
+    is $g.vertex-count, 16, 'expected number of vertexes';
+    is $g.is-connected, False, 'too small to be connected';
+
+    my $g2 = Graph::Leaper.new(moves => @zebra-moves, :4rows, :4columns);
+    is $g2.vertex-count, 16, 'expected number of vertexes';
+    is $g2.is-connected, False, 'too small to be connected';
+
 }, "Leaper graph";
 
 
@@ -26,6 +36,9 @@ subtest {
     my $g2 = Graph::KnightTour.new(5, 6);
 
     is $g1.eqv($g2), True, 'Leaper default moves are Knight-tour';
+
+    my $g = Graph::KnightTour.new;
+    is $g.vertex-count, 64, 'expected number of vertexes';
 
 }, "Knight tour graph";
 
