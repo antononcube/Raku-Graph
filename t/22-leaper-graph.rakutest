@@ -20,6 +20,8 @@ subtest {
 
     isa-ok Graph::KnightTour.new(5, 6), Graph::Leaper:D;
 
+    isa-ok Graph::KnightTour.new(rows => 4, columns => 6, prefix => 'node:'), Graph::Leaper:D;
+
     my $g1 = Graph::Leaper.new(Whatever, 5, 6);
     my $g2 = Graph::KnightTour.new(5, 6);
 
