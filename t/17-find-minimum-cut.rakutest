@@ -21,7 +21,7 @@ my @edges =
         %('from' => '8', 'to' => '9', 'weight' => 1);
 
 my $g = Graph.new(@edges);
-say (:$g);
+#say (:$g);
 
 ## 1
 isa-ok $g, Graph:D;
