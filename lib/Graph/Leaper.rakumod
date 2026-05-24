@@ -44,8 +44,8 @@ class Graph::Leaper is Graph {
 
     multi method new(
             $moves is copy,
-            $rows is copy = Whatever,
-            $columns is copy = Whatever,
+            $rows is copy,
+            $columns is copy,
             Str:D :$prefix = '',
             Str:D :$sep = '_',
             Bool:D :d(:directed-edges(:$directed)) = False
@@ -54,6 +54,7 @@ class Graph::Leaper is Graph {
         if $moves.isa(Whatever) {
             $moves = [(-2, -1), (-2, 1), (-1, 2), (1, 2)]
         }
+
         die 'The first argument is expected to be a list of length-two lists of integers.'
         unless check-moves($moves);
 
