@@ -43,13 +43,14 @@ class Graph::Leaper is Graph {
     }
 
     multi method new(
-            $moves is copy = Whatever,
+            $moves is copy,
             $rows is copy = Whatever,
             $columns is copy = Whatever,
             Str:D :$prefix = '',
             Str:D :$sep = '_',
             Bool:D :d(:directed-edges(:$directed)) = False
                      ) {
+
         if $moves.isa(Whatever) {
             $moves = [(-2, -1), (-2, 1), (-1, 2), (1, 2)]
         }
@@ -66,7 +67,7 @@ class Graph::Leaper is Graph {
         self.bless(:$moves, :$rows, :$columns, :$prefix, :$sep, :$directed);
     }
 
-    multi method new(:$moves, UInt:D :m(:$rows), UInt:D :n(:$columns), Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
+    multi method new(:$moves!, UInt:D :m(:$rows), UInt:D :n(:$columns), Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
 
         die 'The argument $moves is expected to be a list of length-two lists of integers.'
         unless check-moves($moves);
