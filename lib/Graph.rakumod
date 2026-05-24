@@ -1292,17 +1292,15 @@ class Graph
     }
 
     multi method subgraph(@subedges where @subedges.all ~~ Pair:D) {
-        my @edges = self.edges(:!dataset);
-        my $set = @subedges».Str;
-        if $!directed {
-            @edges .= grep({ $_.Str ∈ $set });
+        my $set = do if $!directed {
+            @subedges».Str.Set
         } else {
-            @edges .= grep({ ($_.Str ∈ $set) || (Pair.new($_.value, $_.key).Str ∈ $set)});
+            # If the graph is not directed we enhance the give sub-edges set.
+            # That is because Pair objects are used which strongly hint direction.
+            # It is probably a good idea to have List edges too -- that is for undirected edges.
+            @subedges.map({ [$_.Str, Pair.new($_.value, $_.key).Str] }).flat.Set;
         }
 
-        # This might be too permissive -- additional _directed_ edges will be picked-up.
-        #my @subvertexes = [|@edges».key, |@edges».value].unique;
-        #my @edgesNew = self.edges(:dataset).grep({ $_<from> ∈ @subvertexes && $_<to> ∈ @subvertexes });
         my @edgesNew = self.edges(:dataset).grep({ Pair.new($_<from>, $_<to>).Str ∈ $set });
 
         my $vertex-coordinates =
