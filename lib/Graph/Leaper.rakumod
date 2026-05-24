@@ -43,9 +43,9 @@ class Graph::Leaper is Graph {
     }
 
     multi method new(
-            $moves is copy,
-            $rows is copy,
-            $columns is copy,
+            $moves! is copy,
+            $rows! is copy,
+            $columns! is copy,
             Str:D :$prefix = '',
             Str:D :$sep = '_',
             Bool:D :d(:directed-edges(:$directed)) = False
@@ -53,9 +53,11 @@ class Graph::Leaper is Graph {
 
         if $moves.isa(Whatever) {
             $moves = [(-2, -1), (-2, 1), (-1, 2), (1, 2)]
+        } elsif $moves ~~ (Array:D | List:D | Seq:D) && $moves.elems == 2 && $moves.all ~~ Int:D && $moves.all ≥ 0 {
+            $moves = (-$moves.head, -$moves.tail, $moves.tail, $moves.head).sort.combinations(2).grep({ $_».abs.sum == $moves.sum }).unique.Array
         }
 
-        die 'The first argument is expected to be a list of length-two lists of integers.'
+        die 'The first argument is expected to be a list of two non-negative integers, a list of length-two lists of non-negative integers, or Whatever'
         unless check-moves($moves);
 
         ($rows, $columns) = Graph::Utilities::ProcessPairedUIntArgs($rows, $columns, 8);
