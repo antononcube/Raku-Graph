@@ -720,6 +720,36 @@ class Graph
     }
 
     #======================================================
+    # Graph distance
+    #======================================================
+    #| Give the distance from source vertex start to the target vertex.
+    #| C<$s> -- Start vertex.
+    #| C<$t> -- End vertex; with Whatever the distance from $s to all vertices is given.
+    #| C<:$method> -- Method to use; one of "a-star", "dijkstra", "unit-weight" or Whatever.
+    method distance(Str:D $s, $t = Whatever, :$method is copy = Whatever) {
+        die 'The second argument is expected to be a string or Whatever'
+        unless $t.isa(Whatever) || $t ~~ Str:D;
+
+        if $method.isa(Whatever) { $method = 'Dijkstra' }
+
+        return do if $method.lc ∈ <unit-weight unitweight> {
+            # "UnitWeight" method is to use the weight 1 for every edge
+            my $g = self.clone;
+            $g.adjacency-list = $g.adjacency-list.map({ $_.key => $_.value.map({ $_.key => 1 }).Hash });
+            $g.distance($s, $t, :$method)
+        } elsif $t.isa(Whatever) {
+            # "Dijkstra" can be used for graphs with positive edge weights only
+            self!dijkstra-shortest-path-distances($s)
+        } elsif $method.lc eq 'dijkstra' {
+            self!dijkstra-shortest-path($s, $t).elems
+        } elsif $method ∈ <a* a-star a-star-search> {
+            self!a-star-shortest-path($s, $t).elems
+        } else {
+            die 'Do not know how to process the given method'
+        }
+    }
+
+    #======================================================
     # Find paths
     #======================================================
     #| Find paths
