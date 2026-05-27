@@ -63,7 +63,8 @@ subtest {
     isa-ok $g.distance-matrix(3, :pairs), Map:D, 'expected result, :3max-distance, hash 1';
     is $g.distance-matrix(3, :pairs).values.all ~~ Numeric:D, True, 'expected result, :3max-distance, hash 2';
 
-    is-deeply $g.distance-matrix(2).flat.Bag, List:D, 'expected result, list 1';
+    is-deeply $g.distance-matrix.flat(:hammer).Bag, (0=>9,3=>16,4=>4,1=>24,2=>28).Bag, 'expected result, Whatever';
+    is-deeply $g.distance-matrix(2).flat.Bag, (Pair.new(Inf,20),1=>24,2=>28,0=>9).Bag, 'expected result, 2';
 
 }, 'Grid graph distance matrix';
 
