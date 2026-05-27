@@ -11,6 +11,7 @@ class Graph::Relation is Graph {
                      $w is copy = Whatever,              #= Elements to find relationships; if Whatever then is the same as @v.
                      :with(:&as) is copy = WhateverCode, #= Function to apply to each element for making it a graph vertex.
                      :d(:directed-edges(:$directed)) is copy = Whatever, #= Whether the graph be directed or not; if Whatever becomes False if &f(v1, v2) == &f(v2, v1) for all argument pairs.
+                     :$vertex-coordinates = Whatever
                      ) {
         if &as.isa(WhateverCode) { &as = {$_} }
         given $w {
@@ -44,7 +45,10 @@ class Graph::Relation is Graph {
             }
         }
 
-        my Graph $graph = Graph.new(@edges, :$directed);
+        die 'The argument :$vertex-coordinates is expected to be a hashmap or Whatever.'
+        unless $vertex-coordinates.isa(Whatever) || $vertex-coordinates ~~ Map:D;
+
+        my Graph $graph = Graph.new(@edges, :$directed, :$vertex-coordinates);
         return $graph;
     }
 }
