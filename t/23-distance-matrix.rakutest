@@ -1,0 +1,68 @@
+use v6.d;
+use Test;
+
+#use lib <. lib>;
+use Graph;
+use Graph::Grid;
+
+## 1
+subtest {
+    my $g = Graph::Grid.new(6, 6, :!directed);
+
+    is $g.distance('0_0', '5_5'), 10, '0_0 to 5_5';
+    is $g.distance('0_0', '0_0'), 0, '0_0 to 0_0';
+
+    is-deeply
+            $g.distance('0_0'),
+            (0, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 6, 2, 3, 4, 5, 6, 7, 3, 4, 5, 6, 7, 8, 4, 5, 6, 7, 8, 9, 5, 6, 7, 8, 9, 10),
+            'from 0_0';
+
+    is-deeply
+            $g.distance('0_0'):pairs,
+            {"0_0" => 0, "0_1" => 1, "0_2" => 2, "0_3" => 3, "0_4" => 4, "0_5" => 5, "1_0" => 1, "1_1" => 2, "1_2" => 3, "1_3" => 4, "1_4" => 5, "1_5" => 6, "2_0" => 2, "2_1" => 3, "2_2" => 4, "2_3" => 5, "2_4" => 6, "2_5" => 7, "3_0" => 3, "3_1" => 4, "3_2" => 5, "3_3" => 6, "3_4" => 7, "3_5" => 8, "4_0" => 4, "4_1" => 5, "4_2" => 6, "4_3" => 7, "4_4" => 8, "4_5" => 9, "5_0" => 5, "5_1" => 6, "5_2" => 7, "5_3" => 8, "5_4" => 9, "5_5" => 10}
+            'from 0_0, pairs';
+
+}, "Full grid graph";
+
+
+## 2
+subtest {
+    my $g0 = Graph::Grid.new(6, 6, :!directed);
+    my $g = $g0.clone.vertex-delete($g0.vertex-list.grep({ $_.split('_', :skip-empty)».Int.sum == 5 }));
+
+    is $g.distance('0_0', '5_5'), Inf, '0_0 to 5_5';
+    is $g.distance('0_0', '0_0'), 0, '0_0 to 0_0';
+
+    my %distances = $g0.distance('0_0', :pairs).map({ $_.key => $_.value.split('_', :skip-empty)».Int.sum ≤ 5 ?? $_.value !! Inf });
+    %distances = $g.vertex-list Z=> %distances{|$g.vertex-list};
+
+    is-deeply
+            $g.distance('0_0'),
+            %distances{|$g.vertex-list},
+            'from 0_0';
+
+    is-deeply
+            $g.distance('0_0'):pairs,
+            %distances,
+            'from 0_0, pairs';
+
+}, "Disconnected grid graph";
+
+## 3
+subtest {
+    my $g = Graph::Grid.new(3, 3, :!directed);
+
+    isa-ok $g.distance-matrix, List:D, 'expected result, list 1';
+    is $g.distance-matrix.all ~~ List:D, True, 'expected result, list 2';
+
+    isa-ok $g.distance-matrix(:pairs), Map:D, 'expected result, hash 1';
+    is $g.distance-matrix(:pairs).values.all ~~ Numeric:D, True, 'expected result, hash 2';
+
+    isa-ok $g.distance-matrix(3, :pairs), Map:D, 'expected result, :3max-distance, hash 1';
+    is $g.distance-matrix(3, :pairs).values.all ~~ Numeric:D, True, 'expected result, :3max-distance, hash 2';
+
+    is-deeply $g.distance-matrix(2).flat.Bag, List:D, 'expected result, list 1';
+
+}, 'Grid graph distance matrix';
+
+done-testing;
