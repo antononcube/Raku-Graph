@@ -1,5 +1,9 @@
 Changes of the Raku package "Graph".
 
+2026-05-27 0.0.38
+    - Graph::Relation can be initialized with vertex coordinates.
+    - Implemented the methods distance and distance-matrix.
+
 2026-05-24 0.0.37
     - Implemented Graph::Leaper.
         - Graph::Leaper is generalization of Graph::KnightTour.
