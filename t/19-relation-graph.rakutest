@@ -54,11 +54,13 @@ subtest {
 
 ## 2
 subtest {
-    my $g =Graph::Relation.new( {$^a gcd $^b == 1}, (1...7), directed => Whatever);
+    my %vertex-coordinates = (1...7).map({ $_ => [$_, 0]});
+    my $g =Graph::Relation.new( {$^a gcd $^b == 1}, (1...7), directed => Whatever, :%vertex-coordinates);
     #say $g.wl(VertexLabels => "Name");
     is $g.eqv($g2), True;
     is $g.directed, False, 'is not directed';
-}, "Coprime";
+    is-deeply $g.vertex-coordinates, (1...7).map({ $_ => [$_, 0]}).Hash, 'expected coordinates';
+}, "Coprime with coordinates";
 
 ## 3
 subtest {
