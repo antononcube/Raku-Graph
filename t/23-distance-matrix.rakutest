@@ -5,6 +5,8 @@ use Test;
 use Graph;
 use Graph::Grid;
 
+plan *;
+
 ## 1
 subtest {
     my $g = Graph::Grid.new(6, 6, :!directed);

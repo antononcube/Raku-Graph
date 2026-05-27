@@ -6,6 +6,8 @@ use Graph;
 use Graph::Leaper;
 use Graph::KnightTour;
 
+plan *;
+
 ## 1
 subtest {
     my @moves = (-2, -1), (-2, 1), (-1, 2), (1, 2);
