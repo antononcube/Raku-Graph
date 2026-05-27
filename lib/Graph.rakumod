@@ -726,9 +726,12 @@ class Graph
     #| C<$s> -- Start vertex.
     #| C<$t> -- End vertex; with Whatever the distance from $s to all vertices is given.
     #| C<:$method> -- Method to use; one of "a-star", "dijkstra", "unit-weight" or Whatever.
-    method distance(Str:D $s, $t = Whatever, :$method is copy = Whatever) {
+    #| C<:$pairs> -- Whether to return vertex-distance pairs or not.
+    method distance(Str:D $s, $t = Whatever, :$method is copy = Whatever, Bool:D :p(:$pairs) = False) {
         die 'The second argument is expected to be a string or Whatever'
         unless $t.isa(Whatever) || $t ~~ Str:D;
+
+        if $t ~~ Str:D && $s eq $t { return 0 };
 
         if $method.isa(Whatever) { $method = 'Dijkstra' }
 
@@ -739,13 +742,33 @@ class Graph
             $g.distance($s, $t, :$method)
         } elsif $t.isa(Whatever) {
             # "Dijkstra" can be used for graphs with positive edge weights only
-            self!dijkstra-shortest-path-distances($s)
+            my %distances = self!dijkstra-shortest-path-distances($s);
+            my %default = self.vertex-list X=> Inf;
+            %distances = %default , %distances;
+            $pairs ?? %distances !! %distances{|self.vertex-list}.List
         } elsif $method.lc eq 'dijkstra' {
-            self!dijkstra-shortest-path($s, $t).elems
+            my $res = self!dijkstra-shortest-path($s, $t).elems;
+            $res == 0 ?? Inf !! $res - 1
         } elsif $method ∈ <a* a-star a-star-search> {
-            self!a-star-shortest-path($s, $t).elems
+            my $res = self!a-star-shortest-path($s, $t).elems;
+            $res == 0 ?? Inf !! $res - 1
         } else {
-            die 'Do not know how to process the given method'
+            die 'Do not know how to process the given method.'
+        }
+    }
+
+    method distance-matrix($max-distance = Whatever, Bool:D :p(:$pairs) = False) {
+
+        die 'The first argument is expected to be an integer or Whatever.'
+        unless $max-distance.isa(Whatever) || $max-distance ~~ Int:D;
+
+        return do if $pairs {
+            my %ds = self.vertex-list.map({ $_ => self.distance($_, :pairs) });
+            my %res = %ds.kv.map( -> $k, %v { %v.map({ ($k, $_.key) => $_.value }) }).flat;
+            $max-distance.isa(Whatever) ?? %res !! %res.map({ $_.key => $_.value > $max-distance ?? Inf !! $_.value }).Hash
+        } else {
+            my @res = self.vertex-list.map({ self.distance($_, :!pairs) });
+            $max-distance.isa(Whatever) ?? @res !! @res.deepmap({ $_ > $max-distance ?? Inf !! $_ })».List.List
         }
     }
 
