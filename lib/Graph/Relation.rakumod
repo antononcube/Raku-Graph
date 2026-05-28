@@ -27,11 +27,11 @@ class Graph::Relation is Graph {
         my @edges;
         given $directed {
             when $_ ~~ Bool:D {
-                @edges = (@v X $w.Array).map({ &f($_.head, $_.tail) ?? Pair.new($_.head.&as.Str, $_.tail.&as.Str) !! Empty });
+                @edges = (@v.Array X $w.Array).map({ &f($_.head, $_.tail) ?? Pair.new($_.head.&as.Str, $_.tail.&as.Str) !! Empty });
             }
             when Whatever {
                 $directed = False;
-                for (@v X $w.Array) {
+                for (@v.Array X $w.Array) {
                     my $res = &f($_.head, $_.tail);
                     if $res {
                         @edges.push(Pair.new($_.head.&as.Str, $_.tail.&as.Str))
