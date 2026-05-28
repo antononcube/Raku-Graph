@@ -4,6 +4,7 @@ use BinaryHeap;
 use Data::TypeSystem;
 use Graph::Bipartitish;
 use Graph::Componentish;
+use Graph::DistanceFindish;
 use Graph::Formatish;
 use Graph::MinCuttish;
 use Graph::Neighborhoodish;
@@ -12,6 +13,7 @@ use Graph::Tourish;
 class Graph
         does Graph::Bipartitish
         does Graph::Componentish
+        does Graph::DistanceFindish
         does Graph::Formatish
         does Graph::MinCuttish
         does Graph::Neighborhoodish
@@ -645,33 +647,6 @@ class Graph
     }
 
     #------------------------------------------------------
-    # Dijkstra's algorithm to all other vertexes
-    method !dijkstra-shortest-path-distances(Str $start) {
-        my %distances;
-        my %visited;
-        my @queue = [[$start, 0], ];
-
-        my BinaryHeap::MinHeap[{ $^a[1] <=> $^b[1] }] $h;
-        $h.push(@queue.head);
-
-        while $h {
-            my ($current, $dist) = $h.pop;
-
-            next if %visited{$current}:exists;
-            %visited{$current} = True;
-            %distances{$current} = $dist;
-
-            for %.adjacency-list{$current}.keys -> $neighbor {
-                unless %visited{$neighbor}:exists {
-                    $h.push([$neighbor, $dist + %.adjacency-list{$current}{$neighbor}] );
-                }
-            }
-        }
-
-        return %distances;
-    }
-
-    #------------------------------------------------------
     # A* search
     method !a-star-shortest-path(Str $start, Str $end, :&heuristic is copy = WhateverCode) {
         # Placeholder for actual heuristic function
@@ -740,35 +715,59 @@ class Graph
             my $g = self.clone;
             $g.adjacency-list = $g.adjacency-list.map({ $_.key => $_.value.map({ $_.key => 1 }).Hash });
             $g.distance($s, $t, :$method)
-        } elsif $t.isa(Whatever) {
-            # "Dijkstra" can be used for graphs with positive edge weights only
-            my %distances = self!dijkstra-shortest-path-distances($s);
-            my %default = self.vertex-list X=> Inf;
-            %distances = %default , %distances;
-            $pairs ?? %distances !! %distances{|self.vertex-list}.List
         } elsif $method.lc eq 'dijkstra' {
-            my $res = self!dijkstra-shortest-path($s, $t).elems;
-            $res == 0 ?? Inf !! $res - 1
+            # "Dijkstra" can be used for graphs with positive edge weights only
+           if $t.isa(Whatever) {
+               my %distances = self!dijkstra-shortest-path-distances($s);
+               my %default = self.vertex-list X=> Inf;
+               %distances = %default, %distances;
+               $pairs ?? %distances !! %distances{|self.vertex-list}.List
+           } else {
+               my $res = self!dijkstra-shortest-path($s, $t).elems;
+               $res == 0 ?? Inf !! $res - 1
+           }
         } elsif $method ∈ <a* a-star a-star-search> {
-            my $res = self!a-star-shortest-path($s, $t).elems;
-            $res == 0 ?? Inf !! $res - 1
+            if $t.isa(Whatever) {
+
+            } else {
+                my $res = self!a-star-shortest-path($s, $t).elems;
+                $res == 0 ?? Inf !! $res - 1
+            }
         } else {
             die 'Do not know how to process the given method.'
         }
     }
 
-    method distance-matrix($max-distance = Whatever, Bool:D :p(:$pairs) = False) {
+    method distance-matrix($max-distance = Whatever, :$method is copy = Whatever, Bool:D :p(:$pairs) = False) {
 
         die 'The first argument is expected to be an integer or Whatever.'
         unless $max-distance.isa(Whatever) || $max-distance ~~ Int:D;
 
-        return do if $pairs {
-            my %ds = self.vertex-list.map({ $_ => self.distance($_, :pairs) });
-            my %res = %ds.kv.map( -> $k, %v { %v.map({ ($k, $_.key) => $_.value }) }).flat;
-            $max-distance.isa(Whatever) ?? %res !! %res.map({ $_.key => $_.value > $max-distance ?? Inf !! $_.value }).Hash
-        } else {
-            my @res = self.vertex-list.map({ self.distance($_, :!pairs) });
-            $max-distance.isa(Whatever) ?? @res !! @res.deepmap({ $_ > $max-distance ?? Inf !! $_ })».List.List
+        if $method.isa(Whatever) { $method = 'floyd-warshal'}
+        return do if $method.lc ∈ <floyd-warshal floydwarshall> {
+            my %res = self!floyd-warshall();
+            my @mat = |%res<dist>;
+            if $pairs {
+                my %res = do gather {
+                for self.vertex-list.kv -> $i, $x {
+                    for self.vertex-list.kv -> $j, $y {
+                        take ($x, $y) => @mat[$i][$j]
+                    }
+                }
+                }
+                $max-distance.isa(Whatever) ?? %res !! %res.map({ $_.key => $_.value > $max-distance ?? Inf !! $_.value }).Hash
+            } else {
+                $max-distance.isa(Whatever) ?? @mat !! @mat.deepmap({ $_ > $max-distance ?? Inf !! $_ })».List.List
+            }
+        } elsif $method.lc ∈ <dijkstra unit-weight unitweight> {
+            if $pairs {
+                my %ds = self.vertex-list.map({ $_ => self.distance($_, :pairs) });
+                my %res = %ds.kv.map(-> $k, %v { %v.map({ ($k, $_.key) => $_.value }) }).flat;
+                $max-distance.isa(Whatever) ?? %res !! %res.map({ $_.key => $_.value > $max-distance ?? Inf !! $_.value }).Hash
+            } else {
+                my @res = self.vertex-list.map({ self.distance($_, :!pairs) });
+                $max-distance.isa(Whatever) ?? @res !! @res.deepmap({ $_ > $max-distance ?? Inf !! $_ })».List.List
+            }
         }
     }
 
