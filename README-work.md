@@ -288,8 +288,9 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 - [ ] TODO Distances
   - [X] DONE Graph distance
     - See shortest path.
-  - [ ] TODO Graph distance matrix
-    - Again, requires choosing a matrix Raku class or package. 
+  - [X] DONE Graph distance matrix
+    - Again, requires choosing a matrix Raku class or package.
+      - Just using a dense matrix for now. 
 - [X] DONE Longest shortest paths
   - [X] DONE Vertex eccentricity
   - [X] DONE Graph radius
