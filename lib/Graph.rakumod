@@ -743,8 +743,9 @@ class Graph
         die 'The first argument is expected to be an integer or Whatever.'
         unless $max-distance.isa(Whatever) || $max-distance ~~ Int:D;
 
-        if $method.isa(Whatever) { $method = 'floyd-warshal'}
-        return do if $method.lc ∈ <floyd-warshal floydwarshall> {
+        if $method.isa(Whatever) { $method = 'floyd-warshall' }
+
+        return do if $method.lc ∈ <floyd-warshall floydwarshall> {
             my %res = self!floyd-warshall();
             my @mat = |%res<dist>;
             if $pairs {
@@ -761,11 +762,11 @@ class Graph
             }
         } elsif $method.lc ∈ <dijkstra unit-weight unitweight> {
             if $pairs {
-                my %ds = self.vertex-list.map({ $_ => self.distance($_, :pairs) });
+                my %ds = self.vertex-list.map({ $_ => self.distance($_, :$method, :pairs) });
                 my %res = %ds.kv.map(-> $k, %v { %v.map({ ($k, $_.key) => $_.value }) }).flat;
                 $max-distance.isa(Whatever) ?? %res !! %res.map({ $_.key => $_.value > $max-distance ?? Inf !! $_.value }).Hash
             } else {
-                my @res = self.vertex-list.map({ self.distance($_, :!pairs) });
+                my @res = self.vertex-list.map({ self.distance($_, :$method, :!pairs) });
                 $max-distance.isa(Whatever) ?? @res !! @res.deepmap({ $_ > $max-distance ?? Inf !! $_ })».List.List
             }
         }
