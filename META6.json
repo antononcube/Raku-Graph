@@ -23,6 +23,7 @@
     "Graph::CompleteKaryTree": "lib/Graph/CompleteKaryTree.rakumod",
     "Graph::Componentish": "lib/Graph/Componentish.rakumod",
     "Graph::Cycle": "lib/Graph/Cycle.rakumod",
+    "Graph::DistanceFindish": "lib/Graph/DistanceFindish.rakumod",
     "Graph::Distribution": "lib/Graph/Distribution.rakumod",
     "Graph::Formatish": "lib/Graph/Formatish.rakumod",
     "Graph::Grid": "lib/Graph/Grid.rakumod",
