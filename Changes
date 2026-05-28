@@ -1,6 +1,6 @@
 Changes of the Raku package "Graph".
 
-2026-05-27 0.0.38
+2026-05-28 0.0.38
     - Graph::Relation can be initialized with vertex coordinates.
     - Implemented the methods distance and distance-matrix.
 
