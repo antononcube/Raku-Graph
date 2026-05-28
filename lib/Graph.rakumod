@@ -738,6 +738,13 @@ class Graph
         }
     }
 
+    #======================================================
+    # Graph distance matrix
+    #======================================================
+    #| Give the matrix of distances between vertices for the graph object.
+    #| C<:$max-distance> -- Give the distances less or equal to $max-distance; others are put to Inf.
+    #| C<:$method> -- Method to use; one of "a-star", "dijkstra", "floyd-warshall", "unit-weight", or Whatever.
+    #| C<:$pairs> -- Whether to return vertex-vertex-to-distance pairs or not.
     method distance-matrix($max-distance = Whatever, :$method is copy = Whatever, Bool:D :p(:$pairs) = False) {
 
         die 'The first argument is expected to be an integer or Whatever.'
