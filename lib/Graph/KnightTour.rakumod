@@ -10,6 +10,9 @@ class Graph::KnightTour is Graph {
     my @figure-moves = (-2, -1), (-2, 1), (-1, 2), (1, 2);
 
     multi method new($rows! is copy, $columns is copy = Whatever, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
+        # Since a general leaper graph message is also issued this message,
+        # although specialized, would be "too much."
+        # note 'Directed knight-tour graphs are not implemented.' if $directed;
 
         ($rows, $columns) = Graph::Utilities::ProcessPairedUIntArgs($rows, $columns, 8);
         die 'The first argument is expected to be a positive integer or Whatever.'
