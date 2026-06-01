@@ -26,9 +26,7 @@ class Graph::Leaper is Graph {
     }
 
     submethod BUILD(:@!moves, :$!rows!, :$!columns!, Str:D :$prefix = '', Str:D :$sep = '_', Bool:D :d(:directed-edges(:$directed)) = False) {
-        if $directed {
-            note 'Directed leaper graphs are not implemented.';
-        }
+        note 'Directed leaper graphs are not implemented.' if $directed;
 
         for ^$!rows -> $row {
             for ^$!columns -> $col {
