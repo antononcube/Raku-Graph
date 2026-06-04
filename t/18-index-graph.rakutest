@@ -15,7 +15,7 @@ subtest {
 
 ## 2
 subtest {
-        is-deeply Graph.new(^5, []).adjacency-list, {0 => {}, 1 => {}, 2 => {}, 3 => {}, 4 => {}};
+        is-deeply Graph.new(^5, []).adjacency-map, {0 => {}, 1 => {}, 2 => {}, 3 => {}, 4 => {}};
         is-deeply Graph.new((^5), []).index-graph(10).vertex-list, <10 11 12 13 14>».Str;
 }, "indexed graph over no edges";
 
