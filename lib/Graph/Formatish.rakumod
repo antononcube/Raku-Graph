@@ -6,6 +6,13 @@ role Graph::Formatish
         does Graph::HighlightProcessing {
 
     #------------------------------------------------------
+    method json() {
+        my $vertexes = '[ "' ~ self.vertex-list.join('", "') ~ '" ]';
+        my $edges = '[ ' ~ self.edges(:dataset).map({ '{"from":"' ~ $_<from> ~ '", "to":"' ~ $_<to> ~ '", "weight":' ~ $_<weight> ~ '}' }).join(", ") ~ ' ]';
+        return '{"vertexes": ' ~ $vertexes ~ ', "edges"' ~ $edges ~ '}'
+    }
+
+    #------------------------------------------------------
     sub to-wl-value($x) {
         return do given $x {
             when ($_ ~~ Str:D) && ($_ ~~ / ^ '`' .* '`' $ /) { $_.substr(1, $_.chars - 2) }
