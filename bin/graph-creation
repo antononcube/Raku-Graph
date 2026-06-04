@@ -8,15 +8,40 @@ my %*SUB-MAIN-OPTS = :named-anywhere;
 
 my @knownDistributions = <BarabasiAlbert Bernoulli Price Spatial Uniform WattsStrogatz>;
 
+my @knownGraphs =
+        <Butterfly Complete Circulant CompleteKaryTree Cycle Grid
+         Harary HexagonalGrid Hypercube KnightTour Leaper
+         Path Petersen Star TriangularGrid Wheel>;
+
+sub formatted(Graph:D $g, Str:D $format) {
+    return do given $format.lc {
+        when $_ ∈ <dot graphviz graphviz-dot> { $g.dot }
+        when $_ ∈ <wl wolfram wolfram-language> { $g.wl }
+        when $_ ∈ <json> { $g.json }
+        default { $g.raku }
+    }
+}
+
 sub MAIN(
-        Str:D $name = 'Random',
-        Str:D :d(:$distribution) = 'Uniform',
-        Str:D :f(:$format) = 'dot',
+        Str:D $name is copy = 'Random',
+        Str:D :dist(:$distribution) is copy = 'Uniform',
+        Str:D :$format = 'dot',
         *%args
          ) {
+
     if $name.lc eq 'random' {
+        # This is implementation seems to be very contrived.
+        # Ideally:
+        # - The class names are not hard-coded
+        # - The attributes of the classes are extracted automatically
+
         die "Random graphs distribution argument is expected to be one of \"{@knownDistributions.join('", "')}\"."
         unless $distribution.lc ∈ @knownDistributions».lc;
+
+        $distribution =
+                $distribution.tc
+                .subst(/:i BarabasiAlbert | 'barabasi-albert' /, 'BarabasiAlbert')
+                .subts(/:i WattsStrogatz | 'watts-strogatz' /, 'WattsStrogatz');
 
         my $distObj;
         try {
@@ -25,21 +50,41 @@ sub MAIN(
         }
 
         if $! {
-            die 'Cannot create the specified distribution with the given parameters.'
+            die 'Cannot create the specified random graph distribution with the given parameters.'
         }
 
         my $g = Graph::Random.new($distObj);
 
-        say do given $format.lc {
-            when $_ ∈ <dot graphviz graphviz-dot> { $g.dot() }
-            when $_ ∈ <wl wolfram wolfram-language> { $g.wl() }
-            when $_ ∈ <mermaid mermaid.js mermaid-js>  { $g.mermaid() }
-            # Requires dependency on JSON::Fast
-            # when $_ ∈ <json>  { $g.edges(:dataset) }
-            default {
-                $g.raku
-            }
+        say formatted($g, $format);
+
+    } elsif $name.lc ∈ @knownGraphs».lc {
+
+        $name =
+                $name.tc
+                .subst(/:i CompleteKaryTree | 'complete-kary-tree'/, 'CompleteKaryTree')
+                .subst(/:i HexagonalGrid | 'hexagonal-grid' /, 'HexagonalGrid')
+                .subst(/:i KnightTour | 'knight-tour' /, 'KnightTour')
+                .subst(/:i TriangularGrid | 'triangular-grid' /, 'TriangularGrid');
+
+        my %creator-args = %args.map({
+            if $_.key ∈ <rows columns n k base jumps dimension> { $_.key => $_.value.Numeric }
+            elsif $_.key ∈ <path> { $_.key => $_.value.split(',', :skip-empty)».Str }
+            elsif $_.key ∈ <moves> { $_.key => $_.value.split(',', :skip-empty)».Int }
+            else { $_ }
+        });
+
+        my $g;
+        try {
+            $g = ::("Graph::$name").new(|%creator-args);
         }
+
+        if $! {
+            die 'Cannot create the specified graph with the given parameters.'
+        }
+
+        say formatted($g, $format);
+    } else {
+        die "The first argument is expected to be one of {@knownGraphs.push('Random').sort}."
     }
 
 }
