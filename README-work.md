@@ -223,6 +223,17 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 
 -------
 
+## CLI
+
+The package provides the Command Line Interface (CLI) script `graph-creation` that can be used to 
+create graphs and export them to different formats. For example:
+
+```shell
+graph-creation Grid --rows=3 --columns=2 --format=dot
+```
+
+-------
+
 ## TODO
 
 ### Main, core features
@@ -407,15 +418,17 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 ### CLI
 
 - [ ] TODO Come up with a meaningful CLI script functionalities exposure
-  - [ ] One script or separate creation and graph-operations scripts?
+  - [X] One script or separate creation and graph-operations scripts?
+    - At first just one script, `graph-creation`.
+    - Later on, one script can be used for, say, both creation and verification.
   - [ ] What is the set of commands?
 - [ ] TODO CLI functionalities
-  - [ ] TODO Graph creation
+  - [X] DONE Graph creation
   - [ ] TODO Graph tests over graphs given with JSON files
-  - [ ] TODO Produce the Graphviz DOT, WL, Mermaid, JSON representations
-    - [ ] TODO For specified with parameters graphs
+  - [ ] DONE Produce the Graphviz DOT, WL, Mermaid, JSON representations
+    - [X] DONE For specified with parameters graphs
     - [ ] TODO For JSON files
-- [ ] TODO Understanding commands like "hamiltonian path" or "grid-graph"
+- [ ] TODO Understanding commands like "hamiltonian path" or "grid graph"
   - Not just "hamiltonian-path" and "grid-graph".
  
 ### Tests

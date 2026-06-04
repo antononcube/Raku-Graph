@@ -156,22 +156,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-2 --- 4
-4 --- 9
-3 --- 4
-6 --- 7
+11 --- 12
+1 --- 5
+12 --- 5
 2 --- 6
-3 --- 8
-2 --- 8
+6 --- 7
 10 --- 9
 10 --- 2
+3 --- 8
+2 --- 3
+3 --- 4
+4 --- 9
+2 --- 4
+2 --- 8
 12 --- 2
-11 --- 12
-12 --- 5
 2 --- 7
 1 --- 7
-1 --- 5
-2 --- 3
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -198,7 +198,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [11 12 5 1 7 6 2 10 9 4 3 8]
 ```
 
 Here we find a cycle:
@@ -265,6 +265,34 @@ The visualizations with "JavaScript::D3" are very capricious. Currently they:
 
 The points above were the main reasons to develop the DOT format visualization. 
 Most of the documentation notebooks show the graphs using both "JavaScript::D3" and DOT-SVG. 
+
+-------
+
+## CLI
+
+The package provides the Command Line Interface (CLI) script `graph-creation` that can be used to 
+create graphs and export them to different formats. For example:
+
+```shell
+graph-creation Grid --rows=3 --columns=2 --format=dot
+```
+```
+# graph {
+# "1_0" [pos="0,1!"];
+# "1_1" [pos="1,1!"];
+# "2_0" [pos="0,2!"];
+# "0_0" [pos="0,0!"];
+# "2_1" [pos="1,2!"];
+# "0_1" [pos="1,0!"]
+# "1_0" -- "2_0" 
+# "2_0" -- "2_1" 
+# "1_1" -- "2_1" 
+# "1_0" -- "1_1" 
+# "0_1" -- "1_1" 
+# "0_0" -- "1_0" 
+# "0_0" -- "0_1" 
+# }
+```
 
 -------
 
@@ -452,15 +480,17 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 ### CLI
 
 - [ ] TODO Come up with a meaningful CLI script functionalities exposure
-  - [ ] One script or separate creation and graph-operations scripts?
+  - [X] One script or separate creation and graph-operations scripts?
+    - At first just one script, `graph-creation`.
+    - Later on, one script can be used for, say, both creation and verification.
   - [ ] What is the set of commands?
 - [ ] TODO CLI functionalities
-  - [ ] TODO Graph creation
+  - [X] DONE Graph creation
   - [ ] TODO Graph tests over graphs given with JSON files
-  - [ ] TODO Produce the Graphviz DOT, WL, Mermaid, JSON representations
-    - [ ] TODO For specified with parameters graphs
+  - [ ] DONE Produce the Graphviz DOT, WL, Mermaid, JSON representations
+    - [X] DONE For specified with parameters graphs
     - [ ] TODO For JSON files
-- [ ] TODO Understanding commands like "hamiltonian path" or "grid-graph"
+- [ ] TODO Understanding commands like "hamiltonian path" or "grid graph"
   - Not just "hamiltonian-path" and "grid-graph".
  
 ### Tests
