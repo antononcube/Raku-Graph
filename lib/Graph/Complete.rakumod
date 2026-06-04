@@ -21,9 +21,12 @@ class Graph::Complete is Graph {
             my @vertices;
             my @edges;
             my %vertex-coordinates;
+            my $scale = 3;
+            my $y-factor = (@!n.elems - 1) * $scale;
+            my $max-k = @!n.max;
             for @!n.kv -> $i, $k {
                 my @level = "{$prefix}{$i}_" X~ (^$k);
-                my %coords = @level Z=> cross($i, (^$k) <<->> (($k -1) / 2));
+                my %coords = @level Z=> cross($i * $scale, ((^$k) <<->> (($k -1) / 2)) <</>> ($max-k / $y-factor));
                 %vertex-coordinates = %vertex-coordinates , %coords;
                 if $i > 0 {
                     my @level-edges = @vertices X=> @level;
