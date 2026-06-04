@@ -22,7 +22,7 @@ class Graph::Random is Graph {
                         do if $_ ~~ (Graph::Distribution::Bernoulli:D) {
                             @all-edges.grep({ rand ≤ $!dist.p });
                         } else {
-                            @all-edges.pick($!dist.edges-count);
+                            @all-edges.pick($!dist.edge-count);
                         }
 
                 for @all-edges -> ($from, $to) {
@@ -40,7 +40,7 @@ class Graph::Random is Graph {
             }
 
             when Graph::Distribution::BarabasiAlbert:D {
-                self!generate-barabasi-albert-graph($!dist.vertex-count, $!dist.edges-count, :$prefix);
+                self!generate-barabasi-albert-graph($!dist.vertex-count, $!dist.edge-count, :$prefix);
             }
 
             when Graph::Distribution::Spatial:D {
@@ -48,7 +48,7 @@ class Graph::Random is Graph {
             }
 
             when Graph::Distribution::Price:D {
-                self!generate-de-solla-price-graph($!dist.vertex-count, $!dist.edges-count, $!dist.attractiveness, :$prefix);
+                self!generate-de-solla-price-graph($!dist.vertex-count, $!dist.edge-count, $!dist.attractiveness, :$prefix);
             }
 
             when Graph::Distribution::WattsStrogatz:D {
@@ -147,15 +147,15 @@ class Graph::Random is Graph {
     }
 
     #------------------------------------------------------
-    multi method new(Int:D $vertex-count, Int:D $edges-count, Str:D $prefix = '',
+    multi method new(Int:D $vertex-count, Int:D $edge-count, Str:D $prefix = '',
                      Bool:D :d(:directed-edges(:$directed)) = False) {
-        my $dist = Graph::Distribution::Uniform.new(:$vertex-count, :$edges-count);
+        my $dist = Graph::Distribution::Uniform.new(:$vertex-count, :$edge-count);
         self.bless(:$dist, :$prefix, :$directed);
     }
 
-    multi method new(Int:D :v(:$vertex-count), Int:D :n(:$edges-count), Str:D :$prefix = '',
+    multi method new(Int:D :v(:$vertex-count), Int:D :n(:$edge-count), Str:D :$prefix = '',
                      Bool:D :d(:directed-edges(:$directed)) = False) {
-        my $dist = Graph::Distribution::Uniform.new(:$vertex-count, :$edges-count);
+        my $dist = Graph::Distribution::Uniform.new(:$vertex-count, :$edge-count);
         self.bless(:$dist, :$prefix, :$directed);
     }
 
