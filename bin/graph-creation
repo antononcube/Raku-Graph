@@ -1,0 +1,47 @@
+#!/usr/bin/env raku
+use v6.d;
+
+use Graph;
+use Graph::Classes;
+
+my %*SUB-MAIN-OPTS = :named-anywhere;
+
+my @knownDistributions = <BarabasiAlbert Bernoulli Price Spatial Uniform WattsStrogatz>;
+
+sub MAIN(
+        Str:D $name = 'Random',
+        Str:D :d(:$distribution) = 'Uniform',
+        Str:D :f(:$format) = 'dot',
+        *%args
+         ) {
+    if $name.lc eq 'random' {
+        die "Random graphs distribution arugment is expected to be one of \"{@knownDistributions.join('", "')}\"."
+        unless $distribution.lc ∈ @knownDistributions».lc;
+
+        my $distObj;
+        try {
+            my %dist-args = %args.grep({ $_.key ∈ <vertex-count edge-count radius dimension p> }).map({ $_.key => $_.value.Numeric });
+            say (%dist-args);
+            $distObj = ::("Graph::Distribution::$distribution").new(|%dist-args);
+            say (:$distObj);
+        }
+
+        if $! {
+            die 'Cannot create the specified distribution with the given parameters.'
+        }
+
+        my $g = Graph::Random.new($distObj);
+
+        say do given $format.lc {
+            when $_ ∈ <dot graphviz graphviz-dot> { $g.dot() }
+            when $_ ∈ <wl wolfram wolfram-language> { $g.wl() }
+            when $_ ∈ <mermaid mermaid.js mermaid-js>  { $g.mermaid() }
+            # Requires dependency on JSON::Fast
+            # when $_ ∈ <json>  { $g.edges(:dataset) }
+            default {
+                $g.raku
+            }
+        }
+    }
+
+}
