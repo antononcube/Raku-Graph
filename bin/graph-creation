@@ -21,9 +21,7 @@ sub MAIN(
         my $distObj;
         try {
             my %dist-args = %args.grep({ $_.key ∈ <vertex-count edge-count radius dimension p> }).map({ $_.key => $_.value.Numeric });
-            say (%dist-args);
             $distObj = ::("Graph::Distribution::$distribution").new(|%dist-args);
-            say (:$distObj);
         }
 
         if $! {
