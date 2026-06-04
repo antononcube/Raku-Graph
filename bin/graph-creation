@@ -15,12 +15,12 @@ sub MAIN(
         *%args
          ) {
     if $name.lc eq 'random' {
-        die "Random graphs distribution arugment is expected to be one of \"{@knownDistributions.join('", "')}\"."
+        die "Random graphs distribution argument is expected to be one of \"{@knownDistributions.join('", "')}\"."
         unless $distribution.lc ∈ @knownDistributions».lc;
 
         my $distObj;
         try {
-            my %dist-args = %args.grep({ $_.key ∈ <vertex-count edge-count radius dimension p> }).map({ $_.key => $_.value.Numeric });
+            my %dist-args = %args.grep({ $_.key ∈ <vertex-count edge-count radius dimension p attractiveness> }).map({ $_.key => $_.value.Numeric });
             $distObj = ::("Graph::Distribution::$distribution").new(|%dist-args);
         }
 
