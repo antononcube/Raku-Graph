@@ -391,7 +391,7 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
   - [X] DONE Uniform distribution
 - [ ] TODO Construction of *individual* graphs
   - [ ] TODO Bull graph
-  - [ ] TODO Butterfly graph
+  - [X] DONE Butterfly graph
   - [ ] TODO Chavatal graph
   - [ ] TODO Diamond graph
   - [ ] TODO Durer graph
