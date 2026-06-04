@@ -1,5 +1,9 @@
 Changes of the Raku package "Graph".
 
+2026-06-03 0.0.39
+    - Implemented complete multi-partite graphs.
+        - Graph::Complete.new([k1, k2, ...])
+
 2026-05-28 0.0.38
     - Graph::Relation can be initialized with vertex coordinates.
     - Implemented the methods distance and distance-matrix.
