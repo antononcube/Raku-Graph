@@ -12,17 +12,17 @@ role Graph::Componentish {
         }
 
         my %visited;
-        my @stack = %.adjacency-list.keys[0];
+        my @stack = %.adjacency-map.keys[0];
 
         while @stack {
             my $current = @stack.pop;
             unless %visited{$current} {
                 %visited{$current} = True;
-                @stack.append(%.adjacency-list{$current}.keys.grep({ !%visited{$_} }));
+                @stack.append(%.adjacency-map{$current}.keys.grep({ !%visited{$_} }));
             }
         }
 
-        return %visited.elems == %.adjacency-list.keys.elems;
+        return %visited.elems == %.adjacency-map.keys.elems;
     }
 
     #------------------------------------------------------
@@ -36,7 +36,7 @@ role Graph::Componentish {
         my %visited;
         my @components;
 
-        for %.adjacency-list.keys -> $vertex {
+        for %.adjacency-map.keys -> $vertex {
             unless %visited{$vertex} {
                 my @stack = [$vertex,];
                 my @component;
@@ -46,7 +46,7 @@ role Graph::Componentish {
                     unless %visited{$current} {
                         %visited{$current} = True;
                         @component.push($current);
-                        @stack.append(%.adjacency-list{$current}.keys.grep({ !%visited{$_} }));
+                        @stack.append(%.adjacency-map{$current}.keys.grep({ !%visited{$_} }));
                     }
                 }
                 @components.push(@component);
@@ -73,7 +73,7 @@ role Graph::Componentish {
             @stack.push($v);
             %on-stack{$v} = True;
 
-            for %.adjacency-list{$v}.keys -> $w {
+            for %.adjacency-map{$v}.keys -> $w {
                 if %index-of{$w}:!exists {
                     # Target $w has not yet been visited; recurse on it
                     strongconnect($w);

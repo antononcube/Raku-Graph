@@ -35,7 +35,7 @@ class Graph::Random is Graph {
 
                 # Add the single vertices
                 for @singleVertexes -> $v {
-                    self.adjacency-list.push($v => %());
+                    self.adjacency-map.push($v => %());
                 }
             }
 
@@ -94,7 +94,7 @@ class Graph::Random is Graph {
 
         my $vSet = self.vertex-list.Set;
         for (^$n).map({ $prefix ~ $_ }) -> $v {
-            if $v ∉ $vSet { self.adjacency-list{$v} = %() }
+            if $v ∉ $vSet { self.adjacency-map{$v} = %() }
         }
     }
 
@@ -137,7 +137,7 @@ class Graph::Random is Graph {
                 if rand < $p {
                     my $new-to;
                     repeat {
-                        $new-to = (^$n).grep({ $_ != $i && self.adjacency-list{$prefix ~ $i.Str}.elems }).pick;
+                        $new-to = (^$n).grep({ $_ != $i && self.adjacency-map{$prefix ~ $i.Str}.elems }).pick;
                     } until $new-to.defined;
                     self.edge-add($prefix ~ $i.Str, $prefix ~ $new-to.Str);
                     self.edge-add($prefix ~ $i.Str, $prefix ~ (($i + $j) % $n).Str);

@@ -20,9 +20,9 @@ role Graph::DistanceFindish {
             %visited{$current} = True;
             %distances{$current} = $dist;
 
-            for %.adjacency-list{$current}.keys -> $neighbor {
+            for %.adjacency-map{$current}.keys -> $neighbor {
                 unless %visited{$neighbor}:exists {
-                    $h.push([$neighbor, $dist + %.adjacency-list{$current}{$neighbor}] );
+                    $h.push([$neighbor, $dist + %.adjacency-map{$current}{$neighbor}] );
                 }
             }
         }
@@ -41,7 +41,7 @@ role Graph::DistanceFindish {
         for self.vertex-list -> $v {
             my @row;
             for self.vertex-list -> $u {
-                @row.push( $u eq $v ?? 0 !! self.adjacency-list{$u}{$v} // Inf)
+                @row.push( $u eq $v ?? 0 !! self.adjacency-map{$u}{$v} // Inf)
             }
             @dist.push(@row)
         }

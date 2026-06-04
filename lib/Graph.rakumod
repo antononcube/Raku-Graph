@@ -18,14 +18,14 @@ class Graph
         does Graph::MinCuttish
         does Graph::Neighborhoodish
         does Graph::Tourish {
-    has %.adjacency-list;
+    has %.adjacency-map;
     has Bool:D $.directed = False;
     has $.vertex-coordinates is rw = Whatever;
 
     #======================================================
     # Creators
     #======================================================
-    submethod BUILD(:%!adjacency-list = %(),
+    submethod BUILD(:%!adjacency-map = %(),
                     Bool:D :directed-edges(:$!directed) = False,
                     :@vertexes = Empty,
                     :@edges = Empty,
@@ -36,28 +36,28 @@ class Graph
 
         if @vertexes {
             for @vertexes -> $v {
-                if %!adjacency-list{$v}:!exists {
-                    self.adjacency-list.push( $v => %() );
+                if %!adjacency-map{$v}:!exists {
+                    self.adjacency-map.push( $v => %() );
                 }
             }
         }
     }
 
     #------------------------------------------------------
-    multi method new(:%adjacency-list = %(), :@vertexes = Empty, :@edges = Empty, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
-        self.bless(:%adjacency-list, :$directed, :@vertexes, :@edges, :$vertex-coordinates);
+    multi method new(:%adjacency-map = %(), :@vertexes = Empty, :@edges = Empty, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
+        self.bless(:%adjacency-map, :$directed, :@vertexes, :@edges, :$vertex-coordinates);
     }
 
     multi method new(%edges, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
-        self.bless(adjacency-list => %(), :$directed, edges => %edges.pairs, :$vertex-coordinates);
+        self.bless(adjacency-map => %(), :$directed, edges => %edges.pairs, :$vertex-coordinates);
     }
 
     multi method new(@edges, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
-        self.bless(adjacency-list => %(), :$directed, :@edges, :$vertex-coordinates);
+        self.bless(adjacency-map => %(), :$directed, :@edges, :$vertex-coordinates);
     }
 
     multi method new(@vertexes, @edges, Bool:D :d(:directed-edges(:$directed)) = False, :$vertex-coordinates = Whatever) {
-        self.bless(adjacency-list => %(), :$directed, :@vertexes, :@edges, :$vertex-coordinates);
+        self.bless(adjacency-map => %(), :$directed, :@vertexes, :@edges, :$vertex-coordinates);
     }
 
     multi method new(Graph:D $gr, :d(:directed-edges(:$directed)) is copy = Whatever, :$vertex-coordinates = Whatever) {
@@ -67,7 +67,7 @@ class Graph
         unless $directed ~~ Bool:D;
 
         my @edges = $gr.edges(:dataset);
-        self.bless(adjacency-list => %(), :$directed, :@edges, :$vertex-coordinates);
+        self.bless(adjacency-map => %(), :$directed, :@edges, :$vertex-coordinates);
     }
 
     method clone(:d(:$directed) is copy = Whatever) {
@@ -75,7 +75,7 @@ class Graph
         die 'The value of the argument $directed is expected to be a Boolean or Whaterver.'
         unless $directed ~~ Bool:D;
 
-        # This can be probably made faster by cloning the adjacency-list directly.
+        # This can be probably made faster by cloning the adjacency-map directly.
         my @edges = self.edges(:dataset);
         given ($directed, $!directed) {
             when $_ eqv (True, False) {
@@ -92,29 +92,29 @@ class Graph
     # Basic predicates
     #======================================================
     method has-vertex(Str:D $v --> Bool:D) {
-        return (%!adjacency-list{$v}:exists) || %!adjacency-list{*;$v}.flat.grep(*.defined).elems > 0;
+        return (%!adjacency-map{$v}:exists) || %!adjacency-map{*;$v}.flat.grep(*.defined).elems > 0;
     }
 
     #------------------------------------------------------
     method has-edge(Str:D $from, Str:D $to --> Bool:D) {
         # For undirected graphs both
-        # %!adjacency-list{$from}{$to} and %!adjacency-list{$to}{$from}
+        # %!adjacency-map{$from}{$to} and %!adjacency-map{$to}{$from}
         # should be in.
-        return so %!adjacency-list{$from}{$to};
+        return so %!adjacency-map{$from}{$to};
     }
 
     #------------------------------------------------------
     method is-empty(--> Bool:D) {
-        return %!adjacency-list.elems == 0 || %!adjacency-list.map(*.value.elems).sum == 0;
+        return %!adjacency-map.elems == 0 || %!adjacency-map.map(*.value.elems).sum == 0;
     }
 
     #------------------------------------------------------
     #| Yields True if the graph object is a complete graph, and False otherwise.
     multi method is-complete(--> Bool:D) {
-        return False if %!adjacency-list.elems == 0 || %!adjacency-list.elems < self.vertex-count;
+        return False if %!adjacency-map.elems == 0 || %!adjacency-map.elems < self.vertex-count;
         # No using junction.
-        # This algebraic check assumes that %!adjacency-list does not have "outsider" vertexes.
-        my @counts = %!adjacency-list.map( -> $r { $r.value.grep({ $_.key ne $r.key }).elems });
+        # This algebraic check assumes that %!adjacency-map does not have "outsider" vertexes.
+        my @counts = %!adjacency-map.map( -> $r { $r.value.grep({ $_.key ne $r.key }).elems });
         return @counts.min == self.vertex-count - 1 == @counts.max;
     }
 
@@ -134,7 +134,7 @@ class Graph
     multi method vertex-add(@vertexes) {
         for @vertexes -> $v {
             if !self.has-vertex($v) {
-                self.adjacency-list{$v} = %();
+                self.adjacency-map{$v} = %();
             }
         }
         return self;
@@ -147,10 +147,10 @@ class Graph
     #| C<$weight> -- Edge weight.
     #| C<:d(:$directed)> -- Is the edge directed or not.
     multi method edge-add(Str:D $from, Str:D $to, Numeric:D $weight = 1, Bool:D :d(:$directed) = False) {
-        %!adjacency-list{$from}{$to} = $weight;
+        %!adjacency-map{$from}{$to} = $weight;
 
         if !$directed {
-            %!adjacency-list{$to}{$from} = $weight;
+            %!adjacency-map{$to}{$from} = $weight;
         }
         if $directed { $!directed = True; }
         return self;
@@ -190,8 +190,8 @@ class Graph
     # Vertex removal
     #======================================================
     multi method vertex-delete(Str:D $v) {
-        %!adjacency-list{$v}:delete;
-        for %!adjacency-list.kv -> $k, %vertexes {
+        %!adjacency-map{$v}:delete;
+        for %!adjacency-map.kv -> $k, %vertexes {
             if %vertexes{$v}:exists {
                 %vertexes{$v}:delete
             }
@@ -216,15 +216,15 @@ class Graph
     # Edge removal
     #======================================================
     multi method edge-delete(Str:D :$from, Str:D :$to) {
-        with %!adjacency-list{$from}{$to} {
-            %!adjacency-list{$from}{$to}:delete;
+        with %!adjacency-map{$from}{$to} {
+            %!adjacency-map{$from}{$to}:delete;
             # We do not do the following, because removing an edge does not mean removing its vertexes too.
-            # if %!adjacency-list{$from}.elems == 0 { %!adjacency-list{$from}:delete; }
+            # if %!adjacency-map{$from}.elems == 0 { %!adjacency-map{$from}:delete; }
         }
-        if !$!directed && %!adjacency-list{$to}{$from}.defined {
-            %!adjacency-list{$to}{$from}:delete;
+        if !$!directed && %!adjacency-map{$to}{$from}.defined {
+            %!adjacency-map{$to}{$from}:delete;
             # We do not do the following, because removing an edge does not mean removing its vertexes too.
-            # if %!adjacency-list{$to}.elems == 0 { %!adjacency-list{$to}:delete; }
+            # if %!adjacency-map{$to}.elems == 0 { %!adjacency-map{$to}:delete; }
         }
         #`[
         my @edges = self.edges(:dataset);
@@ -234,7 +234,7 @@ class Graph
             @edges.grep({ !($_<from> eq $from && $_<to> eq $to || $_<to> eq $from && $_<from> eq $to) })
         }
 
-        %!adjacency-list = Empty;
+        %!adjacency-map = Empty;
         self.add-edges(@edges, :$!directed);
         ]
         return self;
@@ -290,7 +290,7 @@ class Graph
 
         return $obj if $clone;
 
-        self.adjacency-list = $obj.adjacency-list;
+        self.adjacency-map = $obj.adjacency-map;
         self.vertex-coordinates = $obj.vertex-coordinates;
 
         return self;
@@ -324,11 +324,11 @@ class Graph
     # Equivalence
     #======================================================
     method eqv(Graph:D $g) {
-        my $same-lvl1 = %!adjacency-list.keys.sort eqv $g.adjacency-list.keys.sort;
+        my $same-lvl1 = %!adjacency-map.keys.sort eqv $g.adjacency-map.keys.sort;
         return False unless $same-lvl1;
 
-        for %!adjacency-list.keys -> $v {
-            return False unless %!adjacency-list{$v} eqv $g.adjacency-list{$v}
+        for %!adjacency-map.keys -> $v {
+            return False unless %!adjacency-map{$v} eqv $g.adjacency-map{$v}
         }
         return True;
     }
@@ -342,7 +342,7 @@ class Graph
         my @edges;
         my %mark;
 
-        for %!adjacency-list.kv -> $from, %tos {
+        for %!adjacency-map.kv -> $from, %tos {
             for %tos.kv -> $to, $weight {
                 if $!directed {
                     @edges.push({ :$from, :$to, :$weight })
@@ -372,7 +372,7 @@ class Graph
     method edge-count(--> Int) {
         if $!directed {
             # Assuming this is faster.
-            return %!adjacency-list.map(*.value.elems).sum;
+            return %!adjacency-map.map(*.value.elems).sum;
         } else {
             return self.edges.elems;
         }
@@ -381,8 +381,8 @@ class Graph
     #------------------------------------------------------
     #| Gives the list of vertices for the graph object.
     method vertex-list() {
-        my @res = |%!adjacency-list.map({ $_.value.keys }).map(*.Slip).unique;
-        @res .= append(%!adjacency-list.keys);
+        my @res = |%!adjacency-map.map({ $_.value.keys }).map(*.Slip).unique;
+        @res .= append(%!adjacency-map.keys);
 
         return @res.unique.sort.List;
     }
@@ -409,7 +409,7 @@ class Graph
             $v => self.vertex-degree($v, :!pairs)
         } else {
             if $!directed {
-                self.adjacency-list{*;$v}.flat.grep(*.defined).elems
+                self.adjacency-map{*;$v}.flat.grep(*.defined).elems
             } else {
                 self.vertex-degree($v)
             }
@@ -432,7 +432,7 @@ class Graph
             $v => self.vertex-degree($v, :!pairs)
         } else {
             if $!directed {
-                self.adjacency-list{$v}:exists ?? self.adjacency-list{$v}.elems !! 0
+                self.adjacency-map{$v}:exists ?? self.adjacency-map{$v}.elems !! 0
             } else {
                 self.vertex-degree($v);
             }
@@ -457,7 +457,7 @@ class Graph
             if $!directed {
                 self.vertex-out-degree($v) - self.vertex-in-degree($v)
             } else {
-                self.adjacency-list{$v}.elems // 0
+                self.adjacency-map{$v}.elems // 0
             }
         }
     }
@@ -510,11 +510,11 @@ class Graph
         }
 
         my %seen;
-        my %new-adjacency-list;
+        my %new-adjacency-map;
         for self.edges(:dataset) -> %e {
-            %new-adjacency-list{%index{%e<from>}}{%index{%e<to>}} = %e<weight>;
+            %new-adjacency-map{%index{%e<from>}}{%index{%e<to>}} = %e<weight>;
             if !self.directed {
-                %new-adjacency-list{%index{%e<to>}}{%index{%e<from>}} = %e<weight>;
+                %new-adjacency-map{%index{%e<to>}}{%index{%e<from>}} = %e<weight>;
             }
             %seen{%e<from>}++;
             %seen{%e<to>}++
@@ -522,14 +522,14 @@ class Graph
 
         # In case there are vertices with no edges
         for @vs.grep({ %seen{$_}:!exists }) -> $v {
-            %new-adjacency-list.push( %index{$v} => {} )
+            %new-adjacency-map.push( %index{$v} => {} )
         }
 
         my $vertex-coordinates = do if self.vertex-coordinates ~~ Map:D {
             self.vertex-coordinates.map({ %index{$_.key} => $_.value }).Hash
         } else { Whatever }
 
-        return Graph.bless(:adjacency-list(%new-adjacency-list), :directed(self.directed), :$vertex-coordinates);
+        return Graph.bless(:adjacency-map(%new-adjacency-map), :directed(self.directed), :$vertex-coordinates);
     }
 
     #======================================================
@@ -551,9 +551,9 @@ class Graph
             my @row;
             for self.vertex-list -> $j {
                 my $v = do if $weighted {
-                    %!adjacency-list{$i}{$j} // 0;
+                    %!adjacency-map{$i}{$j} // 0;
                 } else {
-                    %!adjacency-list{$i}{$j} // False ?? 1 !! 0;
+                    %!adjacency-map{$i}{$j} // False ?? 1 !! 0;
                 }
                 @row.push($v)
             }
@@ -608,7 +608,7 @@ class Graph
     #------------------------------------------------------
     # Dijkstra's algorithm, two nodes
     method !dijkstra-shortest-path(Str $start, Str $end) {
-        my %distances = %.adjacency-list.keys.map({ $_ => Inf }).Hash;
+        my %distances = %.adjacency-map.keys.map({ $_ => Inf }).Hash;
         %distances{$start} = 0;
         my %previous;
         my $visited = SetHash.new;
@@ -622,9 +622,9 @@ class Graph
             last if %distances{$closest} == Inf;
             last if $closest eq $end;
 
-            for %.adjacency-list{$closest}.keys -> $neighbor {
+            for %.adjacency-map{$closest}.keys -> $neighbor {
                 if ! $visited{$neighbor} {
-                    my $alt = %distances{$closest} + %.adjacency-list{$closest}{$neighbor} // Inf;
+                    my $alt = %distances{$closest} + %.adjacency-map{$closest}{$neighbor} // Inf;
                     if $alt < %distances{$neighbor} {
                         %distances{$neighbor} = $alt;
                         %previous{$neighbor} = $closest;
@@ -678,8 +678,8 @@ class Graph
             }.reverse if $current eq $end;
 
             %open-set{$current}:delete;
-            for %.adjacency-list{$current}.keys -> $neighbor {
-                my $tentative-g-score = %g-score{$current} + %.adjacency-list{$current}{$neighbor};
+            for %.adjacency-map{$current}.keys -> $neighbor {
+                my $tentative-g-score = %g-score{$current} + %.adjacency-map{$current}{$neighbor};
                 if %g-score{$neighbor}:!exists || $tentative-g-score < %g-score{$neighbor} {
                     %came-from{$neighbor} = $current;
                     %g-score{$neighbor} = $tentative-g-score;
@@ -713,7 +713,7 @@ class Graph
         return do if $method.lc ∈ <unit-weight unitweight> {
             # "UnitWeight" method is to use the weight 1 for every edge
             my $g = self.clone;
-            $g.adjacency-list = $g.adjacency-list.map({ $_.key => $_.value.map({ $_.key => 1 }).Hash });
+            $g.adjacency-map = $g.adjacency-map.map({ $_.key => $_.value.map({ $_.key => 1 }).Hash });
             $g.distance($s, $t, :$method)
         } elsif $method.lc eq 'dijkstra' {
             # "Dijkstra" can be used for graphs with positive edge weights only
@@ -802,7 +802,7 @@ class Graph
             if $current eq $t && $length >= $min-length && $length <= $max-length {
                 @paths.push($path);
             } elsif $length < $max-length {
-                for %.adjacency-list{$current}.keys -> $neighbor {
+                for %.adjacency-map{$current}.keys -> $neighbor {
                     unless $neighbor ∈ $path {
                         @stack.push([$neighbor, [|$path, $neighbor], $length + 1]);
                     }
@@ -853,7 +853,7 @@ class Graph
 
     #------------------------------------------------------
     method !hamiltonian-path-backtracking(Bool:D :warnsdorf(:$warnsdorf-rule) = True) {
-        my @vertices = %!adjacency-list.keys;
+        my @vertices = %!adjacency-map.keys;
 
         my @path;
         for @vertices -> $start {
@@ -870,12 +870,12 @@ class Graph
         my @path;
 
         sub hamiltonian-path(Str $current) {
-            return True if @path.elems == %!adjacency-list.keys.elems && ($t.isa(Whatever) || $current eq $t);
+            return True if @path.elems == %!adjacency-map.keys.elems && ($t.isa(Whatever) || $current eq $t);
 
             my @nns = do if $warnsdorf-rule {
-                %!adjacency-list{@path.tail}.keys.grep({ !%visited{$_} }).sort({ %!adjacency-list{$_}.keys.grep({ !%visited{$_} }).elems })
+                %!adjacency-map{@path.tail}.keys.grep({ !%visited{$_} }).sort({ %!adjacency-map{$_}.keys.grep({ !%visited{$_} }).elems })
             } else {
-                %!adjacency-list{@path.tail}.keys.grep({ !%visited{$_} })
+                %!adjacency-map{@path.tail}.keys.grep({ !%visited{$_} })
             }
 
             for @nns -> $neighbor {
@@ -945,7 +945,7 @@ class Graph
     }
 
     method !hamiltonian-path-angluin-valiant-single-run(Str:D $s, Str:D $t, Str:D :$pick = 'max-degree') {
-        my %G = self.clone.adjacency-list;
+        my %G = self.clone.adjacency-map;
         my $ndp = $s;
         my $P = Graph.new(:!directed);
         my @res = Empty;
@@ -982,15 +982,15 @@ class Graph
                     $P.edge-add($v, $ndp);
                     $ndp = $v;
                 } elsif $v ne $s && $v ne $t && $P.has-vertex($v) {
-                    my $u = $P.adjacency-list{$v}.keys.grep({ $_ ne $s && $_ ne $t }).pick;
+                    my $u = $P.adjacency-map{$v}.keys.grep({ $_ ne $s && $_ ne $t }).pick;
                     $P.edge-delete($v, $u);
                     $P.edge-add($v, $ndp);
                     $ndp = $u;
                 }
             }
 
-            if $P.adjacency-list.elems ≥ self.vertex-count - 1 &&
-                    (self.adjacency-list{$ndp}{$t} // False) &&
+            if $P.adjacency-map.elems ≥ self.vertex-count - 1 &&
+                    (self.adjacency-map{$ndp}{$t} // False) &&
                     (%G{$ndp}{$t} // False) {
                 $P.edge-add($ndp, $t);
                 @res = $P.find-hamiltonian-path($s, $t, method => 'backtracking');
@@ -1053,7 +1053,7 @@ class Graph
             %visited{$node} = True;
             @path.push($node);
 
-            for %.adjacency-list{$node}.keys -> $neighbor {
+            for %.adjacency-map{$node}.keys -> $neighbor {
                 cycle-dfs($neighbor, @path) if $neighbor ∉ [$node, $parent];
                 last if $found >= $count;
             }
@@ -1062,7 +1062,7 @@ class Graph
             %visited{$node} = False;
         }
 
-        for %.adjacency-list.keys -> $start {
+        for %.adjacency-map.keys -> $start {
             %visited = %();
             cycle-dfs($start, []);
             last if $found >= $count;
@@ -1093,7 +1093,7 @@ class Graph
                 Graph.new(self!minimum-spanning-tree-kruskal())
             }
             when 'prim' {
-                Graph.new(adjacency-list => self!minimum-spanning-tree-prim(), :!directed)
+                Graph.new(adjacency-map => self!minimum-spanning-tree-prim(), :!directed)
             }
             default {
                 die 'Unknown specified method.';
@@ -1137,7 +1137,7 @@ class Graph
         my @edges;
 
         %visited{$start} = True;
-        @edges.push: [ $start, $_, %.adjacency-list{$start}{$_} ] for %.adjacency-list{$start}.keys;
+        @edges.push: [ $start, $_, %.adjacency-map{$start}{$_} ] for %.adjacency-map{$start}.keys;
 
         while @edges {
             @edges = @edges.sort({ $^a[2] <=> $^b[2] });
@@ -1149,7 +1149,7 @@ class Graph
             %mst{$to}{$from} = $weight;
 
             %visited{$to} = True;
-            @edges.push: [ $to, $_, %.adjacency-list{$to}{$_} ] for %.adjacency-list{$to}.keys.grep: { !%visited{$_} };
+            @edges.push: [ $to, $_, %.adjacency-map{$to}{$_} ] for %.adjacency-map{$to}.keys.grep: { !%visited{$_} };
         }
 
         return %mst;
@@ -1175,7 +1175,7 @@ class Graph
         # It represents the longest shortest path between any two vertices in the graph.
         my $max-distance = 0;
         my $nv = self.vertex-count;
-        for %.adjacency-list.keys -> $start {
+        for %.adjacency-map.keys -> $start {
             my %distances = self!dijkstra-shortest-path-distances($start);
             if %distances.elems < $nv { return Inf; }
             my $eccentricity = %distances.values.max;
@@ -1190,7 +1190,7 @@ class Graph
         # The radius is the smallest maximum distance from any vertex to all other vertices in the graph.
         my $min-eccentricity = Inf;
         my $nv = self.vertex-count;
-        for %.adjacency-list.keys -> $start {
+        for %.adjacency-map.keys -> $start {
             my %distances = self!dijkstra-shortest-path-distances($start);
             if %distances.elems < $nv { return Inf; }
             my $eccentricity = %distances.values.max;
@@ -1201,14 +1201,14 @@ class Graph
 
     #| Gives the set of vertices with minimum eccentricity in the graph object.
     method center(--> List) {
-        my %eccentricities = %.adjacency-list.keys.map({ $_ => self.vertex-eccentricity($_) });
+        my %eccentricities = %.adjacency-map.keys.map({ $_ => self.vertex-eccentricity($_) });
         my $me = %eccentricities.values.min;
         return %eccentricities.grep({ $_.value == $me })».key.sort.List;
     }
 
     #| Gives vertices that are maximally distant to at least one vertex in the graph object.
     method periphery(--> List) {
-        my %eccentricities = %.adjacency-list.keys.map({ $_ => self.vertex-eccentricity($_) });
+        my %eccentricities = %.adjacency-map.keys.map({ $_ => self.vertex-eccentricity($_) });
         my $me = %eccentricities.values.max;
         return %eccentricities.grep({ $_.value == $me })».key.sort.List;
     }
@@ -1234,7 +1234,7 @@ class Graph
         my @edges;
         for @vertexes -> $v1 {
             for @vertexes -> $v2 {
-                if ! ( %!adjacency-list{$v1}{$v2} // False) {
+                if ! ( %!adjacency-map{$v1}{$v2} // False) {
                     @edges.push(%(from => $v1, to => $v2, weight => 1))
                 }
             }
@@ -1406,9 +1406,9 @@ class Graph
             my $g = Graph.new(self, :!directed);
             my $g2 = $g.neighborhood-graph(@spec, :$max-path-length);
             $g2.edges(:dataset).map({
-                if %!adjacency-list{$_<from>}{$_<to>}:exists {
+                if %!adjacency-map{$_<from>}{$_<to>}:exists {
                     $_
-                } elsif %!adjacency-list{$_<to>}{$_<from>}:exists {
+                } elsif %!adjacency-map{$_<to>}{$_<from>}:exists {
                     %(from => $_<to>, to => $_<from>, weight => $_<weight>)
                 } else {
                     Empty

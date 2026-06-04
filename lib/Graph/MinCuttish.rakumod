@@ -14,7 +14,7 @@ role Graph::MinCuttish {
         $g = self!karger-contract(self.clone, th => 2, :$sep);
         my ($first, $second) = |$g.vertex-list.map({ $_.split($sep, :skip-empty).List }).List;
         my $cut = 0;
-        $first.map({ $cut += (self.adjacency-list{$_} (&) $second).elems });
+        $first.map({ $cut += (self.adjacency-map{$_} (&) $second).elems });
         return ($cut, ($first, $second));
     }
 

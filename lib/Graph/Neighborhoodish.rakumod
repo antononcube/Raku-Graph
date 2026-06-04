@@ -28,8 +28,8 @@ role Graph::Neighborhoodish {
                         %visited{$v} = True;
                         take $v;
                         #@lastLevelVertices.push($v) if $current-length == $max-path-length;
-                        if %.adjacency-list{$v}:exists {
-                            for %.adjacency-list{$v}.keys -> $neighbor {
+                        if %.adjacency-map{$v}:exists {
+                            for %.adjacency-map{$v}.keys -> $neighbor {
                                 @next-queue.push($neighbor) unless %visited{$neighbor}:exists;
                             }
                         }
@@ -45,7 +45,7 @@ role Graph::Neighborhoodish {
 
         # If Cartesian product is used for undirected graphs, then twice as many edges would be produced
         @edges = @vertices.combinations(2).map({
-            %.adjacency-list{$_.head}{$_.tail}:exists ?? %(from => $_.head, to => $_.tail, weight => %.adjacency-list{$_.head}{$_.tail}) !! Empty
+            %.adjacency-map{$_.head}{$_.tail}:exists ?? %(from => $_.head, to => $_.tail, weight => %.adjacency-map{$_.head}{$_.tail}) !! Empty
         });
         # Note that is likely too slow -- known edges are also tested.
         # It is obviously correct though, and it should be benchmarked before optimizing.

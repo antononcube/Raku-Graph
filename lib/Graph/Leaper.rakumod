@@ -33,7 +33,7 @@ class Graph::Leaper is Graph {
 
                 # In order to prevent "skipped" cells we add empty vertex adjacency list.
                 # See for example 3x3 graph here: https://mathworld.wolfram.com/KnightGraph.html
-                self.adjacency-list{"{$prefix}{$col}{$sep}{$row}"} = {};
+                self.adjacency-map{"{$prefix}{$col}{$sep}{$row}"} = {};
 
                 for @!moves -> $move {
                     my ($dr, $dc) = $move;

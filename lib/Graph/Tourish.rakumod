@@ -10,7 +10,7 @@ role Graph::Tourish {
             my @extEdges;
             for @odd-vertices.combinations(2) -> ($v1, $v2) {
                 my @path = self.find-shortest-path($v1, $v2);
-                my $weight = @path.rotor(2 => -1).map({ self.adjacency-list{$_.head}{$_.tail} }).sum;
+                my $weight = @path.rotor(2 => -1).map({ self.adjacency-map{$_.head}{$_.tail} }).sum;
                 @extEdges.push: ($v1, $v2, $weight);
             }
             @extEdges = @extEdges.sort({ $^a[2] <=> $^b[2] });
@@ -42,7 +42,7 @@ role Graph::Tourish {
             @circuit;
         }
 
-        my %adj-list = %.adjacency-list.clone;
+        my %adj-list = %.adjacency-map.clone;
         %adj-list = %adj-list.map({ $_.key => $_.value.clone });
 
         my @odd-vertices = find-odd-degree-vertices(%adj-list);

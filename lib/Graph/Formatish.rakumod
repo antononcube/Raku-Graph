@@ -67,7 +67,7 @@ role Graph::Formatish
         <graph edgedefault="{ self.directed ?? 'directed' !! 'undirected' }">
         END
 
-        for %.adjacency-list.kv -> $from, %to {
+        for %.adjacency-map.kv -> $from, %to {
             $xml ~= qq:to/END/;
             <node id="{ $from }"/>
             END

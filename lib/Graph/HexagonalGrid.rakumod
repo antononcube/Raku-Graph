@@ -42,7 +42,7 @@ class Graph::HexagonalGrid is Graph {
                 :$prefix;
 
         self.vertex-coordinates = $g.vertex-coordinates;
-        self.adjacency-list = $g.adjacency-list;
+        self.adjacency-map = $g.adjacency-map;
     }
 
     multi method new(Int:D $rows, *%args) {

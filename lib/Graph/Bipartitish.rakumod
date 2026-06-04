@@ -5,7 +5,7 @@ role Graph::Bipartitish {
         my %color;
         my @queue;
 
-        for %.adjacency-list.keys -> $vertex {
+        for %.adjacency-map.keys -> $vertex {
             next if %color{$vertex}:exists;
             %color{$vertex} = 0;
             @queue.push($vertex);
@@ -14,7 +14,7 @@ role Graph::Bipartitish {
                 my $current = @queue.shift;
                 my $current-color = %color{$current};
 
-                for %.adjacency-list{$current}.keys -> $neighbor {
+                for %.adjacency-map{$current}.keys -> $neighbor {
                     if %color{$neighbor}:exists {
                         return %() if %color{$neighbor} == $current-color;
                     } else {
@@ -57,7 +57,7 @@ role Graph::Bipartitish {
 
         for @left -> $u {
             for @right -> $v {
-                %cost{$u}{$v} = %.adjacency-list{$u}{$v} // 0;
+                %cost{$u}{$v} = %.adjacency-map{$u}{$v} // 0;
             }
         }
 
