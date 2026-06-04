@@ -1,7 +1,7 @@
 Changes of the Raku package "Graph".
 
 2026-06-04 0.1.0
-    - Renamed Graph class attribute "adjacency-list" to "adjacency-map_.
+    - Renamed the Graph class attribute "adjacency-list" to "adjacency-map".
 
 2026-06-03 0.0.39
     - Implemented complete multi-partite graphs.
