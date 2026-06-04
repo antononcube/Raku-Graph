@@ -49,8 +49,8 @@ zef install https://github.com/antononcube/Raku-Graph.git
   - Meaning it is for directed graphs.
   - Undirected graphs are represented as directed graphs.
     - I.e. with twice as many edges than necessary.
-  - The current graph representation is with hash-of-hashes, (`adjacency-list`), that keeps from-to-weight relationships.
-    - For example, `$g.adjacency-list<1><2>` gives the weight of the edge connecting vertex "1" to vertex "2".
+  - The current graph representation is with hash-of-hashes, (`adjacency-map`), that keeps from-to-weight relationships.
+    - For example, `$g.adjacency-map<1><2>` gives the weight of the edge connecting vertex "1" to vertex "2".
   - The vertexes are only strings.
     - Not a "hard" design decision.
     - More general vertexes can be imitated (in the future) with vertex tags.
@@ -227,12 +227,14 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 
 ### Main, core features
 
+- [X] DONE Rename the attribute `.adjacency-list` to `.adjacency-map`
+  - Make is consistent with `Math::SparseMatrix`.
 - [ ] TODO Object methods
   - [X] DONE Str and gist methods
   - [X] DONE Deep copy
   - [X] DONE Creation from another graph.
   - [ ] TODO Ingest vertexes and edges of another `Graph` object
-  - [ ] TODO Comparison: `eqv` and `ne`.
+  - [ ] TODO Comparison: `eqv` and `ne`
 - [X] DONE Disjoint graphs
   - The graphs can be disjoint as long as the components have edges.
   - Related, the class `Graph` does supports "lone vertices."
@@ -338,7 +340,7 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
     - For given vertices and/or edges.
   - [X] DONE Make undirected
     - Can be implemented as `Graph.new($g, :!directed)`.
-    - But maybe it is more efficient to directly manipulate `adjacency-list`.
+    - But maybe it is more efficient to directly manipulate `adjacency-map`.
   - [X] DONE Make directed
     - It is not just a flag change of `$!directed`.
     - Implement the methods: `Whatever`, "Acyclic", "Random".
@@ -364,9 +366,12 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 
 - [X] DONE Construction of parameterized graphs
   - [X] DONE [Complete graphs](https://en.wikipedia.org/wiki/Complete_graph)
+    - [X] DONE Single argument
+    - [X] DONE List argument (for K-partite graphs)
   - [X] DONE [Cycle graphs](https://en.wikipedia.org/wiki/Cycle_graph)
   - [X] DONE [Hypercube graphs](https://en.wikipedia.org/wiki/Hypercube_graph)
   - [X] DONE [Grid graphs](https://en.wikipedia.org/wiki/Lattice_graph)
+  - [X] DONE [Leaper graphs](https://mathworld.wolfram.com/LeaperGraph.html)
   - [X] DONE [Knight tour graphs](https://en.wikipedia.org/wiki/Knight%27s_graph)
   - [X] DONE [Star graphs](https://en.wikipedia.org/wiki/Star_graph)
   - [X] DONE Path graphs
