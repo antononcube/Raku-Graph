@@ -1,7 +1,9 @@
 Changes of the Raku package "Graph".
 
 2026-06-04 0.1.0
+    - Implemented CLI script for graph creation.
     - Renamed the Graph class attribute "adjacency-list" to "adjacency-map".
+    - The Graph class has its own Graph.json method.
 
 2026-06-03 0.0.39
     - Implemented complete multi-partite graphs.
