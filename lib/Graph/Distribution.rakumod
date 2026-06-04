@@ -9,14 +9,14 @@ unit module Graph::Distribution;
 #| BarabasiAlbert graph distribution class
 class BarabasiAlbert is export {
     has Int:D $.vertex-count is required;
-    has Int:D $.edges-count is required;
+    has Int:D $.edge-count is required;
 
-    multi method new($vertex-count, $edges-count) {
-        self.bless(:$vertex-count, :$edges-count);
+    multi method new($vertex-count, $edge-count) {
+        self.bless(:$vertex-count, :$edge-count);
     }
 
-    multi method new(:n(:$vertex-count), :k(:$edges-count)) {
-        self.bless(:$vertex-count, :$edges-count);
+    multi method new(:n(:$vertex-count), :k(:$edge-count)) {
+        self.bless(:$vertex-count, :$edge-count);
     }
 }
 #= BarabasiAlbert graph distribution objects are specified with parameters for number of vertexes and number of increment edges.
@@ -39,15 +39,15 @@ class Bernoulli is export {
 #| Price's model graph distribution class
 class Price is export {
     has Int:D $.vertex-count is required;
-    has Int:D $.edges-count is required;
+    has Int:D $.edge-count is required;
     has Numeric:D $.attractiveness is required;
 
-    multi method new($vertex-count, $edges-count, $attractiveness) {
-        self.bless(:$vertex-count, :$edges-count, :$attractiveness);
+    multi method new($vertex-count, $edge-count, $attractiveness) {
+        self.bless(:$vertex-count, :$edge-count, :$attractiveness);
     }
 
-    multi method new(:n(:$vertex-count), :k(:$edges-count), :a(:$attractiveness)) {
-        self.bless(:$vertex-count, :$edges-count, :$attractiveness);
+    multi method new(:n(:$vertex-count), :k(:$edge-count), :a(:$attractiveness)) {
+        self.bless(:$vertex-count, :$edge-count, :$attractiveness);
     }
 }
 #= de Solla Price's graph distribution objects are specified with parameters for number of vertexes, number of increment edges, and an attractiveness parameter.
@@ -88,14 +88,14 @@ class WattsStrogatz is export {
 #| Uniform graph distribution class
 class Uniform is export {
     has Int:D $.vertex-count is required;
-    has Int:D $.edges-count is required;
+    has Int:D $.edge-count is required;
 
-    multi method new($vertex-count, $edges-count) {
-        self.bless(:$vertex-count, :$edges-count);
+    multi method new($vertex-count, $edge-count) {
+        self.bless(:$vertex-count, :$edge-count);
     }
 
-    multi method new(:n(:$vertex-count), :m(:$edges-count)) {
-        self.bless(:$vertex-count, :$edges-count);
+    multi method new(:n(:$vertex-count), :m(:$edge-count)) {
+        self.bless(:$vertex-count, :$edge-count);
     }
 }
 #= Uniform graph distribution objects are specified with parameters for number vertexes and number of edges.
