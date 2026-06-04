@@ -156,22 +156,22 @@ $graph.mermaid(d=>'TD')
 ```
 ```mermaid
 graph TD
-2 --- 6
-6 --- 7
-3 --- 4
 2 --- 4
 4 --- 9
-10 --- 2
-10 --- 9
-12 --- 5
-1 --- 5
+3 --- 4
+6 --- 7
+2 --- 6
 3 --- 8
 2 --- 8
-1 --- 7
-2 --- 7
-2 --- 3
-11 --- 12
+10 --- 9
+10 --- 2
 12 --- 2
+11 --- 12
+12 --- 5
+2 --- 7
+1 --- 7
+1 --- 5
+2 --- 3
 ```
 
 Here we find the shortest path between nodes "1" and "4":
@@ -198,7 +198,7 @@ Here we find a [Hamiltonian path](https://en.wikipedia.org/wiki/Hamiltonian_path
 say 'find-hamiltonian-path : ' , $graph.find-hamiltonian-path();
 ```
 ```
-# find-hamiltonian-path : [10 9 4 3 8 2 6 7 1 5 12 11]
+# find-hamiltonian-path : [8 3 4 9 10 2 6 7 1 5 12 11]
 ```
 
 Here we find a cycle:
@@ -207,7 +207,7 @@ Here we find a cycle:
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 ```
 ```
-# find-cycle : ([2 3 8 2])
+# find-cycle : ([10 2 4 9 10])
 ```
 
 Here we find all cycles in the graph:
@@ -273,7 +273,7 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 ### Main, core features
 
 - [X] DONE Rename the attribute `.adjacency-list` to `.adjacency-map`
-  - Make is consistent with `Math::SparseMatrix`.
+  - Makes it consistent with `Math::SparseMatrix`.
 - [ ] TODO Object methods
   - [X] DONE Str and gist methods
   - [X] DONE Deep copy
@@ -448,7 +448,21 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
   - [ ] Adjacency matrix (sparse)
   - [ ] Incidence matrix (dense)
   - [ ] Incidence matrix (sparse)
-  
+
+### CLI
+
+- [ ] TODO Come up with a meaningful CLI script functionalities exposure
+  - [ ] One script or separate creation and graph-operations scripts?
+  - [ ] What is the set of commands?
+- [ ] TODO CLI functionalities
+  - [ ] TODO Graph creation
+  - [ ] TODO Graph tests over graphs given with JSON files
+  - [ ] TODO Produce the Graphviz DOT, WL, Mermaid, JSON representations
+    - [ ] TODO For specified with parameters graphs
+    - [ ] TODO For JSON files
+- [ ] TODO Understanding commands like "hamiltonian path" or "grid-graph"
+  - Not just "hamiltonian-path" and "grid-graph".
+ 
 ### Tests
 
 - [ ] TODO Unit tests
@@ -458,7 +472,7 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
   - [X] DONE Edge removal
   - [X] DONE Bipartite graph check
   - [ ] TODO Directed graphs cycles
-- [ ] TODO Cross-verification with Mathematica
+- [ ] TODO Cross-verification with Wolfram Language (aka Mathematica)
   - [X] DONE General workflow programming/setup
   - [ ] TODO Path finding
   - [ ] TODO Cycle finding

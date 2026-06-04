@@ -228,7 +228,7 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
 ### Main, core features
 
 - [X] DONE Rename the attribute `.adjacency-list` to `.adjacency-map`
-  - Make is consistent with `Math::SparseMatrix`.
+  - Makes it consistent with `Math::SparseMatrix`.
 - [ ] TODO Object methods
   - [X] DONE Str and gist methods
   - [X] DONE Deep copy
@@ -403,7 +403,21 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
   - [ ] Adjacency matrix (sparse)
   - [ ] Incidence matrix (dense)
   - [ ] Incidence matrix (sparse)
-  
+
+### CLI
+
+- [ ] TODO Come up with a meaningful CLI script functionalities exposure
+  - [ ] One script or separate creation and graph-operations scripts?
+  - [ ] What is the set of commands?
+- [ ] TODO CLI functionalities
+  - [ ] TODO Graph creation
+  - [ ] TODO Graph tests over graphs given with JSON files
+  - [ ] TODO Produce the Graphviz DOT, WL, Mermaid, JSON representations
+    - [ ] TODO For specified with parameters graphs
+    - [ ] TODO For JSON files
+- [ ] TODO Understanding commands like "hamiltonian path" or "grid-graph"
+  - Not just "hamiltonian-path" and "grid-graph".
+ 
 ### Tests
 
 - [ ] TODO Unit tests
@@ -413,7 +427,7 @@ Most of the documentation notebooks show the graphs using both "JavaScript::D3" 
   - [X] DONE Edge removal
   - [X] DONE Bipartite graph check
   - [ ] TODO Directed graphs cycles
-- [ ] TODO Cross-verification with Mathematica
+- [ ] TODO Cross-verification with Wolfram Language (aka Mathematica)
   - [X] DONE General workflow programming/setup
   - [ ] TODO Path finding
   - [ ] TODO Cycle finding
