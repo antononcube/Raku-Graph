@@ -17,6 +17,7 @@ sub formatted(Graph:D $g, Str:D $format) {
     return do given $format.lc {
         when $_ ∈ <dot graphviz graphviz-dot> { $g.dot }
         when $_ ∈ <wl wolfram wolfram-language> { $g.wl }
+        when $_ ∈ <mermaid mermaid.js mermaid-js> { $g.mermaid }
         when $_ ∈ <json> { $g.json }
         default { $g.raku }
     }
