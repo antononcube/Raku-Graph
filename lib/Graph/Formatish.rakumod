@@ -36,7 +36,7 @@ role Graph::Formatish
 
         my $coords = '';
         if self.vertex-coordinates ~~ Map:D {
-            $coords = self.vertex-list.map({ "\"$_\" -> \{{self.vertex-coordinates{$_}.join(', ')}\}" }).join(',');
+            $coords = self.vertex-list.map({ "\"$_\" -> \{{self.vertex-coordinates{$_}.round(1e-7).join(', ')}\}" }).join(',');
             $coords = ", VertexCoordinates -> \{$coords\}";
         }
 
