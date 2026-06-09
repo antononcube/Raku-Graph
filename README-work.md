@@ -301,9 +301,11 @@ graph-creation Grid --rows=3 --columns=2 --format=dot
 - [ ] TODO Distances
   - [X] DONE Graph distance
     - See shortest path.
-  - [X] DONE Graph distance matrix
+  - [ ] TODO Graph distance matrix
     - Again, requires choosing a matrix Raku class or package.
-      - Just using a dense matrix for now. 
+      - Just using a dense matrix for now.
+    - [X] DONE Dense
+    - [ ] TODO Sparse
 - [X] DONE Longest shortest paths
   - [X] DONE Vertex eccentricity
   - [X] DONE Graph radius
@@ -409,11 +411,11 @@ graph-creation Grid --rows=3 --columns=2 --format=dot
   - [ ] TODO Franklin graph
   - [X] DONE [Petersen graph](https://en.wikipedia.org/wiki/Petersen_graph)
   - [ ] TODO Wagner graph
-- Creation from 
-  - [ ] Adjacency matrix (dense)
-  - [ ] Adjacency matrix (sparse)
-  - [ ] Incidence matrix (dense)
-  - [ ] Incidence matrix (sparse)
+- [ ] TODO Creation from 
+  - [ ] TODO Adjacency matrix (dense)
+  - [ ] TODO Adjacency matrix (sparse)
+  - [ ] TODO Incidence matrix (dense)
+  - [ ] TODO Incidence matrix (sparse)
 
 ### CLI
 
