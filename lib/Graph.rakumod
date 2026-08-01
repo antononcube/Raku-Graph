@@ -766,7 +766,7 @@ class Graph
             my %res = self!floyd-warshall();
             my @mat = |%res<dist>;
             if $pairs {
-                my %res = do gather {
+                my Numeric %res{Positional} = do gather {
                 for self.vertex-list.kv -> $i, $x {
                     for self.vertex-list.kv -> $j, $y {
                         take ($x, $y) => @mat[$i][$j]
@@ -780,7 +780,7 @@ class Graph
         } elsif $method.lc ∈ <dijkstra unit-weight unitweight> {
             if $pairs {
                 my %ds = self.vertex-list.map({ $_ => self.distance($_, :$method, :pairs) });
-                my %res = %ds.kv.map(-> $k, %v { %v.map({ ($k, $_.key) => $_.value }) }).flat;
+                my Numeric %res{Positional} = %ds.kv.map(-> $k, %v { %v.map({ ($k, $_.key) => $_.value }) }).flat;
                 $max-distance.isa(Whatever) ?? %res !! %res.map({ $_.key => $_.value > $max-distance ?? Inf !! $_.value }).Hash
             } else {
                 my @res = self.vertex-list.map({ self.distance($_, :$method, :!pairs) });
