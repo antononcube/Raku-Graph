@@ -55,4 +55,27 @@ subtest {
     is $g4.directed, True;
 }
 
+## 4
+#subtest {
+    my $g = Graph.new([
+        %('from' => '1', 'to' => '2', 'weight' => 10),
+        %('from' => '1', 'to' => '3', 'weight' => 5),
+        %('from' => '2', 'to' => '3', 'weight' => 7),
+        %('from' => '3', 'to' => '4', 'weight' => -3)], :!directed);
+
+    ok $g.edge-weight-unitize;
+    is $g.edge-weight-unitize.vertex-count, $g.vertex-count, 'expected vertex count';
+    is-deeply $g.edge-weight-unitize.edges, $g.edges, 'expected edges';
+    is $g.edge-weight-unitize.edges(:dataset).map(*<weight>).min, 1, 'expected min weight';
+    is $g.edge-weight-unitize.edges(:dataset).map(*<weight>).max, 1, 'expected max weight';
+
+    ok $g.edge-weight-unitize(threshold => 1.2);
+    is $g.edge-weight-unitize(:4th).vertex-count, $g.vertex-count, 'threshold, expected vertex count';
+    is-deeply $g.edge-weight-unitize(:4th).edges, $g.edges, 'threshold, expected edges';
+    is $g.edge-weight-unitize(:4th).edges(:dataset).map(*<weight>).min, 0, 'threshold, expected min weight';
+    is $g.edge-weight-unitize(:4th).edges(:dataset).map(*<weight>).max, 1, 'threshold, expected max weight';
+
+#}
+
+
 done-testing;
