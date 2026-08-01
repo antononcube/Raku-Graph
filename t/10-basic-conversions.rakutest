@@ -14,7 +14,7 @@ subtest {
     is $g2.edge-count, 12;
     is-deeply $g2.vertex-list.sort, $g.vertex-list.sort;
     is $g2.directed, False;
-}
+}, 'to undirected graph';
 
 ## 2
 subtest {
@@ -25,7 +25,7 @@ subtest {
     is-deeply $g2.vertex-list.sort, $g.vertex-list.sort;
     is $g2.directed, True;
     is-deeply $g2.edge-list.sort, $g.edge-list.sort;
-}
+}, "to directed graph";
 
 ## 3
 subtest {
@@ -53,10 +53,10 @@ subtest {
     is $g4.edge-count, 4;
     is-deeply $g4.vertex-list.sort, $g.vertex-list.sort;
     is $g4.directed, True;
-}
+}, 'directed graphs with different methods';
 
 ## 4
-#subtest {
+subtest {
     my $g = Graph.new([
         %('from' => '1', 'to' => '2', 'weight' => 10),
         %('from' => '1', 'to' => '3', 'weight' => 5),
@@ -74,8 +74,7 @@ subtest {
     is-deeply $g.edge-weight-unitize(:4th).edges, $g.edges, 'threshold, expected edges';
     is $g.edge-weight-unitize(:4th).edges(:dataset).map(*<weight>).min, 0, 'threshold, expected min weight';
     is $g.edge-weight-unitize(:4th).edges(:dataset).map(*<weight>).max, 1, 'threshold, expected max weight';
-
-#}
+}, 'edge-weight-unitize';
 
 
 done-testing;
