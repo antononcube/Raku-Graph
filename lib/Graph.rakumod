@@ -465,6 +465,16 @@ class Graph
     #======================================================
     # Basic conversions
     #======================================================
+    #| Gives a graph object clone with all non-zero edge weights set to 1.
+    #| C<:tolerance> -- Threshold for the edge-weight absolute values above which the corresponding edge-weights are set to 1.
+    method edge-weight-unitize(Numeric:D :th(:$threshold) = 0) {
+        my $g = self.clone;
+        for $g.adjacency-map.kv -> $k, %d {
+            $g.adjacency-map{$k} = %d.map({ $_.key => $_.value.abs ≤ $threshold ?? 0 !! 1 }).Hash
+        }
+        return $g;
+    }
+
     #| Gives an undirected graph for directed graph object.
     method undirected-graph() {
         return self.clone(:!directed);
@@ -845,7 +855,7 @@ class Graph
                 }
             }
             default {
-                die 'Unknown method. The value of $method is expected to be one of "backtracking" or Whatever.'
+                die 'Unknown method. The value of $method is expected to be one of "angluin-valiant", "backtracking", or Whatever.'
             }
         }
         return @res;
