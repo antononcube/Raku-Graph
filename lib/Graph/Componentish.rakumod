@@ -2,6 +2,40 @@ use v6.d;
 
 role Graph::Componentish {
     #======================================================
+    # Vertex components
+    #======================================================
+    proto method vertex-component($v, Numeric:D :$min-length = 0, Numeric:D :$max-length = Inf) {*}
+    multi method vertex-component(Str:D $v, Numeric:D :$min-length = 0, Numeric:D :$max-length = Inf) {
+        self.vertex-component([$v,], :$min-length, :$max-length)
+    }
+    multi method vertex-component(@v, Numeric:D :$min-length = 0, Numeric:D :$max-length = Inf) {
+        die 'The argument $min-length is expected to be less or equal to $max-length.'
+        unless $min-length ≤ $max-length;
+
+        my $vset = @v.Set;
+        if $max-length == 1 {
+            # Optimization for $max-length == 1
+            my @res;
+            for self.adjacency-map.kv -> $k, %v {
+                for %v {
+                    if $_.key ∈ $vset {
+                        @res.push($k);
+                        last
+                    }
+                }
+            }
+            if $min-length == 0 {
+                @res.append(@v).unique
+            }
+            return @res.sort.List;
+        } else {
+            # Can be slow because distance matrix is slow -- it does not stop at $max-length
+            my @res = self.clone.edge-weight-unitize.distance-matrix(:pairs).grep({ $_.key.tail ∈ $vset }).grep({ $min-length ≤ $_.value ≤ $max-length });
+            return @res.map(*.key.head).unique.sort.List
+        }
+    }
+
+    #======================================================
     # Connected components
     #======================================================
     method is-weakly-connected() {
