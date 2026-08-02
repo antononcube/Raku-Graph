@@ -137,7 +137,7 @@ class Graph
     #| Yields True if the graph is a path and False otherwise.
     method is-path(--> Bool:D) {
         return do if self.directed {
-            self.is-connected && self.vertex-in-degree.max ≤ 1 && self.vertex-out-degree.max ≤ 1
+            self.undirected-graph.is-connected && self.vertex-in-degree.max ≤ 1 && self.vertex-out-degree.max ≤ 1
         } else {
             self.is-connected && self.vertex-degree.max ≤ 2
         }
