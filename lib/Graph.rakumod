@@ -124,6 +124,25 @@ class Graph
         return self.subgraph($v).is-complete;
     }
 
+    #| Yields True if the graph has not self-loops, and False otherwise.
+    method is-loop-free(--> Bool:D) {
+        for self.adjacency-map.kv -> $k, %v {
+            for %v.kv -> $u, $w {
+                return False if $k eq $u;
+            }
+        }
+        return True;
+    }
+
+    #| Yields True if the graph is a path and False otherwise.
+    method is-path(--> Bool:D) {
+        return do if self.directed {
+            self.is-connected && self.vertex-in-degree.max ≤ 1 && self.vertex-out-degree.max ≤ 1
+        } else {
+            self.is-connected && self.vertex-degree.max ≤ 2
+        }
+    }
+
     #======================================================
     # Construction
     #======================================================
