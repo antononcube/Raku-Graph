@@ -1,5 +1,11 @@
 Changes of the Raku package "Graph".
 
+2026-08-02 0.1.2
+    - Optimization: Faster vertex-component for paths longer than 1.
+        - Using Dijkstra's algorithm instead of Floyd-Warshall.
+        - Betting on the number of the input vertices to be relatively small.
+    - Implemented the methods is-loop-free and is-path.
+
 2026-08-02 0.1.1
     - Implemented the methods edge-weight-unitize and vertex-component.
     - Currently, vertex-component is very slow for paths longer than 1.
