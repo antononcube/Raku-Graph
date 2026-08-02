@@ -76,12 +76,15 @@ subtest {
     is-deeply
             $g8.connected-components.map({ $_.sort.cache }).sort({ [$_.elems, -$_.head.Int] }).reverse.cache,
             (("1", "2", "3"), ("4",), ("5",));
-}, 'custom made graphs';
+}, 'Custom made graphs';
 
 ## 8
-is Graph::Path.new((^10)».Str).is-connected, True,'Undirected path graph';
+subtest {
+    is Graph::Path.new((^10)».Str).is-connected, True, 'Undirected path graph';
 
-## 9
-is Graph::Path.new((^10)».Str, :directed).is-connected, True, 'Directed path graph';
+    my $g = Graph::Path.new((^10)».Str, :directed);
+    is $g.is-connected, False, 'Directed path graph';
+    is $g.connected-components.elems, $g.vertex-count, 'Directed path graph number of compoenents';
+}, 'Path graphs';
 
 done-testing;
