@@ -49,3 +49,8 @@ say 'find-hamiltonian-path from 8 to 11 : ' , $graph.find-hamiltonian-path('8', 
 say 'find-cycle : ' , $graph.find-cycle().sort({ $_.elems ~ ' ' ~ $_.join(' ') });
 
 say 'find-cycle (All): ' , $graph.find-cycle(count => Inf).sort({ $_.elems ~ ' ' ~ $_.join(' ') });
+
+# Apply all predicates
+say "\npredicates:";
+my @preds = <directed is-acyclic is-bipartite is-complete is-connected is-weakly-connected is-empty is-loop-free is-path>.map({ $_ => $graph.$($graph.^find_method($_)) });
+.say for @preds;
