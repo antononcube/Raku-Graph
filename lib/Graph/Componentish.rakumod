@@ -29,9 +29,15 @@ role Graph::Componentish {
             }
             return @res.sort.List;
         } else {
-            # Can be slow because distance matrix is slow -- it does not stop at $max-length
-            my @res = self.clone.edge-weight-unitize.distance-matrix(:pairs).grep({ $_.key.tail ∈ $vset }).grep({ $min-length ≤ $_.value ≤ $max-length });
-            return @res.map(*.key.head).unique.sort.List
+            # Can be slow because distance matrix with Floyd-Warshall is slow. Also it does not stop at $max-length.
+            # my @res = self.clone.edge-weight-unitize.distance-matrix(:pairs).grep({ $_.key.tail ∈ $vset }).grep({ $min-length ≤ $_.value ≤ $max-length });
+            # return @res.map(*.key.head).unique.sort.List
+
+            # Betting on @v being with a few elements
+            my $g = self.clone.edge-weight-unitize;
+            return @v.map(-> $v {
+                $g.distance($v, method => 'dijkstra', :pairs).grep({ $min-length ≤ $_.value ≤ $max-length })».key
+            }).flat.unique.sort.List;
         }
     }
 
