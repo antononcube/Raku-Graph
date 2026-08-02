@@ -316,10 +316,11 @@ graph-creation Grid --rows=3 --columns=2 --format=dot
 - [X] DONE Strongly connected component
   - [X] DONE [Tarjan's algorithm](https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm)
   - [ ] TODO [Kosaraju's algorithm](https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm) 
-- [ ] TODO Vertex component
+- [X] DONE Vertex component
   - [X] DONE Fast 1-edge length paths
-  - [X] DONE Very slow longer-than-one paths
-  - [ ] TODO Fast longer-than-one paths
+  - [X] DONE Fast longer-than-one paths
+    - Fast (enough) when the number of input vertexes is small
+    - Using Dijkstra's algorithm to find all vertex-distance pairs per input vertex.
 - [X] DONE Topological sort
   - Using Tarjan's algorithm
 - [ ] TODO Cycles and tours
