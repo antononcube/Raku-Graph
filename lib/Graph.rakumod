@@ -513,7 +513,21 @@ class Graph
         my $index = $r;
 
         my @vs = self.vertex-list;
-        @vs .= sort(&as) unless &as.isa(WhateverCode);
+        if &as.isa(WhateverCode) {
+            # Note, that sorting according to self.vertex-coordinates if it is not empty/Whatever
+            # is not a good idea for graphs like Circulant, Cycle, or Wheel.
+
+            # Special treatment of the default vertex names of grid graph or knight tour
+            if @vs.all ~~ *.contains('_') {
+                @vs = try @vs.sort({ $_.split('_', :skip-empty)».Numeric });
+                if $! {
+                    # Maybe redundant, but just to be sure (and it is "cheap")
+                    @vs = self.vertex-list
+                }
+            }
+        } else {
+            @vs .= sort(&as);
+        }
 
         for @vs -> $vertex {
             %index{$vertex} = $prefix ~ $index++;
