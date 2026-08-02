@@ -1,5 +1,10 @@
 Changes of the Raku package "Graph".
 
+2026-08-02 0.1.1
+    - Implemented the methods edge-weight-unitize and vertex-component.
+    - Currently, vertex-component is very slow for paths longer than 1.
+        - Because of its use of the vey slow method distance-matrix.
+
 2026-06-04 0.1.0
     - Implemented CLI script for graph creation.
     - Renamed the Graph class attribute "adjacency-list" to "adjacency-map".
