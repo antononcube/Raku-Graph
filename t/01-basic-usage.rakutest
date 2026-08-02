@@ -207,4 +207,13 @@ subtest {
 
 }, 'Equivalence tests';
 
+## 34
+subtest {
+    is Graph::Path.new(5).is-loop-free, True, 'Path(5) is loop free';
+    is Graph::Grid.new(:5rows, :3columns).is-loop-free, True, 'Grid(5,3) is loop free';
+
+    my @edges2 = |@edges, {from => '1', to => '1', weight => 3};
+    is Graph.new(@edges2).is-loop-free, False, 'Looped is not loop free';
+}, 'Loop free tests';
+
 done-testing;
