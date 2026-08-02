@@ -55,12 +55,9 @@ my $g5 = Graph.new([
 is $g5.is-connected, True;
 
 ## 6
-is Graph::Path.new((^10)».Str).is-connected, True;
-
-## 7
 is Graph::Petersen.new.is-connected, True;
 
-## 8
+## 7
 subtest {
     my $g8 = Graph.new([
         %('from' => '1', 'to' => '2', 'weight' => 1),
@@ -79,6 +76,12 @@ subtest {
     is-deeply
             $g8.connected-components.map({ $_.sort.cache }).sort({ [$_.elems, -$_.head.Int] }).reverse.cache,
             (("1", "2", "3"), ("4",), ("5",));
-}
+}, 'custom made graphs';
+
+## 8
+is Graph::Path.new((^10)».Str).is-connected, True,'Undirected path graph';
+
+## 9
+is Graph::Path.new((^10)».Str, :directed).is-connected, True, 'Directed path graph';
 
 done-testing;
