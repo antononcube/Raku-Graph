@@ -35,8 +35,10 @@ subtest {
 
     is-deeply $g.vertex-component("80", :1max-length), ('120', '40', '79', '80');
     is-deeply $g.vertex-component("80", :1min-length, :1max-length), ('120', '40', '79');
-    # Very slow
-    # is-deeply $g.vertex-component("80", :1min-length, :1max-length), ('119', '120', '160', '39', '40', '78', '79');
+
+    # Can be slow
+    is-deeply $g.vertex-component("80", :1min-length, :2max-length), ('119', '120', '160', '39', '40', '78', '79');
+    is-deeply $g.vertex-component(["80", "120", "160"], :1min-length, :2max-length), ("118", "119", "120", "158", "159", "160", "199", "200", "240", "39", "40", "78", "79", "80");
 
 }, "Larger grid graph, indexed";
 
