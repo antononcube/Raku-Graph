@@ -1,0 +1,45 @@
+use v6.d;
+use Test;
+
+#use lib <. lib>;
+use Graph;
+use Graph::Grid;
+
+plan *;
+
+## 1
+subtest {
+    my $g = Graph::Grid.new(:2rows, :4columns);
+
+    isa-ok $g.vertex-component("1_3"), List;
+    isa-ok $g.vertex-component("1_3", :1max-length), List;
+    is-deeply $g.vertex-component("1_3", :1max-length), ('0_3', '1_2', '1_3');
+    is-deeply $g.vertex-component("1_3", :2max-length), ('0_2', '0_3', '1_1', '1_2', '1_3');
+
+}, "Small grid graph";
+
+## 2
+subtest {
+    my $g = Graph::Grid.new(:2rows, :4columns).index-graph(1);
+
+    is-deeply $g.vertex-component("8", :1max-length), ('4', '7', '8');
+    is-deeply $g.vertex-component("8", :1min-length, :1max-length), ('4', '7');
+    is-deeply $g.vertex-component("8", :2max-length), ('3', '4', '6', '7', '8');
+
+}, "Small grid graph, indexed";
+
+
+## 3
+subtest {
+    my $g = Graph::Grid.new(:20rows, :40columns).index-graph(1);
+
+    is-deeply $g.vertex-component("80", :1max-length), ('120', '40', '79', '80');
+    is-deeply $g.vertex-component("80", :1min-length, :1max-length), ('120', '40', '79');
+    # Very slow
+    #is-deeply $g.vertex-component("8", :2max-length), ('3', '4', '6', '7', '8');
+
+}, "Larger grid graph, indexed";
+
+
+
+done-testing;
