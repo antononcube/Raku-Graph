@@ -4,6 +4,7 @@ use v6.d;
 
 use Graph;
 use Graph::Circulant;
+use Graph::Grid;
 
 use Test;
 
@@ -18,5 +19,16 @@ subtest {
         is-deeply Graph.new(^5, []).adjacency-map, {0 => {}, 1 => {}, 2 => {}, 3 => {}, 4 => {}};
         is-deeply Graph.new((^5), []).index-graph(10).vertex-list, <10 11 12 13 14>».Str;
 }, "indexed graph over no edges";
+
+## 3
+subtest {
+        my $g = Graph::Grid.new(:2rows, :11columns);
+        is-deeply $g.index-graph(10).vertex-list, (10 ... (2 * 11 - 1 + 10))».Str;
+
+        my @vs1 = $g.index-graph.vertex-list;
+        my @vs2 = $g.index-graph(as => { $g.vertex-coordinates{$_} } ).vertex-list;
+
+        is-deeply @vs1, @vs2, 'expected equivalence of default and coordinates sorting';
+}, "indexed graph over grid graph";
 
 done-testing;
